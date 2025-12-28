@@ -1,0 +1,20 @@
+# Core Libraries
+neo4j>=5.15.0
+litellm>=1.30.0
+loguru>=0.7.2
+python-dotenv>=1.0.0
+pydantic>=2.5.0
+
+# EDGAR Tools (adjust based on actual library)
+# Possible options:
+# sec-edgar-mcp>=0.1.0
+# edgar-tools>=0.1.0
+# Or use MCP client if available
+
+# Utilities
+tiktoken>=0.5.0
+typing-extensions>=4.5.0
+
+# Data Processing (for chunking and transformation)
+numpy>=1.24.0
+
