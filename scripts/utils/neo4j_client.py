@@ -2,6 +2,7 @@
 
 import os
 import time
+import json
 from typing import Optional, Dict, Any, List
 from contextlib import contextmanager
 from neo4j import GraphDatabase, Driver, Session
@@ -163,8 +164,16 @@ class Neo4jClient:
         while attempt < self.max_retries:
             try:
                 with self.session() as session:
+                    # #region agent log
+                    with open('/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log', 'a') as f:
+                        f.write(json.dumps({"sessionId": "debug-session", "runId": "run1", "hypothesisId": "A", "location": "neo4j_client.py:165", "message": "Session object type check", "data": {"session_type": str(type(session)), "has_commit": hasattr(session, 'commit'), "session_methods": [m for m in dir(session) if not m.startswith('_')][:10]}, "timestamp": int(time.time() * 1000)}) + '\n')
+                    # #endregion agent log
                     result = session.run(query, parameters)
                     records = [dict(record) for record in result]
+                    # #region agent log
+                    with open('/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log', 'a') as f:
+                        f.write(json.dumps({"sessionId": "debug-session", "runId": "run1", "hypothesisId": "A", "location": "neo4j_client.py:168", "message": "Before commit call", "data": {"records_count": len(records), "has_commit_method": hasattr(session, 'commit')}, "timestamp": int(time.time() * 1000)}) + '\n')
+                    # #endregion agent log
                     session.commit()
                     return records
             except (ServiceUnavailable, TransientError) as e:
@@ -201,6 +210,10 @@ class Neo4jClient:
         while attempt < self.max_retries:
             try:
                 with self.session() as session:
+                    # #region agent log
+                    with open('/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log', 'a') as f:
+                        f.write(json.dumps({"sessionId": "debug-session", "runId": "run1", "hypothesisId": "B", "location": "neo4j_client.py:203", "message": "Transaction session type check", "data": {"session_type": str(type(session)), "has_commit": hasattr(session, 'commit'), "queries_count": len(queries)}, "timestamp": int(time.time() * 1000)}) + '\n')
+                    # #endregion agent log
                     results = []
                     for query, parameters in queries:
                         if parameters is None:
@@ -208,6 +221,10 @@ class Neo4jClient:
                         result = session.run(query, parameters)
                         records = [dict(record) for record in result]
                         results.append(records)
+                    # #region agent log
+                    with open('/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log', 'a') as f:
+                        f.write(json.dumps({"sessionId": "debug-session", "runId": "run1", "hypothesisId": "B", "location": "neo4j_client.py:211", "message": "Before transaction commit call", "data": {"has_commit_method": hasattr(session, 'commit')}, "timestamp": int(time.time() * 1000)}) + '\n')
+                    # #endregion agent log
                     session.commit()
                     return results
             except (ServiceUnavailable, TransientError) as e:
