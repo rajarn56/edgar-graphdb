@@ -1,34 +1,36 @@
-2025-12-28 21:00:30.933 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
-2025-12-28 21:00:30.934 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251228.log
-2025-12-28 21:00:30.934 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251228.log
-2025-12-28 21:00:30.934 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
-2025-12-28 21:00:30.934 | INFO     | __main__:main:344 | ============================================================
-2025-12-28 21:00:30.934 | INFO     | __main__:main:345 | EDGAR Data Ingestion
-2025-12-28 21:00:30.934 | INFO     | __main__:main:346 | ============================================================
-2025-12-28 21:00:30.934 | INFO     | __main__:main:347 | Ticker: AAPL
-2025-12-28 21:00:30.934 | INFO     | __main__:main:348 | Form Type: 10-K
-2025-12-28 21:00:30.934 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
-2025-12-28 21:00:30.935 | WARNING  | utils.edgar_client:_initialize_client:41 | Could not import edgar-tools library. Using mock implementation.
-2025-12-28 21:00:30.935 | WARNING  | utils.edgar_client:_initialize_client:42 | Please install edgar-tools: pip install edgar-tools
-2025-12-28 21:00:32.896 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
-2025-12-28 21:00:32.896 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
-2025-12-28 21:00:32.912 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
-2025-12-28 21:00:32.914 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
-2025-12-28 21:00:32.914 | INFO     | __main__:ingest_filing:262 | Ingesting filing for AAPL (10-K)...
-2025-12-28 21:00:32.914 | INFO     | __main__:ingest_filing:265 | Retrieving EDGAR data...
-2025-12-28 21:00:32.914 | WARNING  | utils.edgar_client:_mock_filing_data:246 | Using mock filing data for AAPL 10-K (edgar-tools not available)
-2025-12-28 21:00:32.914 | WARNING  | utils.edgar_client:_mock_company_data:233 | Using mock company data for AAPL (edgar-tools not available)
-2025-12-28 21:00:32.914 | INFO     | __main__:ingest_filing:272 | Transforming data to graph format...
-2025-12-28 21:00:33.092 | INFO     | __main__:ingest_filing:282 | Creating company node...
-2025-12-28 21:00:33.140 | ERROR    | utils.neo4j_client:execute_write:229 | Write query execution failed: {neo4j_code: Neo.ClientError.Statement.SyntaxError} {message: Invalid input 'ON': expected an expression, ',', 'ORDER BY', 'CALL', 'CREATE', 'LOAD CSV', 'DELETE', 'DETACH', 'FINISH', 'FOREACH', 'INSERT', 'LIMIT', 'MATCH', 'MERGE', 'NODETACH', 'OFFSET', 'OPTIONAL', 'REMOVE', 'RETURN', 'SET', 'SKIP', 'UNION', 'UNWIND', 'USE', 'WITH' or <EOF> (line 10, column 5 (offset: 279))
-"    ON CREATE SET c.created_at = datetime()"
-     ^} {gql_status: 42001} {gql_status_description: error: syntax error or access rule violation - invalid syntax}
-Query: 
-    MERGE (c:Company {cik: $cik})
-    SET c.name = $name,
-        c.ticker = $ticker,
-        c.sic = $sic,
-        c.sic_description = $sic_description,
-        c.exchange = $exchange,
-        c.inc...
-2025-12-28 21:00:33.141 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-28 21:08:13.142 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-28 21:08:13.142 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251228.log
+2025-12-28 21:08:13.142 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251228.log
+2025-12-28 21:08:13.143 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-28 21:08:13.143 | INFO     | __main__:main:377 | ============================================================
+2025-12-28 21:08:13.143 | INFO     | __main__:main:378 | EDGAR Data Ingestion
+2025-12-28 21:08:13.143 | INFO     | __main__:main:379 | ============================================================
+2025-12-28 21:08:13.143 | INFO     | __main__:main:380 | Ticker: AAPL
+2025-12-28 21:08:13.143 | INFO     | __main__:main:381 | Form Type: 10-K
+2025-12-28 21:08:13.143 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-28 21:08:13.143 | WARNING  | utils.edgar_client:_initialize_client:41 | Could not import edgar-tools library. Using mock implementation.
+2025-12-28 21:08:13.143 | WARNING  | utils.edgar_client:_initialize_client:42 | Please install edgar-tools: pip install edgar-tools
+2025-12-28 21:08:13.193 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-28 21:08:13.194 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-28 21:08:13.211 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-28 21:08:13.219 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-28 21:08:13.219 | INFO     | __main__:ingest_filing:295 | Ingesting filing for AAPL (10-K)...
+2025-12-28 21:08:13.219 | INFO     | __main__:ingest_filing:298 | Retrieving EDGAR data...
+2025-12-28 21:08:13.219 | WARNING  | utils.edgar_client:_mock_filing_data:246 | Using mock filing data for AAPL 10-K (edgar-tools not available)
+2025-12-28 21:08:13.219 | WARNING  | utils.edgar_client:_mock_company_data:233 | Using mock company data for AAPL (edgar-tools not available)
+2025-12-28 21:08:13.219 | INFO     | __main__:ingest_filing:305 | Transforming data to graph format...
+2025-12-28 21:08:13.237 | INFO     | __main__:ingest_filing:315 | Creating company node...
+2025-12-28 21:08:13.378 | INFO     | __main__:create_company_node:66 | Created/updated Company node: 0000320193 (AAPL Inc.)
+2025-12-28 21:08:13.378 | INFO     | __main__:ingest_filing:321 | Creating filing node...
+2025-12-28 21:08:13.474 | INFO     | __main__:create_filing_node:116 | Created/updated Filing node: 0000320193-2024-000077
+2025-12-28 21:08:13.521 | INFO     | __main__:create_filing_node:146 | Created/updated Period node: 2024_Q3
+2025-12-28 21:08:13.522 | INFO     | __main__:ingest_filing:330 | Creating 2 sections...
+2025-12-28 21:08:13.621 | INFO     | __main__:create_chunk_nodes:210 | Creating 1 chunk nodes for section 0000320193-2024-000077_Item1...
+2025-12-28 21:08:13.621 | INFO     | __main__:create_chunk_nodes:230 | Generating embeddings...
+2025-12-28 21:08:14.502 | INFO     | __main__:create_chunk_nodes:210 | Creating 1 chunk nodes for section 0000320193-2024-000077_Item7...
+2025-12-28 21:08:14.503 | INFO     | __main__:create_chunk_nodes:230 | Generating embeddings...
+2025-12-28 21:08:14.580 | INFO     | __main__:ingest_filing:362 | Successfully ingested filing 0000320193-2024-000077
+2025-12-28 21:08:14.581 | INFO     | __main__:main:411 | ============================================================
+2025-12-28 21:08:14.581 | INFO     | __main__:main:412 | Ingestion completed successfully!
+2025-12-28 21:08:14.581 | INFO     | __main__:main:413 | ============================================================
+2025-12-28 21:08:14.581 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
