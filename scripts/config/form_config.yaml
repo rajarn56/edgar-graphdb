@@ -1,0 +1,242 @@
+# EDGAR Form Configuration Registry
+# This file defines extraction strategies and metadata for all EDGAR form types
+
+forms:
+  # Periodic Reports
+  "10-K":
+    category: "periodic_report"
+    name: "Annual Report"
+    description: "Comprehensive annual report with audited financial statements"
+    structured_object: "TenK"
+    extraction_strategy: "structured_object"
+    schema_labels:
+      - "Section"
+      - "PeriodicReportSection"
+    section_mappings:
+      "1": ["business", "Business"]
+      "1A": ["risk_factors", "Risk Factors"]
+      "2": ["properties", "Properties"]
+      "3": ["legal_proceedings", "Legal Proceedings"]
+      "7": ["management_discussion", "Management's Discussion and Analysis"]
+      "7A": ["quantitative_qualitative", "Quantitative and Qualitative Disclosures"]
+      "8": ["financial_statements", "Financial Statements"]
+      "9": ["controls_procedures", "Controls and Procedures"]
+    rag_compatible: true
+
+  "10-Q":
+    category: "periodic_report"
+    name: "Quarterly Report"
+    description: "Quarterly report with unaudited financial statements"
+    structured_object: "TenQ"
+    extraction_strategy: "structured_object"
+    schema_labels:
+      - "Section"
+      - "PeriodicReportSection"
+    section_mappings:
+      "1": ["business", "Business"]
+      "2": ["risk_factors", "Risk Factors"]
+      "3": ["legal_proceedings", "Legal Proceedings"]
+      "4": ["controls_procedures", "Controls and Procedures"]
+    rag_compatible: true
+
+  "8-K":
+    category: "periodic_report"
+    name: "Current Report"
+    description: "Report of material events"
+    structured_object: "EightK"
+    extraction_strategy: "structured_object"
+    schema_labels:
+      - "Section"
+      - "Form8KItem"
+    rag_compatible: true
+
+  # Proxy & Governance
+  "DEF 14A":
+    category: "proxy_governance"
+    name: "Definitive Proxy Statement"
+    description: "Proxy statement for shareholder meetings"
+    structured_object: "Def14A"
+    extraction_strategy: "attribute_inspection"
+    schema_labels:
+      - "Section"
+      - "ProxySection"
+    section_mappings:
+      "compensation": ["compensation", "Executive Compensation"]
+      "compensation_discussion": ["compensation_discussion", "Compensation Discussion & Analysis"]
+      "directors": ["directors", "Director Information"]
+      "board": ["board", "Board Information"]
+      "committees": ["committees", "Board Committees"]
+      "proposals": ["proposals", "Shareholder Proposals"]
+      "governance": ["governance", "Corporate Governance"]
+      "voting": ["voting", "Voting Procedures"]
+      "auditor": ["auditor", "Auditor Information"]
+      "related_party": ["related_party", "Related Party Transactions"]
+    rag_compatible: true
+
+  "DEF 14C":
+    category: "proxy_governance"
+    name: "Information Statement"
+    description: "Information statement when shareholder action taken without meeting"
+    structured_object: "Def14C"
+    extraction_strategy: "attribute_inspection"
+    schema_labels:
+      - "Section"
+      - "ProxySection"
+    section_mappings:
+      "action": ["action", "Action Taken"]
+      "voting_results": ["voting_results", "Voting Results"]
+      "governance": ["governance", "Corporate Governance"]
+    rag_compatible: true
+
+  # Registration Statements
+  "S-1":
+    category: "registration"
+    name: "Initial Public Offering Registration"
+    description: "Registration statement for IPO"
+    extraction_strategy: "html_pattern"
+    schema_labels:
+      - "Section"
+    section_patterns:
+      - pattern: "Item\\s+(\\d+[A-Z]?)[\\.:]?\\s*(.*?)(?=<|$)"
+        type: "html"
+    rag_compatible: true
+
+  "S-3":
+    category: "registration"
+    name: "Short Form Registration"
+    description: "Short form registration for secondary offerings"
+    extraction_strategy: "html_pattern"
+    schema_labels:
+      - "Section"
+    rag_compatible: true
+
+  "S-4":
+    category: "registration"
+    name: "Merger/Acquisition Registration"
+    description: "Registration statement for mergers and acquisitions"
+    extraction_strategy: "html_pattern"
+    schema_labels:
+      - "Section"
+    rag_compatible: true
+
+  "10":
+    category: "registration"
+    name: "General Form for Registration"
+    description: "General form for registration of securities"
+    extraction_strategy: "html_pattern"
+    schema_labels:
+      - "Section"
+    rag_compatible: true
+
+  # Ownership & Insider Trading
+  "3":
+    category: "ownership"
+    name: "Initial Statement of Beneficial Ownership"
+    description: "Initial ownership statement for insiders"
+    extraction_strategy: "text_pattern"
+    schema_labels:
+      - "Section"
+    rag_compatible: true
+
+  "4":
+    category: "ownership"
+    name: "Statement of Changes in Beneficial Ownership"
+    description: "Insider trading transactions"
+    extraction_strategy: "text_pattern"
+    schema_labels:
+      - "Section"
+    rag_compatible: true
+
+  "5":
+    category: "ownership"
+    name: "Annual Statement of Changes in Beneficial Ownership"
+    description: "Annual summary of insider transactions"
+    extraction_strategy: "text_pattern"
+    schema_labels:
+      - "Section"
+    rag_compatible: true
+
+  "13D":
+    category: "ownership"
+    name: "Schedule 13D - Beneficial Ownership Report (Active)"
+    description: "Active ownership report for 5%+ holders"
+    extraction_strategy: "html_pattern"
+    schema_labels:
+      - "Section"
+    rag_compatible: true
+
+  "13G":
+    category: "ownership"
+    name: "Schedule 13G - Beneficial Ownership Report (Passive)"
+    description: "Passive ownership report for 5%+ holders"
+    extraction_strategy: "html_pattern"
+    schema_labels:
+      - "Section"
+    rag_compatible: true
+
+  # Investment & Benefit Plans
+  "13F":
+    category: "investment"
+    name: "Institutional Investment Manager Holdings"
+    description: "Quarterly holdings report for institutional managers"
+    extraction_strategy: "html_pattern"
+    schema_labels:
+      - "Section"
+    rag_compatible: true
+
+  "N-CSR":
+    category: "investment"
+    name: "Certified Shareholder Report"
+    description: "Semi-annual report for registered investment companies"
+    extraction_strategy: "html_pattern"
+    schema_labels:
+      - "Section"
+    rag_compatible: true
+
+  "11-K":
+    category: "investment"
+    name: "Annual Report of Employee Stock Purchase Plans"
+    description: "Annual report for employee benefit plans"
+    extraction_strategy: "html_pattern"
+    schema_labels:
+      - "Section"
+    rag_compatible: true
+
+  # Foreign Issuers
+  "20-F":
+    category: "foreign"
+    name: "Annual Report for Foreign Private Issuers"
+    description: "Annual report for foreign companies"
+    extraction_strategy: "html_pattern"
+    schema_labels:
+      - "Section"
+    rag_compatible: true
+
+  "40-F":
+    category: "foreign"
+    name: "Annual Report for Canadian Issuers"
+    description: "Annual report for Canadian companies using MJDS"
+    extraction_strategy: "html_pattern"
+    schema_labels:
+      - "Section"
+    rag_compatible: true
+
+  # Other Forms
+  "144":
+    category: "other"
+    name: "Notice of Proposed Sale of Securities"
+    description: "Notice before selling restricted securities"
+    extraction_strategy: "generic"
+    schema_labels:
+      - "Section"
+    rag_compatible: true
+
+  "424B":
+    category: "other"
+    name: "Prospectus Supplement"
+    description: "Prospectus supplement for securities offerings"
+    extraction_strategy: "generic"
+    schema_labels:
+      - "Section"
+    rag_compatible: true
+

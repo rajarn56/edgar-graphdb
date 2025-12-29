@@ -6,6 +6,14 @@ from datetime import datetime
 import tiktoken
 from loguru import logger
 
+# Import form registry
+try:
+    from .form_registry import get_registry
+    FORM_REGISTRY_AVAILABLE = True
+except ImportError:
+    FORM_REGISTRY_AVAILABLE = False
+    logger.debug("Form registry not available, using legacy label assignment")
+
 
 class DataTransformer:
     """Transforms EDGAR data to Neo4j graph format"""
@@ -334,12 +342,31 @@ class DataTransformer:
         # Determine section type based on form type
         form_type = filing_data.get("form", "")
         section_labels = ["Section"]
-        if form_type == "8-K":
-            section_labels.append("Form8KItem")
-        elif form_type == "DEF 14A":
-            section_labels.append("ProxySection")
-        elif form_type in ["10-K", "10-Q"]:
-            section_labels.append("PeriodicReportSection")
+        
+        # Use form registry if available
+        if FORM_REGISTRY_AVAILABLE:
+            try:
+                registry = get_registry()
+                labels = registry.get_schema_labels(form_type)
+                if labels:
+                    section_labels = labels
+            except Exception as e:
+                logger.debug(f"Error getting schema labels from registry: {e}, using legacy method")
+                # Fall back to legacy method
+                if form_type == "8-K":
+                    section_labels.append("Form8KItem")
+                elif form_type == "DEF 14A":
+                    section_labels.append("ProxySection")
+                elif form_type in ["10-K", "10-Q"]:
+                    section_labels.append("PeriodicReportSection")
+        else:
+            # Legacy label assignment
+            if form_type == "8-K":
+                section_labels.append("Form8KItem")
+            elif form_type == "DEF 14A":
+                section_labels.append("ProxySection")
+            elif form_type in ["10-K", "10-Q"]:
+                section_labels.append("PeriodicReportSection")
         
         fiscal_year = None
         if filing_data.get("period_of_report"):
@@ -370,6 +397,13 @@ class DataTransformer:
         if form_type == "8-K":
             section_node["properties"]["item_code"] = item_number
             section_node["properties"]["event_type"] = self._infer_event_type(item_number)
+        elif form_type == "DEF 14A":
+            # Add ProxySection-specific properties
+            section_node["properties"]["section_type"] = self._infer_proxy_section_type(item_number, item_title)
+            # Try to infer if this section has voting requirements
+            section_node["properties"]["vote_required"] = self._has_vote_required(item_number, item_title)
+            # Try to infer if this section has compensation tables
+            section_node["properties"]["has_compensation_table"] = "compensation" in item_number.lower() or "compensation" in item_title.lower()
         
         # Chunk the content
         chunks = self._chunk_content(
@@ -673,6 +707,47 @@ class DataTransformer:
             "8.01": "other_events",
         }
         return event_map.get(item_code, "other_events")
+    
+    def _infer_proxy_section_type(self, item_number: str, item_title: str) -> str:
+        """Infer ProxySection section type from item number and title"""
+        item_lower = item_number.lower()
+        title_lower = item_title.lower()
+        
+        if "compensation" in item_lower or "compensation" in title_lower:
+            if "discussion" in title_lower or "cda" in title_lower:
+                return "compensation_discussion"
+            return "executive_compensation"
+        elif "director" in item_lower or "director" in title_lower:
+            return "director_information"
+        elif "board" in item_lower or "board" in title_lower:
+            return "board_information"
+        elif "committee" in item_lower or "committee" in title_lower:
+            return "board_committees"
+        elif "proposal" in item_lower or "proposal" in title_lower:
+            return "shareholder_proposals"
+        elif "governance" in item_lower or "governance" in title_lower:
+            return "corporate_governance"
+        elif "voting" in item_lower or "voting" in title_lower:
+            return "voting_procedures"
+        elif "auditor" in item_lower or "auditor" in title_lower:
+            return "auditor_information"
+        elif "related" in item_lower or "related" in title_lower:
+            return "related_party_transactions"
+        else:
+            return "other"
+    
+    def _has_vote_required(self, item_number: str, item_title: str) -> bool:
+        """Determine if a proxy section requires a vote"""
+        item_lower = item_number.lower()
+        title_lower = item_title.lower()
+        
+        # Proposals typically require votes
+        if "proposal" in item_lower or "proposal" in title_lower:
+            return True
+        # Some compensation items may require votes
+        if "say on pay" in title_lower or "say-on-pay" in title_lower:
+            return True
+        return False
     
     def _transform_financials(
         self, financials_data: Dict[str, Any], filing_data: Dict[str, Any], company_data: Dict[str, Any]

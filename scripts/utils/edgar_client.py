@@ -5,6 +5,15 @@ import time
 from typing import Dict, Any, List, Optional
 from loguru import logger
 
+# Import form registry and strategies
+try:
+    from .form_registry import get_registry
+    from .extraction_strategies import get_strategy
+    FORM_REGISTRY_AVAILABLE = True
+except ImportError:
+    FORM_REGISTRY_AVAILABLE = False
+    logger.warning("Form registry not available, using legacy extraction methods")
+
 
 class EdgarClient:
     """Interface to edgartools library for fetching SEC EDGAR filing data"""
@@ -209,8 +218,36 @@ class EdgarClient:
                 try:
                     logger.debug(f"Filing object type: {type(filing).__name__}")
                     logger.debug(f"Filing object attributes: {[attr for attr in dir(filing) if not attr.startswith('_')][:20]}")
-                    items = self._extract_filing_items(filing, form_type)
-                    filing_data["filing"]["items"] = items
+                    
+                    # Try using form registry and strategies first
+                    if FORM_REGISTRY_AVAILABLE:
+                        try:
+                            registry = get_registry()
+                            form_config = registry.get_form_config(form_type)
+                            if form_config:
+                                strategy_name = registry.get_extraction_strategy(form_type)
+                                strategy = get_strategy(strategy_name)
+                                items = strategy.extract_sections(filing, form_config, form_type)
+                                if items:
+                                    logger.info(f"Extracted {len(items)} items using {strategy_name} strategy")
+                                    filing_data["filing"]["items"] = items
+                                else:
+                                    logger.debug(f"No items extracted with {strategy_name}, falling back to legacy method")
+                                    items = self._extract_filing_items(filing, form_type)
+                                    filing_data["filing"]["items"] = items
+                            else:
+                                logger.debug(f"No form config found for {form_type}, using legacy extraction")
+                                items = self._extract_filing_items(filing, form_type)
+                                filing_data["filing"]["items"] = items
+                        except Exception as e:
+                            logger.warning(f"Error using form registry: {e}, falling back to legacy method")
+                            items = self._extract_filing_items(filing, form_type)
+                            filing_data["filing"]["items"] = items
+                    else:
+                        # Legacy extraction method
+                        items = self._extract_filing_items(filing, form_type)
+                        filing_data["filing"]["items"] = items
+                    
                     if items:
                         logger.info(f"Extracted {len(items)} items/sections from filing")
                         for item in items[:3]:  # Log first 3 items
@@ -467,17 +504,22 @@ class EdgarClient:
                 },
                 'Def14A': {
                     # Proxy statements (DEF 14A) sections
-                    # Common attributes in edgartools Def14A object
+                    # Map section identifiers to (attribute_name, display_title) tuples
                     'compensation': ('compensation', 'Executive Compensation'),
                     'compensation_discussion': ('compensation_discussion', 'Compensation Discussion & Analysis'),
+                    'cda': ('compensation_discussion', 'Compensation Discussion & Analysis'),  # Alternative name
                     'directors': ('directors', 'Director Information'),
+                    'director': ('directors', 'Director Information'),  # Alternative name
                     'board': ('board', 'Board Information'),
                     'committees': ('committees', 'Board Committees'),
+                    'committee': ('committees', 'Board Committees'),  # Alternative name
                     'proposals': ('proposals', 'Shareholder Proposals'),
+                    'proposal': ('proposals', 'Shareholder Proposals'),  # Alternative name
                     'governance': ('governance', 'Corporate Governance'),
                     'voting': ('voting', 'Voting Procedures'),
                     'auditor': ('auditor', 'Auditor Information'),
                     'related_party': ('related_party', 'Related Party Transactions'),
+                    'related_party_transactions': ('related_party', 'Related Party Transactions'),  # Alternative name
                 },
                 'Def14C': {
                     # Information statements (DEF 14C) - similar to DEF 14A
