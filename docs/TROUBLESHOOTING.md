@@ -5,8 +5,10 @@ This document collects troubleshooting information, fixes, and debugging techniq
 ## Table of Contents
 
 1. [Neo4j Session Commit Error](#neo4j-session-commit-error)
-2. [Debug Logging](#debug-logging)
-3. [Common Issues](#common-issues)
+2. [Cypher MERGE Syntax Error](#cypher-merge-syntax-error)
+3. [Mock Data Instead of Real EDGAR Data](#mock-data-instead-of-real-edgar-data)
+4. [Debug Logging](#debug-logging)
+5. [Common Issues](#common-issues)
 
 ---
 
@@ -74,6 +76,204 @@ After the fix:
 
 - `scripts/utils/neo4j_client.py` - Fixed methods: `execute_write()`, `execute_transaction()`
 - `scripts/setup_schema.py` - Uses the fixed client methods
+
+---
+
+## Cypher MERGE Syntax Error
+
+### Issue
+
+**Error Message:**
+```
+Invalid input 'ON': expected an expression, ',', 'ORDER BY', 'CALL', 'CREATE', 'LOAD CSV', 'DELETE', 'DETACH', 'FINISH', 'FOREACH', 'INSERT', 'LIMIT', 'MATCH', 'MERGE', 'NODETACH', 'OFFSET', 'OPTIONAL', 'REMOVE', 'RETURN', 'SET', 'SKIP', 'UNION', 'UNWIND', 'USE', 'WITH' or <EOF> (line 10, column 5 (offset: 279))
+"    ON CREATE SET c.created_at = datetime()"
+     ^
+```
+
+**Symptoms:**
+- Data ingestion script fails when creating Company, Filing, Section, or Period nodes
+- Error occurs in `ingest_edgar_data.py` during node creation
+- Script fails immediately after attempting to create company node
+- Error log shows syntax error in Cypher query
+
+**Date Fixed:** 2025-12-28
+
+### Root Cause
+
+In Cypher, when using `MERGE` statements, you cannot place a `SET` clause before `ON CREATE SET`. The correct syntax requires `ON CREATE SET` and `ON MATCH SET` to come immediately after `MERGE`, before any standalone `SET` clause.
+
+The code was incorrectly structured as:
+```cypher
+MERGE (c:Company {cik: $cik})
+SET c.name = $name, ...  // ❌ SET before ON CREATE SET is invalid
+ON CREATE SET c.created_at = datetime()
+```
+
+This violates Cypher syntax rules where `ON CREATE SET` and `ON MATCH SET` must directly follow `MERGE`.
+
+### Solution
+
+**Fixed in:** `scripts/ingest_edgar_data.py`
+
+**Functions Fixed:**
+1. `create_company_node()` - Line 43-63
+2. `create_filing_node()` - Line 62-96
+3. `create_section_node()` - Line 149-192
+4. Period node creation in `create_filing_node()` - Line 102-138
+
+**Code Before:**
+```python
+query = """
+MERGE (c:Company {cik: $cik})
+SET c.name = $name,
+    c.ticker = $ticker,
+    c.updated_at = datetime()
+ON CREATE SET c.created_at = datetime()
+RETURN c.cik AS cik
+"""
+```
+
+**Code After:**
+```python
+query = """
+MERGE (c:Company {cik: $cik})
+ON CREATE SET c.created_at = datetime(),
+    c.name = $name,
+    c.ticker = $ticker,
+    c.updated_at = datetime()
+ON MATCH SET c.name = $name,
+    c.ticker = $ticker,
+    c.updated_at = datetime()
+RETURN c.cik AS cik
+"""
+```
+
+**Key Changes:**
+- Moved all property assignments into `ON CREATE SET` and `ON MATCH SET` clauses
+- `ON CREATE SET` handles properties when node is first created
+- `ON MATCH SET` handles properties when node already exists
+- Ensures `created_at` is only set on creation, while other properties update on both create and match
+
+### Verification
+
+After the fix:
+- Ingestion script runs successfully
+- Company, Filing, Section, and Period nodes are created correctly
+- No Cypher syntax errors in logs
+- Data ingestion completes successfully
+
+### Related Files
+
+- `scripts/ingest_edgar_data.py` - Fixed all MERGE queries with incorrect SET/ON CREATE SET ordering
+- `scripts/logs/errors_20251228.log` - Contains original error logs
+
+---
+
+## Mock Data Instead of Real EDGAR Data
+
+### Issue
+
+**Warning Messages:**
+```
+WARNING | utils.edgar_client:_initialize_client:41 | Could not import edgar-tools library. Using mock implementation.
+WARNING | utils.edgar_client:_initialize_client:42 | Please install edgar-tools: pip install edgar-tools
+WARNING | utils.edgar_client:_mock_filing_data:246 | Using mock filing data for AAPL 10-K (edgar-tools not available)
+WARNING | utils.edgar_client:_mock_company_data:233 | Using mock company data for AAPL (edgar-tools not available)
+```
+
+**Symptoms:**
+- Ingestion script runs successfully but uses mock/test data instead of real SEC EDGAR data
+- Logs show warnings about edgar-tools library not being available
+- Data ingested contains placeholder/mock values (e.g., "AAPL Inc." instead of "Apple Inc.")
+- Mock data structure matches expected format but contains fake content
+
+**Date Identified:** 2025-12-28
+
+### Root Cause
+
+The `EdgarClient` class in `utils/edgar_client.py` attempts to import the `edgar-tools` library to fetch real SEC EDGAR data. If the library is not installed or cannot be imported, it falls back to a mock implementation that generates test data.
+
+The client tries to import several possible module names:
+- `edgar_tools`
+- `edgar_tools.client`
+- `sec_edgar`
+- `sec_edgar.client`
+- `edgar`
+
+If none of these are found, it logs a warning and uses mock data instead of failing.
+
+### Solution
+
+**Install the edgartools Library:**
+
+The project uses `edgartools` library (https://github.com/dgunning/edgartools) for fetching SEC EDGAR data.
+
+**Step 1: Install edgartools**
+```bash
+pip install edgartools
+```
+
+Or update from requirements.txt:
+```bash
+pip install -r requirements.txt
+```
+
+**Step 2: Set Your SEC EDGAR Identity**
+
+The SEC requires you to identify yourself when accessing EDGAR data. Set your email address as an environment variable:
+
+```bash
+# In your .env file (recommended)
+EDGAR_IDENTITY=your.email@example.com
+
+# Or export in shell
+export EDGAR_IDENTITY=your.email@example.com
+```
+
+**Important:** Use a valid email address. The SEC uses this to identify who is accessing their data.
+
+**Step 3: Verify Installation**
+
+1. Check if library is installed:
+   ```bash
+   python -c "import edgar; print('edgartools installed')"
+   ```
+
+2. Check logs after installation:
+   - Should see: `Successfully imported edgartools library`
+   - Should see: `Set EDGAR identity: your.email@example.com`
+   - Should NOT see: `Could not import edgartools library. Using mock implementation.`
+
+3. Re-run ingestion:
+   ```bash
+   python ingest_edgar_data.py --ticker AAPL
+   ```
+
+4. Verify real data:
+   - Company name should be "Apple Inc." (not "AAPL Inc.")
+   - CIK should be correct (0000320193 for Apple)
+   - Filing data should contain actual SEC filing content
+   - Logs should show: `Fetched company data for AAPL: Apple Inc.`
+   - Logs should show: `Fetched filing data for AAPL 10-K: <accession_number>`
+
+### Current Workaround
+
+If you cannot install an EDGAR tools library immediately:
+- Mock data allows testing the ingestion pipeline end-to-end
+- Mock data structure matches expected schema format
+- You can verify Neo4j schema, embeddings, and graph structure work correctly
+- Replace with real data once EDGAR library is installed
+
+### Related Files
+
+- `scripts/utils/edgar_client.py` - Contains the EDGAR client implementation with edgartools integration and mock data fallback
+- `scripts/requirements.txt` - Lists edgartools library dependency
+- `scripts/logs/ingest_20251228.log` - Contains warnings about mock data usage
+- `scripts/README.md` - Setup instructions including EDGAR_IDENTITY configuration
+
+### Additional Notes
+
+The mock implementation generates realistic-looking data structures but with placeholder content. This is intentional to allow testing without requiring external dependencies. However, for production use, you must install and configure a real EDGAR data fetching library.
 
 ---
 

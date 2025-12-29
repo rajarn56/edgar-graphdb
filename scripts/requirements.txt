@@ -5,11 +5,9 @@ loguru>=0.7.2
 python-dotenv>=1.0.0
 pydantic>=2.5.0
 
-# EDGAR Tools (adjust based on actual library)
-# Possible options:
-# sec-edgar-mcp>=0.1.0
-# edgar-tools>=0.1.0
-# Or use MCP client if available
+# EDGAR Tools - edgartools library for fetching SEC EDGAR data
+# GitHub: https://github.com/dgunning/edgartools
+edgartools>=4.0.0
 
 # Utilities
 tiktoken>=0.5.0

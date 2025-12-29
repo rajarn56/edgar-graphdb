@@ -7,39 +7,57 @@ from loguru import logger
 
 
 class EdgarClient:
-    """Interface to edgar-tools library for fetching SEC EDGAR filing data"""
+    """Interface to edgartools library for fetching SEC EDGAR filing data"""
     
-    def __init__(self):
-        """Initialize EDGAR client"""
+    def __init__(self, identity_email: Optional[str] = None):
+        """
+        Initialize EDGAR client.
+        
+        Args:
+            identity_email: Email address for SEC EDGAR identity (required by SEC).
+                           If not provided, will try to get from EDGAR_IDENTITY env var.
+        """
         self._cache: Dict[str, Dict[str, Any]] = {}
         self._rate_limit_delay = 1.0  # Seconds between requests
         self._last_request_time = 0.0
         
-        # Try to import edgar-tools library
+        # Try to import edgartools library
         self._edgar_module = None
-        self._initialize_client()
+        self._Company = None
+        self._Filing = None
+        self._set_identity = None
+        self._initialize_client(identity_email)
     
-    def _initialize_client(self):
-        """Initialize the edgar-tools client library"""
-        # Try different possible library names
-        possible_modules = [
-            "edgar_tools",
-            "edgar_tools.client",
-            "sec_edgar",
-            "sec_edgar.client",
-            "edgar",
-        ]
-        
-        for module_name in possible_modules:
-            try:
-                self._edgar_module = __import__(module_name, fromlist=[""])
-                logger.info(f"Successfully imported edgar-tools library: {module_name}")
-                return
-            except ImportError:
-                continue
-        
-        logger.warning("Could not import edgar-tools library. Using mock implementation.")
-        logger.warning("Please install edgar-tools: pip install edgar-tools")
+    def _initialize_client(self, identity_email: Optional[str] = None):
+        """Initialize the edgartools client library"""
+        try:
+            # Import edgartools (the library uses 'edgar' as module name)
+            import edgar
+            from edgar import Company, Filing, set_identity
+            
+            self._edgar_module = edgar
+            self._Company = Company
+            self._Filing = Filing
+            self._set_identity = set_identity
+            
+            # Set identity (required by SEC)
+            email = identity_email or os.getenv("EDGAR_IDENTITY")
+            if email:
+                set_identity(email)
+                logger.info(f"Set EDGAR identity: {email}")
+            else:
+                logger.warning("EDGAR_IDENTITY not set. SEC requires identity for EDGAR access.")
+                logger.warning("Set EDGAR_IDENTITY environment variable or pass identity_email parameter.")
+                logger.warning("Example: export EDGAR_IDENTITY='your.email@example.com'")
+            
+            logger.info("Successfully imported edgartools library")
+            return
+            
+        except ImportError as e:
+            logger.warning(f"Could not import edgartools library: {e}")
+            logger.warning("Using mock implementation.")
+            logger.warning("Please install edgartools: pip install edgartools")
+            logger.warning("GitHub: https://github.com/dgunning/edgartools")
     
     def _rate_limit(self):
         """Enforce rate limiting between requests"""
@@ -68,26 +86,30 @@ class EdgarClient:
         self._rate_limit()
         
         try:
-            if self._edgar_module:
-                # Try common API patterns
-                if hasattr(self._edgar_module, "get_company"):
-                    company_data = self._edgar_module.get_company(ticker)
-                elif hasattr(self._edgar_module, "Company"):
-                    company = self._edgar_module.Company(ticker)
-                    company_data = company.to_dict() if hasattr(company, "to_dict") else company.__dict__
-                else:
-                    logger.warning("edgar-tools library found but API not recognized")
-                    return self._mock_company_data(ticker)
+            if self._Company:
+                # Use edgartools Company class
+                company = self._Company(ticker)
+                # Convert to dict - edgartools Company objects have attributes
+                company_data = {
+                    "cik": str(company.cik).zfill(10),  # Ensure CIK is 10 digits
+                    "name": company.name,
+                    "tickers": [ticker.upper()],
+                    "exchanges": getattr(company, "exchange", []),
+                    "sic": getattr(company, "sic", ""),
+                    "sic_description": getattr(company, "sic_description", ""),
+                    "state_of_incorporation": getattr(company, "state_of_incorporation", ""),
+                }
             else:
                 return self._mock_company_data(ticker)
             
             # Normalize company data structure
             normalized = self._normalize_company_data(company_data)
             self._cache[cache_key] = normalized
+            logger.info(f"Fetched company data for {ticker}: {normalized['name']}")
             return normalized
             
         except Exception as e:
-            logger.error(f"Error fetching company data for {ticker}: {e}")
+            logger.error(f"Error fetching company data for {ticker}: {e}", exc_info=True)
             return self._mock_company_data(ticker)
     
     def get_filing(
@@ -115,26 +137,77 @@ class EdgarClient:
         self._rate_limit()
         
         try:
-            if self._edgar_module:
-                # Try common API patterns
-                if hasattr(self._edgar_module, "get_filing"):
-                    filing_data = self._edgar_module.get_filing(ticker, form_type, fiscal_year)
-                elif hasattr(self._edgar_module, "Filing"):
-                    filing = self._edgar_module.Filing(ticker, form_type, fiscal_year)
-                    filing_data = filing.to_dict() if hasattr(filing, "to_dict") else filing.__dict__
-                else:
-                    logger.warning("edgar-tools library found but API not recognized")
+            if self._Filing:
+                # Use edgartools Filing class
+                # Get company first to ensure we have CIK
+                company_data = self.get_company_by_ticker(ticker)
+                if not company_data:
+                    logger.error(f"Could not get company data for {ticker}")
                     return self._mock_filing_data(ticker, form_type, fiscal_year)
+                
+                # Get filings for the company
+                company = self._Company(ticker)
+                
+                # Get the specific filing
+                if fiscal_year:
+                    # Get filing for specific year
+                    filings = company.get_filings(form=form_type)
+                    # Filter by fiscal year if possible
+                    filing = None
+                    for f in filings:
+                        if hasattr(f, 'filing_date') and str(fiscal_year) in str(f.filing_date):
+                            filing = f
+                            break
+                    if not filing and len(filings) > 0:
+                        filing = filings[0]  # Fallback to first filing
+                else:
+                    # Get latest filing
+                    filings = company.get_filings(form=form_type)
+                    filing = filings[0] if len(filings) > 0 else None
+                
+                if not filing:
+                    logger.warning(f"No {form_type} filing found for {ticker}")
+                    return self._mock_filing_data(ticker, form_type, fiscal_year)
+                
+                # Extract filing data
+                filing_data = {
+                    "company": company_data,
+                    "filing": {
+                        "form": form_type,
+                        "filing_date": str(filing.filing_date) if hasattr(filing, 'filing_date') else "",
+                        "accession_no": filing.accession_number if hasattr(filing, 'accession_number') else "",
+                        "period_of_report": str(filing.period_end_date) if hasattr(filing, 'period_end_date') else "",
+                        "fiscal_year_end": "",
+                        "document_url": filing.url if hasattr(filing, 'url') else "",
+                        "items": [],
+                    },
+                    "financials": {},
+                    "xbrl": {},
+                }
+                
+                # Get filing items/sections if available
+                try:
+                    if hasattr(filing, 'get_items') or hasattr(filing, 'items'):
+                        items = filing.items() if hasattr(filing, 'items') else filing.get_items()
+                        filing_data["filing"]["items"] = items
+                    elif hasattr(filing, 'html'):
+                        # Try to parse HTML for items
+                        # This is a simplified version - edgartools may have better methods
+                        filing_data["filing"]["items"] = []
+                except Exception as e:
+                    logger.debug(f"Could not extract filing items: {e}")
+                
             else:
                 return self._mock_filing_data(ticker, form_type, fiscal_year)
             
             # Normalize filing data structure
             normalized = self._normalize_filing_data(filing_data, ticker)
             self._cache[cache_key] = normalized
+            logger.info(f"Fetched filing data for {ticker} {form_type}: {normalized['filing'].get('accession_no', 'N/A')}")
             return normalized
             
         except Exception as e:
-            logger.error(f"Error fetching filing data for {ticker} {form_type}: {e}")
+            logger.error(f"Error fetching filing data for {ticker} {form_type}: {e}", exc_info=True)
             return self._mock_filing_data(ticker, form_type, fiscal_year)
     
     def _normalize_company_data(self, data: Any) -> Dict[str, Any]:

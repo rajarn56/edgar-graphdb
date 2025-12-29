@@ -244,9 +244,16 @@ See `requirements.txt` for complete list. Key dependencies:
 - `pydantic>=2.5.0`: Data validation
 - `tiktoken>=0.5.0`: Token counting for chunking
 
-**Note on EDGAR Tools**: The actual edgar-tools library package name may vary. The scripts include a flexible wrapper that can adapt to different library implementations. You may need to install:
-- `edgar-tools` or `sec-edgar-mcp` or similar package
-- Or configure MCP client if using MCP server integration
+**Note on EDGAR Tools**: The scripts use `edgartools` library (https://github.com/dgunning/edgartools) for fetching SEC EDGAR data. Install it with:
+```bash
+pip install edgartools
+```
+
+**Important**: Set `EDGAR_IDENTITY` environment variable with your email address. The SEC requires this to identify who is accessing their data:
+```bash
+export EDGAR_IDENTITY=your.email@example.com
+```
+Or add it to your `.env` file.
 
 ## Environment Variables
 
@@ -254,6 +261,7 @@ Required environment variables (in `.env`):
 - `NEO4J_URI`: Neo4j connection URI (default: bolt://localhost:7687)
 - `NEO4J_USER`: Neo4j username (default: neo4j)
 - `NEO4J_PASSWORD`: Neo4j password
+- `EDGAR_IDENTITY`: Your email address (required by SEC for EDGAR access). Example: `your.email@example.com`
 - `EMBEDDING_PROVIDER`: Embedding provider (default: lmstudio)
 - `LM_STUDIO_API_BASE`: LMStudio API base URL (default: http://localhost:1234/v1)
 - `EMBEDDING_MODEL`: Embedding model name
@@ -290,10 +298,12 @@ Logs are written to the `logs/` directory:
 
 ### EDGAR Data Retrieval Issues
 
-- Verify edgar-tools library is installed correctly
+- Verify edgartools library is installed: `pip install edgartools`
+- **Set EDGAR_IDENTITY environment variable** with your email address (required by SEC)
 - Check network connectivity to SEC EDGAR
-- Verify ticker symbol is valid
+- Verify ticker symbol is valid (use uppercase)
 - Check for rate limiting (SEC may throttle requests)
+- If you see "Using mock data" warnings, edgartools is not installed or EDGAR_IDENTITY is not set
 
 ### Schema Creation Issues
 
