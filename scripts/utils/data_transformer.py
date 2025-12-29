@@ -35,6 +35,98 @@ class DataTransformer:
         # Fallback: rough estimation (1 token ≈ 4 characters)
         return len(text) // 4
     
+    def clean_text_for_rag(self, text: str) -> str:
+        """
+        Clean and normalize text content for RAG consumption.
+        
+        This ensures text is:
+        - Free of HTML tags and entities
+        - Properly normalized whitespace
+        - Clean line breaks
+        - Ready for LLM consumption
+        
+        Args:
+            text: Raw text content (may contain HTML)
+        
+        Returns:
+            Clean, normalized text ready for RAG
+        """
+        if not text:
+            return ""
+        
+        # If text contains HTML, extract text content
+        if '<' in text and '>' in text:
+            try:
+                from bs4 import BeautifulSoup
+                from html import unescape
+                soup = BeautifulSoup(text, 'html.parser')
+                # Get text content, preserving some structure
+                text = soup.get_text(separator='\n', strip=True)
+                # Unescape HTML entities
+                text = unescape(text)
+            except ImportError:
+                # Fallback: simple HTML tag removal
+                import re
+                from html import unescape
+                text = re.sub(r'<[^>]+>', ' ', text)
+                text = unescape(text)
+            except Exception as e:
+                logger.debug(f"HTML parsing failed, using regex fallback: {e}")
+                import re
+                from html import unescape
+                text = re.sub(r'<[^>]+>', ' ', text)
+                text = unescape(text)
+        
+        # Normalize whitespace
+        # Replace multiple spaces with single space
+        text = re.sub(r' +', ' ', text)
+        # Replace multiple newlines (3+) with double newline (paragraph break)
+        text = re.sub(r'\n{3,}', '\n\n', text)
+        # Replace tabs with spaces
+        text = text.replace('\t', ' ')
+        # Remove leading/trailing whitespace from each line
+        lines = [line.strip() for line in text.split('\n')]
+        text = '\n'.join(lines)
+        
+        # Remove excessive blank lines (more than 2 consecutive)
+        text = re.sub(r'\n{3,}', '\n\n', text)
+        
+        # Remove special characters that might interfere with RAG
+        # Keep: letters, numbers, punctuation, whitespace, common symbols
+        # Remove: control characters, zero-width spaces, etc.
+        text = ''.join(char for char in text if ord(char) >= 32 or char in '\n\t')
+        
+        # Final cleanup: remove leading/trailing whitespace
+        text = text.strip()
+        
+        return text
+    
+    def normalize_whitespace(self, text: str) -> str:
+        """
+        Normalize whitespace in text for consistent formatting.
+        
+        Args:
+            text: Text to normalize
+        
+        Returns:
+            Text with normalized whitespace
+        """
+        if not text:
+            return ""
+        
+        # Replace multiple spaces with single space
+        text = re.sub(r' +', ' ', text)
+        # Normalize line breaks
+        text = re.sub(r'\r\n', '\n', text)  # Windows line breaks
+        text = re.sub(r'\r', '\n', text)  # Old Mac line breaks
+        # Replace multiple newlines with double newline (paragraph break)
+        text = re.sub(r'\n{3,}', '\n\n', text)
+        # Remove trailing spaces from lines
+        lines = [line.rstrip() for line in text.split('\n')]
+        text = '\n'.join(lines)
+        
+        return text.strip()
+    
     def transform_edgar_data(self, edgar_data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Transform complete EDGAR data structure to Neo4j format.
@@ -226,7 +318,18 @@ class DataTransformer:
         accession_number = filing_data.get("accession_no", "")
         item_number = item_data.get("item", "")
         item_title = item_data.get("name", "")
-        content = item_data.get("text", "")
+        
+        # Get content and clean it for RAG
+        raw_content = item_data.get("text", "")
+        if not raw_content and item_data.get("html"):
+            # If no text but HTML is available, extract text from HTML
+            raw_content = item_data.get("html", "")
+        
+        # Clean content for RAG consumption
+        content = self.clean_text_for_rag(raw_content)
+        
+        # Clean and normalize item title
+        item_title = self.normalize_whitespace(item_title) if item_title else ""
         
         section_id = f"{accession_number}_Item{item_number}"
         
@@ -289,7 +392,7 @@ class DataTransformer:
         Chunk content with context preservation (as per schema design).
         
         Args:
-            content: Text content to chunk
+            content: Text content to chunk (should already be cleaned)
             section_id: Section ID for chunk IDs
             company_data: Company data for context
             filing_data: Filing data for context
@@ -300,6 +403,9 @@ class DataTransformer:
         """
         if not content or not content.strip():
             return []
+        
+        # Ensure content is clean (in case it wasn't cleaned before)
+        content = self.normalize_whitespace(content)
         
         # Split into paragraphs
         paragraphs = self._split_paragraphs(content)
@@ -384,6 +490,11 @@ class DataTransformer:
         """Create a chunk node dictionary"""
         chunk_id = f"{section_id}_chunk_{chunk_index}"
         
+        # Ensure content is clean and normalized for RAG
+        content = self.normalize_whitespace(content)
+        context_before = self.normalize_whitespace(context_before) if context_before else ""
+        context_after = self.normalize_whitespace(context_after) if context_after else ""
+        
         # Determine semantic type
         semantic_type = self._infer_semantic_type(content, item_number)
         
@@ -392,20 +503,26 @@ class DataTransformer:
         if self._is_table(content):
             chunk_type = "table"
         
+        # Add company name and ticker for better RAG context
+        company_name = company_data.get("name", "")
+        company_ticker = company_data.get("tickers", [""])[0] if company_data.get("tickers") else ""
+        
         return {
             "node_type": "Chunk",
             "properties": {
                 "chunk_id": chunk_id,
                 "chunk_index": chunk_index,
-                "content": content,
+                "content": content,  # Clean text ready for RAG
                 "content_length": len(content),
                 "word_count": len(content.split()),
                 "token_count": self.estimate_tokens(content),
                 "chunk_type": chunk_type,
                 "semantic_type": semantic_type,
-                "context_before": context_before,
-                "context_after": context_after,
+                "context_before": context_before,  # Clean context
+                "context_after": context_after,  # Clean context
                 "company_cik": company_data.get("cik", ""),
+                "company_name": company_name,  # Added for RAG context
+                "company_ticker": company_ticker,  # Added for RAG context
                 "fiscal_year": fiscal_year,
                 "fiscal_quarter": fiscal_quarter,
                 "form_type": filing_data.get("form", ""),

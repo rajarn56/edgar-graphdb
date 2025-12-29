@@ -16,3 +16,6 @@ typing-extensions>=4.5.0
 # Data Processing (for chunking and transformation)
 numpy>=1.24.0
 
+# HTML Parsing (for extracting filing sections)
+beautifulsoup4>=4.12.0
+

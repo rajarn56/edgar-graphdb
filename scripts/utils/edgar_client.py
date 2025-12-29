@@ -187,15 +187,13 @@ class EdgarClient:
                 
                 # Get filing items/sections if available
                 try:
-                    if hasattr(filing, 'get_items') or hasattr(filing, 'items'):
-                        items = filing.items() if hasattr(filing, 'items') else filing.get_items()
-                        filing_data["filing"]["items"] = items
-                    elif hasattr(filing, 'html'):
-                        # Try to parse HTML for items
-                        # This is a simplified version - edgartools may have better methods
-                        filing_data["filing"]["items"] = []
+                    items = self._extract_filing_items(filing, form_type)
+                    filing_data["filing"]["items"] = items
+                    logger.info(f"Extracted {len(items)} items/sections from filing")
                 except Exception as e:
-                    logger.debug(f"Could not extract filing items: {e}")
+                    logger.warning(f"Could not extract filing items: {e}")
+                    logger.debug(f"Exception details: {e}", exc_info=True)
+                    filing_data["filing"]["items"] = []
                 
             else:
                 return self._mock_filing_data(ticker, form_type, fiscal_year)
@@ -300,6 +298,337 @@ class EdgarClient:
             "financials": getattr(data, "financials", {}),
             "xbrl": getattr(data, "xbrl", {}),
         }
+    
+    def _extract_filing_items(self, filing: Any, form_type: str) -> List[Dict[str, Any]]:
+        """
+        Extract items/sections from edgartools Filing object.
+        
+        Args:
+            filing: edgartools Filing object
+            form_type: Form type (e.g., "10-K", "10-Q", "8-K")
+        
+        Returns:
+            List of item dictionaries with 'item', 'name', 'text', 'html' keys
+        """
+        items = []
+        
+        try:
+            # Method 1: Try to use edgartools built-in method if available
+            # Check for common method names
+            if hasattr(filing, 'get_items'):
+                try:
+                    filing_items = filing.get_items()
+                    if filing_items:
+                        logger.debug(f"Found {len(filing_items)} items using get_items() method")
+                        # Convert to list if it's an iterator or dict
+                        if isinstance(filing_items, dict):
+                            items = list(filing_items.values())
+                        elif hasattr(filing_items, '__iter__') and not isinstance(filing_items, str):
+                            items = list(filing_items)
+                        else:
+                            items = filing_items if isinstance(filing_items, list) else []
+                        if items:
+                            return self._normalize_items(items)
+                except Exception as e:
+                    logger.debug(f"get_items() method failed: {e}")
+            
+            # Method 2: Try to access items attribute directly (but avoid dict.items() method)
+            # Check if 'items' is a property/attribute, not a method
+            items_attr = getattr(filing, 'items', None)
+            if items_attr is not None and not callable(items_attr):
+                try:
+                    filing_items = items_attr
+                    if filing_items:
+                        logger.debug(f"Found items attribute with {len(filing_items) if hasattr(filing_items, '__len__') else 'unknown'} items")
+                        if isinstance(filing_items, dict):
+                            items = list(filing_items.values())
+                        elif hasattr(filing_items, '__iter__') and not isinstance(filing_items, str):
+                            items = list(filing_items)
+                        else:
+                            items = filing_items if isinstance(filing_items, list) else []
+                        if items:
+                            return self._normalize_items(items)
+                except Exception as e:
+                    logger.debug(f"items attribute access failed: {e}")
+            
+            # Method 3: Try to get HTML content and parse it
+            html_content = None
+            if hasattr(filing, 'html'):
+                try:
+                    html_content = filing.html
+                    if html_content:
+                        logger.debug("Found HTML content, parsing for items...")
+                        items = self._parse_html_for_items(html_content, form_type)
+                        if items:
+                            return items
+                except Exception as e:
+                    logger.debug(f"HTML parsing failed: {e}")
+            
+            # Method 4: Try to get text content and parse it
+            text_content = None
+            if hasattr(filing, 'text'):
+                try:
+                    text_content = filing.text
+                    if text_content:
+                        logger.debug("Found text content, parsing for items...")
+                        items = self._parse_text_for_items(text_content, form_type)
+                        if items:
+                            return items
+                except Exception as e:
+                    logger.debug(f"Text parsing failed: {e}")
+            
+            # Method 5: Try to get documents and extract from them
+            if hasattr(filing, 'documents') or hasattr(filing, 'get_documents'):
+                try:
+                    documents = filing.documents if hasattr(filing, 'documents') else filing.get_documents()
+                    if documents:
+                        logger.debug(f"Found {len(documents) if hasattr(documents, '__len__') else 'unknown'} documents")
+                        # Try to get HTML/text from first document
+                        for doc in documents:
+                            if hasattr(doc, 'html'):
+                                html_content = doc.html
+                                if html_content:
+                                    items = self._parse_html_for_items(html_content, form_type)
+                                    if items:
+                                        return items
+                            elif hasattr(doc, 'text'):
+                                text_content = doc.text
+                                if text_content:
+                                    items = self._parse_text_for_items(text_content, form_type)
+                                    if items:
+                                        return items
+                except Exception as e:
+                    logger.debug(f"Document extraction failed: {e}")
+            
+            logger.warning(f"Could not extract items from filing using any method")
+            return []
+            
+        except Exception as e:
+            logger.error(f"Error extracting filing items: {e}", exc_info=True)
+            return []
+    
+    def _normalize_items(self, items: List[Any]) -> List[Dict[str, Any]]:
+        """Normalize items to expected format"""
+        normalized = []
+        for item in items:
+            if isinstance(item, dict):
+                normalized.append({
+                    "item": item.get("item") or item.get("item_number") or item.get("number", ""),
+                    "name": item.get("name") or item.get("title") or item.get("item_title", ""),
+                    "text": item.get("text") or item.get("content") or "",
+                    "html": item.get("html") or "",
+                })
+            elif hasattr(item, '__dict__'):
+                # Object with attributes
+                normalized.append({
+                    "item": getattr(item, "item", "") or getattr(item, "item_number", "") or getattr(item, "number", ""),
+                    "name": getattr(item, "name", "") or getattr(item, "title", "") or getattr(item, "item_title", ""),
+                    "text": getattr(item, "text", "") or getattr(item, "content", ""),
+                    "html": getattr(item, "html", ""),
+                })
+        return normalized
+    
+    def _parse_html_for_items(self, html_content: str, form_type: str) -> List[Dict[str, Any]]:
+        """Parse HTML content to extract items/sections"""
+        import re
+        from html import unescape
+        
+        items = []
+        
+        # Common item patterns for 10-K, 10-Q forms
+        # Pattern: Item 1, Item 1A, Item 7, etc.
+        item_patterns = [
+            r'<h[1-6][^>]*>.*?Item\s+(\d+[A-Z]?)[\.:]?\s*(.*?)</h[1-6]>',
+            r'<p[^>]*>.*?Item\s+(\d+[A-Z]?)[\.:]?\s*(.*?)</p>',
+            r'Item\s+(\d+[A-Z]?)[\.:]?\s*(.*?)(?=<|$)',
+        ]
+        
+        # Try to extract using BeautifulSoup if available
+        try:
+            from bs4 import BeautifulSoup
+            soup = BeautifulSoup(html_content, 'html.parser')
+            
+            # Find all potential item headers
+            item_headers = soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div'], 
+                                        string=re.compile(r'Item\s+\d+[A-Z]?', re.IGNORECASE))
+            
+            for header in item_headers:
+                text = header.get_text() if hasattr(header, 'get_text') else str(header)
+                match = re.search(r'Item\s+(\d+[A-Z]?)[\.:]?\s*(.*?)$', text, re.IGNORECASE)
+                if match:
+                    item_num = match.group(1)
+                    item_title = match.group(2).strip() if match.group(2) else ""
+                    
+                    # Extract content after header - find the section content
+                    # Look for the next sibling elements until we hit another item header
+                    content_elements = []
+                    current = header.find_next_sibling()
+                    max_elements = 1000  # Limit to prevent excessive content
+                    element_count = 0
+                    
+                    while current and element_count < max_elements:
+                        # Stop at next item header
+                        if hasattr(current, 'get_text'):
+                            current_text = current.get_text()
+                            if re.search(r'Item\s+\d+[A-Z]?', current_text, re.IGNORECASE):
+                                break
+                        
+                        # Collect content elements
+                        if hasattr(current, 'name') and current.name in ['p', 'div', 'span', 'li', 'td', 'th']:
+                            content_elements.append(current)
+                            element_count += 1
+                        
+                        current = current.find_next_sibling()
+                    
+                    # Extract clean text from elements
+                    content_text_parts = []
+                    for elem in content_elements:
+                        if hasattr(elem, 'get_text'):
+                            text = elem.get_text(separator=' ', strip=True)
+                            if text and len(text.strip()) > 10:  # Skip very short fragments
+                                content_text_parts.append(text)
+                    
+                    content_text = '\n\n'.join(content_text_parts)
+                    
+                    # Also get HTML for reference (limited)
+                    content_html = str(header) + ''.join(str(elem) for elem in content_elements[:20])
+                    
+                    # Clean and normalize text
+                    content_text = self._clean_extracted_text(content_text)
+                    
+                    if content_text.strip() and len(content_text.strip()) > 100:
+                        items.append({
+                            "item": item_num,
+                            "name": item_title or f"Item {item_num}",
+                            "text": content_text[:50000],  # Limit text size
+                            "html": content_html[:100000],  # Limit HTML size
+                        })
+            
+            if items:
+                logger.info(f"Extracted {len(items)} items from HTML using BeautifulSoup")
+                return items
+                
+        except ImportError:
+            logger.debug("BeautifulSoup not available, using regex parsing")
+        except Exception as e:
+            logger.debug(f"BeautifulSoup parsing failed: {e}")
+        
+        # Fallback: Simple regex parsing
+        # This is less accurate but doesn't require BeautifulSoup
+        for pattern in item_patterns:
+            matches = re.finditer(pattern, html_content, re.IGNORECASE | re.DOTALL)
+            for match in matches:
+                item_num = match.group(1)
+                item_title = match.group(2).strip() if len(match.groups()) > 1 else ""
+                
+                # Extract text content (simplified)
+                start_pos = match.end()
+                # Find next item or end of document
+                next_match = re.search(r'Item\s+\d+[A-Z]?', html_content[start_pos:], re.IGNORECASE)
+                end_pos = start_pos + next_match.start() if next_match else len(html_content)
+                
+                content_html = html_content[start_pos:end_pos]
+                # Strip HTML tags for text
+                content_text = re.sub(r'<[^>]+>', ' ', content_html)
+                content_text = unescape(content_text)
+                # Clean extracted text
+                content_text = self._clean_extracted_text(content_text)
+                
+                if content_text and len(content_text.strip()) > 100:  # Minimum content length
+                    items.append({
+                        "item": item_num,
+                        "name": item_title or f"Item {item_num}",
+                        "text": content_text[:50000],
+                        "html": content_html[:100000],
+                    })
+                    break  # Use first matching pattern
+        
+        if items:
+            logger.info(f"Extracted {len(items)} items from HTML using regex")
+        
+        return items
+    
+    def _parse_text_for_items(self, text_content: str, form_type: str) -> List[Dict[str, Any]]:
+        """Parse text content to extract items/sections"""
+        import re
+        
+        items = []
+        
+        # Pattern to find items in text
+        pattern = r'Item\s+(\d+[A-Z]?)[\.:]?\s*(.*?)(?=\n|Item\s+\d+[A-Z]?|$)'
+        matches = re.finditer(pattern, text_content, re.IGNORECASE | re.DOTALL)
+        
+        for match in matches:
+            item_num = match.group(1)
+            rest = match.group(2).strip()
+            
+            # Extract title (first line or first sentence)
+            lines = rest.split('\n')
+            item_title = lines[0].strip() if lines else ""
+            if len(item_title) > 200:
+                item_title = item_title[:200]
+            
+            # Extract content (everything after title)
+            content_start = len(item_title)
+            content_text = rest[content_start:].strip()
+            
+            # Find next item
+            next_match = re.search(r'Item\s+\d+[A-Z]?', content_text, re.IGNORECASE)
+            if next_match:
+                content_text = content_text[:next_match.start()].strip()
+            
+            # Clean extracted text
+            content_text = self._clean_extracted_text(content_text)
+            
+            if content_text and len(content_text.strip()) > 100:
+                items.append({
+                    "item": item_num,
+                    "name": item_title or f"Item {item_num}",
+                    "text": content_text[:50000],
+                    "html": f"<p>{content_text[:50000]}</p>",
+                })
+        
+        if items:
+            logger.info(f"Extracted {len(items)} items from text content")
+        
+        return items
+    
+    def _clean_extracted_text(self, text: str) -> str:
+        """
+        Clean extracted text for RAG consumption.
+        
+        Args:
+            text: Raw extracted text
+        
+        Returns:
+            Clean, normalized text
+        """
+        if not text:
+            return ""
+        
+        import re
+        from html import unescape
+        
+        # Unescape HTML entities
+        text = unescape(text)
+        
+        # Remove excessive whitespace
+        text = re.sub(r' +', ' ', text)  # Multiple spaces to single space
+        text = re.sub(r'\n{3,}', '\n\n', text)  # Multiple newlines to double newline
+        text = text.replace('\t', ' ')  # Tabs to spaces
+        text = text.replace('\r', '')  # Remove carriage returns
+        
+        # Remove leading/trailing whitespace from each line
+        lines = [line.strip() for line in text.split('\n')]
+        text = '\n'.join(lines)
+        
+        # Remove control characters and zero-width spaces
+        text = ''.join(char for char in text if ord(char) >= 32 or char in '\n\t')
+        
+        # Final cleanup
+        text = text.strip()
+        
+        return text
     
     def _mock_company_data(self, ticker: str) -> Dict[str, Any]:
         """Generate mock company data for testing when library is not available"""
