@@ -80,8 +80,8 @@ def create_property_indexes(client: Neo4jClient) -> None:
         ("Company", "market_cap_tier"),
         
         # Filing indexes - composite
-        ("Filing", "company_cik, fiscal_year, form_type", composite=True),
-        ("Filing", "form_type, filing_date", composite=True),
+        ("Filing", "company_cik, fiscal_year, form_type", True),
+        ("Filing", "form_type, filing_date", True),
         ("Filing", "fiscal_period"),
         
         # Section indexes
@@ -89,18 +89,18 @@ def create_property_indexes(client: Neo4jClient) -> None:
         ("Section", "company_cik"),
         
         # Form8KItem indexes
-        ("Form8KItem", "event_type, event_date", composite=True),
+        ("Form8KItem", "event_type, event_date", True),
         
         # Chunk indexes - composite
-        ("Chunk", "company_cik, fiscal_year, chunk_type", composite=True),
+        ("Chunk", "company_cik, fiscal_year, chunk_type", True),
         ("Chunk", "semantic_type"),
         ("Chunk", "form_type"),
         
         # Financial indexes
         ("LineItem", "line_name"),
         ("LineItem", "xbrl_tag"),
-        ("Value", "fiscal_year, fiscal_quarter", composite=True),
-        ("Metric", "company_cik, metric_name, fiscal_year", composite=True),
+        ("Value", "fiscal_year, fiscal_quarter", True),
+        ("Metric", "company_cik, metric_name, fiscal_year", True),
         
         # Entity indexes
         ("Industry", "sic_code"),

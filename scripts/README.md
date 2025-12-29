@@ -22,15 +22,15 @@ The scripts serve as a verification and testing suite for:
 
 ### 1. Create Virtual Environment
 
-```bash
-python3.12 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+```bash 
+uv venv edgarvenv --python 3.12
+source venv/bin/activate
 ```
 
 ### 2. Install Dependencies
 
 ```bash
-pip install -r requirements.txt
+uv pip install -r requirements.txt
 ```
 
 ### 3. Configure Environment Variables
