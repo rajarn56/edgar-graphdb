@@ -1,67 +1,67 @@
-2025-12-28 21:51:39.815 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: setup_schema
-2025-12-28 21:51:39.815 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/setup_schema_20251228.log
-2025-12-28 21:51:39.815 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251228.log
-2025-12-28 21:51:39.816 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
-2025-12-28 21:51:39.816 | INFO     | __main__:main:295 | ============================================================
-2025-12-28 21:51:39.816 | INFO     | __main__:main:296 | Neo4j EDGAR Schema Setup
-2025-12-28 21:51:39.816 | INFO     | __main__:main:297 | ============================================================
-2025-12-28 21:51:39.816 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
-2025-12-28 21:51:39.836 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
-2025-12-28 21:51:39.842 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
-2025-12-28 21:51:39.842 | INFO     | __main__:main:309 | Using embedding dimension: 1536
-2025-12-28 21:51:39.842 | INFO     | __main__:create_unique_constraints:28 | Creating unique constraints...
-2025-12-28 21:51:39.852 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Company.cik
-2025-12-28 21:51:39.859 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Filing.accession_number
-2025-12-28 21:51:39.867 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Section.section_id
-2025-12-28 21:51:39.873 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Chunk.chunk_id
-2025-12-28 21:51:39.880 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Period.period_id
-2025-12-28 21:51:39.888 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: FinancialStatement.statement_id
-2025-12-28 21:51:39.895 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: LineItem.line_item_id
-2025-12-28 21:51:39.952 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Value.value_id
-2025-12-28 21:51:39.960 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Metric.metric_id
-2025-12-28 21:51:39.969 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Industry.industry_id
-2025-12-28 21:51:39.976 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Sector.sector_id
-2025-12-28 21:51:39.982 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Topic.topic_id
-2025-12-28 21:51:39.989 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Person.person_id
-2025-12-28 21:51:39.996 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Transaction.transaction_id
-2025-12-28 21:51:40.053 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Compensation.compensation_id
-2025-12-28 21:51:40.053 | INFO     | __main__:create_property_indexes:74 | Creating property indexes...
-2025-12-28 21:51:40.059 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: company_ticker
-2025-12-28 21:51:40.065 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: company_name
-2025-12-28 21:51:40.071 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: company_market_cap_tier
-2025-12-28 21:51:40.077 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: filing_company_cik_fiscal_year_form_type
-2025-12-28 21:51:40.083 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: filing_form_type_filing_date
-2025-12-28 21:51:40.089 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: filing_fiscal_period
-2025-12-28 21:51:40.099 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: section_item_number
-2025-12-28 21:51:40.153 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: section_company_cik
-2025-12-28 21:51:40.160 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: form8kitem_event_type_event_date
-2025-12-28 21:51:40.166 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: chunk_company_cik_fiscal_year_chunk_type
-2025-12-28 21:51:40.172 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: chunk_semantic_type
-2025-12-28 21:51:40.178 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: chunk_form_type
-2025-12-28 21:51:40.184 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: lineitem_line_name
-2025-12-28 21:51:40.190 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: lineitem_xbrl_tag
-2025-12-28 21:51:40.253 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: value_fiscal_year_fiscal_quarter
-2025-12-28 21:51:40.260 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: metric_company_cik_metric_name_fiscal_year
-2025-12-28 21:51:40.266 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: industry_sic_code
-2025-12-28 21:51:40.273 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: topic_topic_category
-2025-12-28 21:51:40.279 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: transaction_transaction_date
-2025-12-28 21:51:40.286 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: transaction_transaction_type
-2025-12-28 21:51:40.286 | INFO     | __main__:create_vector_indexes:147 | Creating vector indexes (dimension: 1536)...
-2025-12-28 21:51:40.297 | INFO     | __main__:create_vector_indexes:206 | ✓ Created vector index: textChunkEmbeddings (General text content)
-2025-12-28 21:51:40.300 | INFO     | __main__:create_vector_indexes:206 | ✓ Created vector index: riskChunkEmbeddings (Risk factor discussions)
-2025-12-28 21:51:40.302 | INFO     | __main__:create_vector_indexes:206 | ✓ Created vector index: financialChunkEmbeddings (Financial analysis)
-2025-12-28 21:51:40.304 | INFO     | __main__:create_vector_indexes:206 | ✓ Created vector index: strategyChunkEmbeddings (Strategic/forward-looking content)
-2025-12-28 21:51:40.308 | INFO     | __main__:create_vector_indexes:206 | ✓ Created vector index: maChunkEmbeddings (M&A and transactions)
-2025-12-28 21:51:40.308 | INFO     | __main__:create_fulltext_indexes:220 | Creating full-text indexes...
-2025-12-28 21:51:40.321 | INFO     | __main__:create_fulltext_indexes:263 | ✓ Created full-text index: chunkContentFulltext
-2025-12-28 21:51:40.332 | INFO     | __main__:create_fulltext_indexes:248 | ✓ Created full-text index: sectionContentFulltext_item_title
-2025-12-28 21:51:40.345 | INFO     | __main__:create_fulltext_indexes:263 | ✓ Created full-text index: sectionContentFulltext
-2025-12-28 21:51:40.354 | INFO     | __main__:create_fulltext_indexes:248 | ✓ Created full-text index: riskFactorFulltext_risk_title
-2025-12-28 21:51:40.362 | INFO     | __main__:create_fulltext_indexes:263 | ✓ Created full-text index: riskFactorFulltext
-2025-12-28 21:51:40.362 | INFO     | __main__:verify_schema:273 | Verifying schema...
-2025-12-28 21:51:40.369 | INFO     | __main__:verify_schema:279 | ✓ Found 15 constraints
-2025-12-28 21:51:40.377 | INFO     | __main__:verify_schema:287 | ✓ Found 41 indexes
-2025-12-28 21:51:40.377 | INFO     | __main__:main:320 | ============================================================
-2025-12-28 21:51:40.377 | INFO     | __main__:main:321 | Schema setup completed successfully!
-2025-12-28 21:51:40.377 | INFO     | __main__:main:322 | ============================================================
-2025-12-28 21:51:40.378 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-28 22:07:19.718 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: setup_schema
+2025-12-28 22:07:19.718 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/setup_schema_20251228.log
+2025-12-28 22:07:19.718 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251228.log
+2025-12-28 22:07:19.718 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-28 22:07:19.718 | INFO     | __main__:main:295 | ============================================================
+2025-12-28 22:07:19.719 | INFO     | __main__:main:296 | Neo4j EDGAR Schema Setup
+2025-12-28 22:07:19.719 | INFO     | __main__:main:297 | ============================================================
+2025-12-28 22:07:19.719 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-28 22:07:19.734 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-28 22:07:19.741 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-28 22:07:19.741 | INFO     | __main__:main:309 | Using embedding dimension: 1536
+2025-12-28 22:07:19.741 | INFO     | __main__:create_unique_constraints:28 | Creating unique constraints...
+2025-12-28 22:07:19.750 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Company.cik
+2025-12-28 22:07:19.757 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Filing.accession_number
+2025-12-28 22:07:19.766 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Section.section_id
+2025-12-28 22:07:19.773 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Chunk.chunk_id
+2025-12-28 22:07:19.781 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Period.period_id
+2025-12-28 22:07:19.788 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: FinancialStatement.statement_id
+2025-12-28 22:07:19.795 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: LineItem.line_item_id
+2025-12-28 22:07:19.851 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Value.value_id
+2025-12-28 22:07:19.858 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Metric.metric_id
+2025-12-28 22:07:19.865 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Industry.industry_id
+2025-12-28 22:07:19.872 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Sector.sector_id
+2025-12-28 22:07:19.880 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Topic.topic_id
+2025-12-28 22:07:19.888 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Person.person_id
+2025-12-28 22:07:19.895 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Transaction.transaction_id
+2025-12-28 22:07:19.951 | INFO     | __main__:create_unique_constraints:63 | ✓ Created constraint: Compensation.compensation_id
+2025-12-28 22:07:19.951 | INFO     | __main__:create_property_indexes:74 | Creating property indexes...
+2025-12-28 22:07:19.957 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: company_ticker
+2025-12-28 22:07:19.963 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: company_name
+2025-12-28 22:07:19.969 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: company_market_cap_tier
+2025-12-28 22:07:19.975 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: filing_company_cik_fiscal_year_form_type
+2025-12-28 22:07:19.981 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: filing_form_type_filing_date
+2025-12-28 22:07:19.987 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: filing_fiscal_period
+2025-12-28 22:07:19.993 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: section_item_number
+2025-12-28 22:07:20.052 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: section_company_cik
+2025-12-28 22:07:20.060 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: form8kitem_event_type_event_date
+2025-12-28 22:07:20.066 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: chunk_company_cik_fiscal_year_chunk_type
+2025-12-28 22:07:20.072 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: chunk_semantic_type
+2025-12-28 22:07:20.077 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: chunk_form_type
+2025-12-28 22:07:20.083 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: lineitem_line_name
+2025-12-28 22:07:20.090 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: lineitem_xbrl_tag
+2025-12-28 22:07:20.154 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: value_fiscal_year_fiscal_quarter
+2025-12-28 22:07:20.163 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: metric_company_cik_metric_name_fiscal_year
+2025-12-28 22:07:20.170 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: industry_sic_code
+2025-12-28 22:07:20.176 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: topic_topic_category
+2025-12-28 22:07:20.182 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: transaction_transaction_date
+2025-12-28 22:07:20.187 | INFO     | __main__:create_property_indexes:137 | ✓ Created index: transaction_transaction_type
+2025-12-28 22:07:20.188 | INFO     | __main__:create_vector_indexes:147 | Creating vector indexes (dimension: 1536)...
+2025-12-28 22:07:20.198 | INFO     | __main__:create_vector_indexes:206 | ✓ Created vector index: textChunkEmbeddings (General text content)
+2025-12-28 22:07:20.201 | INFO     | __main__:create_vector_indexes:206 | ✓ Created vector index: riskChunkEmbeddings (Risk factor discussions)
+2025-12-28 22:07:20.203 | INFO     | __main__:create_vector_indexes:206 | ✓ Created vector index: financialChunkEmbeddings (Financial analysis)
+2025-12-28 22:07:20.206 | INFO     | __main__:create_vector_indexes:206 | ✓ Created vector index: strategyChunkEmbeddings (Strategic/forward-looking content)
+2025-12-28 22:07:20.207 | INFO     | __main__:create_vector_indexes:206 | ✓ Created vector index: maChunkEmbeddings (M&A and transactions)
+2025-12-28 22:07:20.208 | INFO     | __main__:create_fulltext_indexes:220 | Creating full-text indexes...
+2025-12-28 22:07:20.218 | INFO     | __main__:create_fulltext_indexes:263 | ✓ Created full-text index: chunkContentFulltext
+2025-12-28 22:07:20.227 | INFO     | __main__:create_fulltext_indexes:248 | ✓ Created full-text index: sectionContentFulltext_item_title
+2025-12-28 22:07:20.237 | INFO     | __main__:create_fulltext_indexes:263 | ✓ Created full-text index: sectionContentFulltext
+2025-12-28 22:07:20.250 | INFO     | __main__:create_fulltext_indexes:248 | ✓ Created full-text index: riskFactorFulltext_risk_title
+2025-12-28 22:07:20.260 | INFO     | __main__:create_fulltext_indexes:263 | ✓ Created full-text index: riskFactorFulltext
+2025-12-28 22:07:20.260 | INFO     | __main__:verify_schema:273 | Verifying schema...
+2025-12-28 22:07:20.273 | INFO     | __main__:verify_schema:279 | ✓ Found 15 constraints
+2025-12-28 22:07:20.281 | INFO     | __main__:verify_schema:287 | ✓ Found 41 indexes
+2025-12-28 22:07:20.281 | INFO     | __main__:main:320 | ============================================================
+2025-12-28 22:07:20.281 | INFO     | __main__:main:321 | Schema setup completed successfully!
+2025-12-28 22:07:20.281 | INFO     | __main__:main:322 | ============================================================
+2025-12-28 22:07:20.281 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
