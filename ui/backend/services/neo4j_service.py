@@ -32,6 +32,70 @@ from utils.logger_config import get_logger
 logger = get_logger(__name__)
 
 
+def convert_neo4j_value(value: Any) -> Any:
+    """
+    Convert Neo4j temporal types and other special types to JSON-serializable values.
+    
+    Args:
+        value: Value that may contain Neo4j types
+        
+    Returns:
+        JSON-serializable value
+    """
+    if value is None:
+        return None
+    
+    # Check if it's a Neo4j temporal type by checking the module name
+    value_type = type(value)
+    module_name = getattr(value_type, '__module__', '')
+    type_name = value_type.__name__
+    
+    # Handle Neo4j temporal types (from neo4j.time module)
+    # Check both module name and type name to catch all Neo4j temporal types
+    is_neo4j_temporal = (
+        'neo4j.time' in module_name or 
+        'neo4j' in module_name.lower() or
+        type_name in ('DateTime', 'Date', 'Time', 'Duration', 'LocalDateTime', 'LocalTime', 'LocalDate')
+    )
+    
+    if is_neo4j_temporal:
+        try:
+            # Try to convert to native Python datetime first
+            if hasattr(value, 'to_native'):
+                native_value = value.to_native()
+                # Convert Python datetime to ISO string
+                if hasattr(native_value, 'isoformat'):
+                    return native_value.isoformat()
+                return str(native_value)
+            # Try iso_format() method (some Neo4j versions)
+            elif hasattr(value, 'iso_format'):
+                return value.iso_format()
+            # Fallback: convert to string
+            else:
+                return str(value)
+        except Exception as e:
+            logger.debug(f"Error converting Neo4j temporal type {type_name}: {e}, using str()")
+            try:
+                return str(value)
+            except Exception:
+                logger.warning(f"Could not convert {type_name}: {value}")
+                return None
+    
+    # Handle Python datetime objects
+    if hasattr(value, 'isoformat'):
+        return value.isoformat()
+    
+    # Handle lists and dicts recursively
+    if isinstance(value, list):
+        return [convert_neo4j_value(item) for item in value]
+    
+    if isinstance(value, dict):
+        return {k: convert_neo4j_value(v) for k, v in value.items()}
+    
+    # Return as-is for other types (int, str, float, bool, etc.)
+    return value
+
+
 class Neo4jGraphService:
     """Service for querying Neo4j graph database"""
     
@@ -63,8 +127,9 @@ class Neo4jGraphService:
         # Extract labels
         labels = list(node.labels) if hasattr(node, 'labels') else []
         
-        # Extract properties
-        properties = dict(node) if hasattr(node, '__iter__') else {}
+        # Extract properties and convert Neo4j types to JSON-serializable values
+        raw_properties = dict(node) if hasattr(node, '__iter__') else {}
+        properties = {k: convert_neo4j_value(v) for k, v in raw_properties.items()}
         
         # Determine node ID based on labels
         node_id = None
@@ -107,9 +172,12 @@ class Neo4jGraphService:
         if not rel:
             return None
         
+        raw_properties = dict(rel) if hasattr(rel, '__iter__') else {}
+        properties = {k: convert_neo4j_value(v) for k, v in raw_properties.items()}
+        
         return {
             "type": rel.type if hasattr(rel, 'type') else str(rel),
-            "properties": dict(rel) if hasattr(rel, '__iter__') else {}
+            "properties": properties
         }
     
     def get_company_graph(self, ticker: str) -> Dict[str, Any]:
