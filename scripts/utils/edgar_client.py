@@ -187,9 +187,16 @@ class EdgarClient:
                 
                 # Get filing items/sections if available
                 try:
+                    logger.debug(f"Filing object type: {type(filing).__name__}")
+                    logger.debug(f"Filing object attributes: {[attr for attr in dir(filing) if not attr.startswith('_')][:20]}")
                     items = self._extract_filing_items(filing, form_type)
                     filing_data["filing"]["items"] = items
-                    logger.info(f"Extracted {len(items)} items/sections from filing")
+                    if items:
+                        logger.info(f"Extracted {len(items)} items/sections from filing")
+                        for item in items[:3]:  # Log first 3 items
+                            logger.debug(f"  - Item {item.get('item')}: {item.get('name')} ({len(item.get('text', ''))} chars)")
+                    else:
+                        logger.warning(f"No items extracted from filing. Check debug logs for details.")
                 except Exception as e:
                     logger.warning(f"Could not extract filing items: {e}")
                     logger.debug(f"Exception details: {e}", exc_info=True)
@@ -303,6 +310,8 @@ class EdgarClient:
         """
         Extract items/sections from edgartools Filing object.
         
+        Uses edgartools structured data objects (TenK, TenQ, etc.) for better extraction.
+        
         Args:
             filing: edgartools Filing object
             form_type: Form type (e.g., "10-K", "10-Q", "8-K")
@@ -313,98 +322,225 @@ class EdgarClient:
         items = []
         
         try:
-            # Method 1: Try to use edgartools built-in method if available
-            # Check for common method names
-            if hasattr(filing, 'get_items'):
+            # Method 1: Use edgartools structured data objects (TenK, TenQ, etc.)
+            # This is the recommended way to access filing sections
+            if hasattr(filing, 'obj'):
                 try:
-                    filing_items = filing.get_items()
-                    if filing_items:
-                        logger.debug(f"Found {len(filing_items)} items using get_items() method")
-                        # Convert to list if it's an iterator or dict
-                        if isinstance(filing_items, dict):
-                            items = list(filing_items.values())
-                        elif hasattr(filing_items, '__iter__') and not isinstance(filing_items, str):
-                            items = list(filing_items)
-                        else:
-                            items = filing_items if isinstance(filing_items, list) else []
+                    logger.info(f"Attempting to convert filing to structured object using obj() method...")
+                    structured_obj = filing.obj()
+                    if structured_obj:
+                        logger.info(f"Successfully converted to structured object: {type(structured_obj).__name__}")
+                        items = self._extract_from_structured_object(structured_obj, form_type)
                         if items:
-                            return self._normalize_items(items)
-                except Exception as e:
-                    logger.debug(f"get_items() method failed: {e}")
-            
-            # Method 2: Try to access items attribute directly (but avoid dict.items() method)
-            # Check if 'items' is a property/attribute, not a method
-            items_attr = getattr(filing, 'items', None)
-            if items_attr is not None and not callable(items_attr):
-                try:
-                    filing_items = items_attr
-                    if filing_items:
-                        logger.debug(f"Found items attribute with {len(filing_items) if hasattr(filing_items, '__len__') else 'unknown'} items")
-                        if isinstance(filing_items, dict):
-                            items = list(filing_items.values())
-                        elif hasattr(filing_items, '__iter__') and not isinstance(filing_items, str):
-                            items = list(filing_items)
+                            logger.info(f"Extracted {len(items)} items using structured object method")
+                            return items
                         else:
-                            items = filing_items if isinstance(filing_items, list) else []
-                        if items:
-                            return self._normalize_items(items)
+                            logger.warning(f"Structured object conversion succeeded but no items extracted")
+                    else:
+                        logger.warning(f"obj() method returned None")
                 except Exception as e:
-                    logger.debug(f"items attribute access failed: {e}")
+                    logger.warning(f"Structured object extraction failed: {type(e).__name__}: {str(e)}")
+                    logger.debug(f"Exception details: {e}", exc_info=True)
             
-            # Method 3: Try to get HTML content and parse it
+            # Method 2: Try to get HTML content and parse it
             html_content = None
             if hasattr(filing, 'html'):
                 try:
                     html_content = filing.html
-                    if html_content:
-                        logger.debug("Found HTML content, parsing for items...")
-                        items = self._parse_html_for_items(html_content, form_type)
+                    if html_content and len(str(html_content)) > 100:
+                        logger.debug(f"Found HTML content ({len(str(html_content))} chars), parsing for items...")
+                        items = self._parse_html_for_items(str(html_content), form_type)
                         if items:
+                            logger.info(f"Extracted {len(items)} items from HTML content")
                             return items
                 except Exception as e:
-                    logger.debug(f"HTML parsing failed: {e}")
+                    logger.debug(f"HTML access/parsing failed: {e}")
             
-            # Method 4: Try to get text content and parse it
-            text_content = None
+            # Method 3: Try to get text content and parse it
             if hasattr(filing, 'text'):
                 try:
                     text_content = filing.text
-                    if text_content:
-                        logger.debug("Found text content, parsing for items...")
-                        items = self._parse_text_for_items(text_content, form_type)
+                    if text_content and len(str(text_content)) > 100:
+                        logger.debug(f"Found text content ({len(str(text_content))} chars), parsing for items...")
+                        items = self._parse_text_for_items(str(text_content), form_type)
                         if items:
+                            logger.info(f"Extracted {len(items)} items from text content")
                             return items
                 except Exception as e:
-                    logger.debug(f"Text parsing failed: {e}")
+                    logger.debug(f"Text access/parsing failed: {e}")
             
-            # Method 5: Try to get documents and extract from them
-            if hasattr(filing, 'documents') or hasattr(filing, 'get_documents'):
+            # Method 4: Try to get documents and extract from them
+            if hasattr(filing, 'documents'):
                 try:
-                    documents = filing.documents if hasattr(filing, 'documents') else filing.get_documents()
+                    documents = filing.documents
                     if documents:
-                        logger.debug(f"Found {len(documents) if hasattr(documents, '__len__') else 'unknown'} documents")
-                        # Try to get HTML/text from first document
-                        for doc in documents:
+                        doc_list = list(documents) if hasattr(documents, '__iter__') else [documents]
+                        logger.debug(f"Found {len(doc_list)} documents")
+                        for doc in doc_list:
                             if hasattr(doc, 'html'):
                                 html_content = doc.html
-                                if html_content:
-                                    items = self._parse_html_for_items(html_content, form_type)
+                                if html_content and len(str(html_content)) > 100:
+                                    items = self._parse_html_for_items(str(html_content), form_type)
                                     if items:
+                                        logger.info(f"Extracted {len(items)} items from document HTML")
                                         return items
                             elif hasattr(doc, 'text'):
                                 text_content = doc.text
-                                if text_content:
-                                    items = self._parse_text_for_items(text_content, form_type)
+                                if text_content and len(str(text_content)) > 100:
+                                    items = self._parse_text_for_items(str(text_content), form_type)
                                     if items:
+                                        logger.info(f"Extracted {len(items)} items from document text")
                                         return items
                 except Exception as e:
                     logger.debug(f"Document extraction failed: {e}")
             
+            # Log available attributes for debugging
+            logger.debug(f"Filing object attributes: {[attr for attr in dir(filing) if not attr.startswith('_')]}")
             logger.warning(f"Could not extract items from filing using any method")
             return []
             
         except Exception as e:
             logger.error(f"Error extracting filing items: {e}", exc_info=True)
+            return []
+    
+    def _extract_from_structured_object(self, structured_obj: Any, form_type: str) -> List[Dict[str, Any]]:
+        """
+        Extract items from edgartools structured data objects (TenK, TenQ, etc.)
+        
+        Args:
+            structured_obj: Structured data object (TenK, TenQ, etc.)
+            form_type: Form type for context
+        
+        Returns:
+            List of item dictionaries
+        """
+        items = []
+        
+        try:
+            # Map form types to their structured object class names
+            obj_type = type(structured_obj).__name__
+            logger.debug(f"Processing structured object type: {obj_type}")
+            
+            # Common section mappings for 10-K and 10-Q
+            section_mappings = {
+                'TenK': {
+                    '1': ('business', 'Business'),
+                    '1A': ('risk_factors', 'Risk Factors'),
+                    '2': ('properties', 'Properties'),
+                    '3': ('legal_proceedings', 'Legal Proceedings'),
+                    '7': ('management_discussion', "Management's Discussion and Analysis"),
+                    '7A': ('quantitative_qualitative', 'Quantitative and Qualitative Disclosures'),
+                    '8': ('financial_statements', 'Financial Statements'),
+                    '9': ('controls_procedures', 'Controls and Procedures'),
+                },
+                'TenQ': {
+                    '1': ('business', 'Business'),
+                    '2': ('risk_factors', 'Risk Factors'),
+                    '3': ('legal_proceedings', 'Legal Proceedings'),
+                    '4': ('controls_procedures', 'Controls and Procedures'),
+                }
+            }
+            
+            # Get section mappings for this form type
+            mappings = section_mappings.get(obj_type, {})
+            
+            # Try to extract sections using known attribute names
+            for item_num, (attr_name, item_title) in mappings.items():
+                try:
+                    if hasattr(structured_obj, attr_name):
+                        section_content = getattr(structured_obj, attr_name)
+                        if section_content:
+                            # Convert to text if it's an object
+                            text = None
+                            if hasattr(section_content, 'text'):
+                                text = section_content.text
+                            elif hasattr(section_content, 'html'):
+                                # If it has HTML, extract text from it
+                                html = section_content.html
+                                if html:
+                                    try:
+                                        from bs4 import BeautifulSoup
+                                        soup = BeautifulSoup(str(html), 'html.parser')
+                                        text = soup.get_text(separator='\n', strip=True)
+                                    except:
+                                        text = str(html)
+                            elif hasattr(section_content, '__str__'):
+                                text = str(section_content)
+                            else:
+                                text = str(section_content)
+                            
+                            if text and len(str(text).strip()) > 100:
+                                text_str = str(text)[:50000]  # Limit size
+                                items.append({
+                                    "item": item_num,
+                                    "name": item_title,
+                                    "text": text_str,
+                                    "html": f"<p>{text_str}</p>",
+                                })
+                                logger.info(f"Extracted Item {item_num}: {item_title} ({len(text_str)} chars)")
+                except Exception as e:
+                    logger.debug(f"Failed to extract {attr_name}: {e}")
+            
+            # If no items found with mappings, try to inspect the object structure
+            if not items:
+                logger.debug(f"No items found using mappings. Inspecting object structure...")
+                # Try to find any attributes that might contain section content
+                obj_attrs = [attr for attr in dir(structured_obj) if not attr.startswith('_')]
+                logger.debug(f"Available attributes: {obj_attrs[:20]}")
+                
+                # Try common patterns
+                for attr in obj_attrs:
+                    if any(keyword in attr.lower() for keyword in ['business', 'risk', 'management', 'discussion', 'mda', 'item']):
+                        try:
+                            content = getattr(structured_obj, attr)
+                            if content:
+                                text = str(content) if not hasattr(content, 'text') else content.text
+                                if text and len(str(text).strip()) > 100:
+                                    # Try to infer item number from attribute name
+                                    item_num = '1'  # Default
+                                    if 'risk' in attr.lower():
+                                        item_num = '1A'
+                                    elif 'business' in attr.lower():
+                                        item_num = '1'
+                                    elif 'management' in attr.lower() or 'mda' in attr.lower():
+                                        item_num = '7'
+                                    
+                                    items.append({
+                                        "item": item_num,
+                                        "name": attr.replace('_', ' ').title(),
+                                        "text": str(text)[:50000],
+                                        "html": f"<p>{str(text)[:50000]}</p>",
+                                    })
+                                    logger.info(f"Extracted from attribute '{attr}': Item {item_num} ({len(str(text))} chars)")
+                        except Exception as e:
+                            logger.debug(f"Failed to extract from {attr}: {e}")
+            
+            # Also try generic methods that might exist
+            # Some structured objects have methods like get_section() or similar
+            if hasattr(structured_obj, 'get_section'):
+                try:
+                    # Try common item numbers
+                    for item_num in ['1', '1A', '2', '3', '7', '7A', '8', '9']:
+                        try:
+                            section = structured_obj.get_section(item_num)
+                            if section:
+                                text = str(section) if not hasattr(section, 'text') else section.text
+                                if text and len(text.strip()) > 100:
+                                    items.append({
+                                        "item": item_num,
+                                        "name": f"Item {item_num}",
+                                        "text": text[:50000],
+                                        "html": f"<p>{text[:50000]}</p>",
+                                    })
+                        except:
+                            pass
+                except Exception as e:
+                    logger.debug(f"get_section() method failed: {e}")
+            
+            return items
+            
+        except Exception as e:
+            logger.error(f"Error extracting from structured object: {e}", exc_info=True)
             return []
     
     def _normalize_items(self, items: List[Any]) -> List[Dict[str, Any]]:
