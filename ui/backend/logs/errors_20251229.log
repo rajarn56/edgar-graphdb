@@ -6,3 +6,4 @@ Query:
         RETURN c, f
         ORDER BY f.fiscal_year DESC, f.fiscal_quarter DESC NULLS LAST
         ...
+2025-12-29 00:53:14.311 | ERROR    | app:dispatch:59 | Error: GET /api/graph/AAPL | Exception: Unable to serialize unknown type: <class 'neo4j.time.DateTime'> | Time: 0.078s

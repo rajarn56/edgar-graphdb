@@ -25,3 +25,21 @@ Query:
 2025-12-29 00:43:05.509 | INFO     | app:shutdown_event:97 | ============================================================
 2025-12-29 00:43:05.510 | INFO     | app:shutdown_event:98 | Neo4j EDGAR Graph API - Shutting down
 2025-12-29 00:43:05.511 | INFO     | app:shutdown_event:99 | ============================================================
+2025-12-29 00:52:58.162 | INFO     | utils.logger_config:setup_logger:111 | Logger configured: ui_backend
+2025-12-29 00:52:58.163 | INFO     | utils.logger_config:setup_logger:112 | Log file: /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/ui/backend/logs/ui_backend_20251229.log
+2025-12-29 00:52:58.163 | INFO     | utils.logger_config:setup_logger:113 | Error log file: /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/ui/backend/logs/errors_20251229.log
+2025-12-29 00:52:58.163 | INFO     | utils.logger_config:setup_logger:114 | Access log file: /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/ui/backend/logs/access_20251229.log
+2025-12-29 00:52:58.163 | INFO     | utils.logger_config:setup_logger:115 | Log level: INFO
+2025-12-29 00:52:58.378 | INFO     | app:startup_event:87 | ============================================================
+2025-12-29 00:52:58.378 | INFO     | app:startup_event:88 | Neo4j EDGAR Graph API - Starting
+2025-12-29 00:52:58.378 | INFO     | app:startup_event:89 | ============================================================
+2025-12-29 00:52:58.378 | INFO     | app:startup_event:90 | Environment: development
+2025-12-29 00:52:58.378 | INFO     | app:startup_event:91 | Neo4j URI: bolt://localhost:7687
+2025-12-29 00:53:14.233 | INFO     | app:dispatch:39 | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
+2025-12-29 00:53:14.235 | INFO     | services.neo4j_service:__init__:40 | Initializing Neo4jGraphService
+2025-12-29 00:53:14.236 | INFO     | neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:53:14.253 | INFO     | neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:53:14.253 | INFO     | services.neo4j_service:__init__:44 | Neo4jGraphService initialized successfully
+2025-12-29 00:53:14.311 | INFO     | services.neo4j_service:get_company_graph:167 | get_company_graph completed for AAPL: 13 nodes, 13 edges in 0.058s
+2025-12-29 00:53:14.311 | ERROR    | app:dispatch:59 | Error: GET /api/graph/AAPL | Exception: Unable to serialize unknown type: <class 'neo4j.time.DateTime'> | Time: 0.078s
+2025-12-29 00:54:10.174 | INFO     | app:shutdown_event:97 | ============================================================
