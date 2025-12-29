@@ -446,8 +446,24 @@ class EdgarClient:
                     # We'll use fallback inspection for 8-K
                 },
                 'Def14A': {
-                    # Proxy statements (DEF 14A) have different structure
-                    # We'll use fallback inspection for DEF 14A
+                    # Proxy statements (DEF 14A) sections
+                    # Common attributes in edgartools Def14A object
+                    'compensation': ('compensation', 'Executive Compensation'),
+                    'compensation_discussion': ('compensation_discussion', 'Compensation Discussion & Analysis'),
+                    'directors': ('directors', 'Director Information'),
+                    'board': ('board', 'Board Information'),
+                    'committees': ('committees', 'Board Committees'),
+                    'proposals': ('proposals', 'Shareholder Proposals'),
+                    'governance': ('governance', 'Corporate Governance'),
+                    'voting': ('voting', 'Voting Procedures'),
+                    'auditor': ('auditor', 'Auditor Information'),
+                    'related_party': ('related_party', 'Related Party Transactions'),
+                },
+                'Def14C': {
+                    # Information statements (DEF 14C) - similar to DEF 14A
+                    'action': ('action', 'Action Taken'),
+                    'voting_results': ('voting_results', 'Voting Results'),
+                    'governance': ('governance', 'Corporate Governance'),
                 }
             }
             
@@ -530,13 +546,51 @@ class EdgarClient:
                     except Exception as e:
                         logger.debug(f"Failed to extract 8-K items: {e}")
                 
+                # For DEF 14A, try sections() method if available (common in edgartools)
+                if obj_type == 'Def14A' and hasattr(structured_obj, 'sections'):
+                    try:
+                        sections = structured_obj.sections()
+                        if sections:
+                            if isinstance(sections, dict):
+                                for section_key, section_content in sections.items():
+                                    text = None
+                                    if hasattr(section_content, 'text'):
+                                        text = section_content.text
+                                    elif hasattr(section_content, 'html'):
+                                        html = section_content.html
+                                        if html:
+                                            try:
+                                                from bs4 import BeautifulSoup
+                                                soup = BeautifulSoup(str(html), 'html.parser')
+                                                text = soup.get_text(separator='\n', strip=True)
+                                            except:
+                                                text = str(html)
+                                    else:
+                                        text = str(section_content)
+                                    
+                                    if text and len(str(text).strip()) > 100:
+                                        items.append({
+                                            "item": str(section_key),
+                                            "name": f"Section {section_key}",
+                                            "text": str(text)[:50000],
+                                            "html": f"<p>{str(text)[:50000]}</p>",
+                                        })
+                                        logger.info(f"Extracted DEF 14A section '{section_key}' ({len(str(text))} chars)")
+                    except Exception as e:
+                        logger.debug(f"Failed to extract DEF 14A sections: {e}")
+                
                 # Try common patterns for all form types
                 for attr in obj_attrs:
                     # Skip methods and common non-content attributes
-                    if attr in ['items', 'obj', 'html', 'text', 'documents', 'url', 'accession_number']:
+                    if attr in ['items', 'obj', 'html', 'text', 'documents', 'url', 'accession_number', 'sections']:
                         continue
                     
-                    if any(keyword in attr.lower() for keyword in ['business', 'risk', 'management', 'discussion', 'mda', 'item', 'section', 'content', 'description']):
+                    # Extended keyword list for DEF 14A and other forms
+                    keywords = ['business', 'risk', 'management', 'discussion', 'mda', 'item', 'section', 
+                               'content', 'description', 'compensation', 'director', 'board', 'committee',
+                               'proposal', 'governance', 'voting', 'auditor', 'related', 'party']
+                    
+                    if any(keyword in attr.lower() for keyword in keywords):
                         try:
                             content = getattr(structured_obj, attr)
                             if content and not callable(content):
@@ -567,6 +621,14 @@ class EdgarClient:
                                         item_num = '7'
                                     elif 'financial' in attr.lower():
                                         item_num = '8'
+                                    elif 'compensation' in attr.lower():
+                                        item_num = 'compensation'
+                                    elif 'director' in attr.lower() or 'board' in attr.lower():
+                                        item_num = 'directors'
+                                    elif 'proposal' in attr.lower():
+                                        item_num = 'proposals'
+                                    elif 'governance' in attr.lower():
+                                        item_num = 'governance'
                                     
                                     items.append({
                                         "item": item_num,
