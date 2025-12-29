@@ -1,0 +1,1 @@
+2025-12-28 21:51:52.544 | ERROR    | __main__:main:699 | Ingestion failed: cannot access local variable 're' where it is not associated with a value
