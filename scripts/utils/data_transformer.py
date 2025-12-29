@@ -66,13 +66,11 @@ class DataTransformer:
                 text = unescape(text)
             except ImportError:
                 # Fallback: simple HTML tag removal
-                import re
                 from html import unescape
                 text = re.sub(r'<[^>]+>', ' ', text)
                 text = unescape(text)
             except Exception as e:
                 logger.debug(f"HTML parsing failed, using regex fallback: {e}")
-                import re
                 from html import unescape
                 text = re.sub(r'<[^>]+>', ' ', text)
                 text = unescape(text)
