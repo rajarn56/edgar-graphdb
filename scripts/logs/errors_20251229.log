@@ -1,0 +1,9 @@
+2025-12-29 00:16:46.743 | ERROR    | __main__:main:573 | Schema deletion failed: Neo4j password must be provided via parameter or NEO4J_PASSWORD env var
+2025-12-29 00:19:00.750 | ERROR    | __main__:main:739 | Ingestion failed!
+2025-12-29 00:19:03.717 | ERROR    | __main__:main:739 | Ingestion failed!
+2025-12-29 00:19:25.217 | ERROR    | __main__:main:739 | Ingestion failed!
+2025-12-29 00:19:31.223 | ERROR    | __main__:main:739 | Ingestion failed!
+2025-12-29 00:19:34.199 | ERROR    | __main__:main:739 | Ingestion failed!
+2025-12-29 00:19:37.182 | ERROR    | __main__:main:739 | Ingestion failed!
+2025-12-29 00:19:40.234 | ERROR    | __main__:main:739 | Ingestion failed!
+2025-12-29 00:19:43.230 | ERROR    | __main__:main:739 | Ingestion failed!

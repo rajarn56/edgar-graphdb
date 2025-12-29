@@ -1,0 +1,57 @@
+2025-12-29 00:16:46.743 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: delete_schema
+2025-12-29 00:16:46.743 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/delete_schema_20251229.log
+2025-12-29 00:16:46.743 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:16:46.743 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:16:46.743 | WARNING  | __main__:main:497 | ============================================================
+2025-12-29 00:16:46.743 | WARNING  | __main__:main:498 | Neo4j EDGAR Schema Deletion
+2025-12-29 00:16:46.743 | WARNING  | __main__:main:499 | ============================================================
+2025-12-29 00:16:46.743 | WARNING  | __main__:main:500 | ⚠️  WARNING: This will DELETE ALL DATA in the database!
+2025-12-29 00:16:46.743 | WARNING  | __main__:main:501 | ============================================================
+2025-12-29 00:16:46.743 | ERROR    | __main__:main:573 | Schema deletion failed: Neo4j password must be provided via parameter or NEO4J_PASSWORD env var
+2025-12-29 00:18:05.190 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: delete_schema
+2025-12-29 00:18:05.190 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/delete_schema_20251229.log
+2025-12-29 00:18:05.191 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:18:05.191 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:18:05.191 | WARNING  | __main__:main:497 | ============================================================
+2025-12-29 00:18:05.191 | WARNING  | __main__:main:498 | Neo4j EDGAR Schema Deletion
+2025-12-29 00:18:05.191 | WARNING  | __main__:main:499 | ============================================================
+2025-12-29 00:18:05.191 | WARNING  | __main__:main:500 | ⚠️  WARNING: This will DELETE ALL DATA in the database!
+2025-12-29 00:18:05.191 | WARNING  | __main__:main:501 | ============================================================
+2025-12-29 00:18:05.191 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:18:05.214 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:18:05.219 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:18:05.219 | INFO     | __main__:main:511 | Getting current database statistics...
+2025-12-29 00:18:05.226 | INFO     | __main__:main:514 | Current database state:
+2025-12-29 00:18:05.226 | INFO     | __main__:main:515 |   - Nodes: 0
+2025-12-29 00:18:05.226 | INFO     | __main__:main:516 |   - Relationships: 0
+2025-12-29 00:18:05.226 | INFO     | __main__:main:517 |   - Constraints: 0
+2025-12-29 00:18:05.226 | INFO     | __main__:main:518 |   - Indexes: 0
+2025-12-29 00:18:05.226 | INFO     | __main__:main:520 |   - Property Keys: 68
+2025-12-29 00:18:05.226 | WARNING  | __main__:main:531 | 
+2025-12-29 00:18:05.226 | WARNING  | __main__:main:532 | Proceeding with deletion...
+2025-12-29 00:18:05.226 | WARNING  | __main__:main:533 | 
+2025-12-29 00:18:05.226 | INFO     | __main__:clear_property_keys_from_nodes:300 | Attempting to clear properties from nodes...
+2025-12-29 00:18:05.234 | WARNING  | __main__:delete_all_data:107 | ============================================================
+2025-12-29 00:18:05.234 | WARNING  | __main__:delete_all_data:108 | DELETING ALL NODES AND RELATIONSHIPS
+2025-12-29 00:18:05.234 | WARNING  | __main__:delete_all_data:109 | ============================================================
+2025-12-29 00:18:05.241 | INFO     | __main__:delete_all_data:119 | ✓ Deleted all nodes and relationships
+2025-12-29 00:18:05.242 | INFO     | __main__:delete_all_data:127 | ✓ Verification: All nodes deleted successfully
+2025-12-29 00:18:05.242 | INFO     | __main__:drop_all_constraints:153 | Dropping all constraints...
+2025-12-29 00:18:05.243 | INFO     | __main__:drop_all_constraints:162 | No constraints found
+2025-12-29 00:18:05.244 | INFO     | __main__:drop_all_indexes:220 | Dropping all indexes...
+2025-12-29 00:18:05.244 | INFO     | __main__:drop_all_indexes:229 | No indexes found
+2025-12-29 00:18:05.245 | INFO     | __main__:check_property_keys:358 | Checking property keys in metadata...
+2025-12-29 00:18:05.246 | INFO     | __main__:check_property_keys:367 | Found 68 property key(s) in metadata
+2025-12-29 00:18:05.246 | INFO     | __main__:check_property_keys:368 | Note: Property keys are harmless metadata that persist after node deletion.
+2025-12-29 00:18:05.246 | INFO     | __main__:check_property_keys:369 | They don't affect database functionality and will be cleared when:
+2025-12-29 00:18:05.246 | INFO     | __main__:check_property_keys:370 |   - Neo4j is restarted (in some versions)
+2025-12-29 00:18:05.246 | INFO     | __main__:check_property_keys:371 |   - The database is recreated
+2025-12-29 00:18:05.246 | INFO     | __main__:check_property_keys:372 | To manually clear: Restart Neo4j or recreate the database
+2025-12-29 00:18:05.246 | INFO     | __main__:verify_deletion:394 | Verifying deletion...
+2025-12-29 00:18:05.251 | INFO     | __main__:verify_deletion:450 | ✓ Database is clean - all data, constraints, and indexes removed
+2025-12-29 00:18:05.251 | INFO     | __main__:main:557 | 
+2025-12-29 00:18:05.251 | INFO     | __main__:main:558 | ============================================================
+2025-12-29 00:18:05.251 | INFO     | __main__:main:560 | ✓ Schema deletion completed successfully!
+2025-12-29 00:18:05.251 | INFO     | __main__:main:561 | Database is now clean and ready for fresh schema setup.
+2025-12-29 00:18:05.251 | INFO     | __main__:main:565 | ============================================================
+2025-12-29 00:18:05.251 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed

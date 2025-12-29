@@ -1,0 +1,27 @@
+2025-12-29 00:42:42.163 | INFO     | utils.logger_config:setup_logger:111 | Logger configured: ui_backend
+2025-12-29 00:42:42.163 | INFO     | utils.logger_config:setup_logger:112 | Log file: /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/ui/backend/logs/ui_backend_20251229.log
+2025-12-29 00:42:42.163 | INFO     | utils.logger_config:setup_logger:113 | Error log file: /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/ui/backend/logs/errors_20251229.log
+2025-12-29 00:42:42.164 | INFO     | utils.logger_config:setup_logger:114 | Access log file: /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/ui/backend/logs/access_20251229.log
+2025-12-29 00:42:42.164 | INFO     | utils.logger_config:setup_logger:115 | Log level: INFO
+2025-12-29 00:42:42.373 | INFO     | app:startup_event:87 | ============================================================
+2025-12-29 00:42:42.373 | INFO     | app:startup_event:88 | Neo4j EDGAR Graph API - Starting
+2025-12-29 00:42:42.374 | INFO     | app:startup_event:89 | ============================================================
+2025-12-29 00:42:42.374 | INFO     | app:startup_event:90 | Environment: development
+2025-12-29 00:42:42.374 | INFO     | app:startup_event:91 | Neo4j URI: bolt://localhost:7687
+2025-12-29 00:42:58.281 | INFO     | app:dispatch:39 | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
+2025-12-29 00:42:58.282 | INFO     | services.neo4j_service:__init__:40 | Initializing Neo4jGraphService
+2025-12-29 00:42:58.283 | INFO     | neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:42:58.297 | INFO     | neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:42:58.297 | INFO     | services.neo4j_service:__init__:44 | Neo4jGraphService initialized successfully
+2025-12-29 00:42:58.308 | ERROR    | neo4j_client:execute_query:148 | Query execution failed: {neo4j_code: Neo.ClientError.Statement.SyntaxError} {message: Invalid input 'NULLS': expected ',', 'ORDER BY', 'CALL', 'CREATE', 'LOAD CSV', 'DELETE', 'DETACH', 'FINISH', 'FOREACH', 'INSERT', 'LIMIT', 'MATCH', 'MERGE', 'NODETACH', 'OFFSET', 'OPTIONAL', 'REMOVE', 'RETURN', 'SET', 'SKIP', 'UNION', 'UNWIND', 'USE', 'WITH' or <EOF> (line 4, column 60 (offset: 148))
+"        ORDER BY f.fiscal_year DESC, f.fiscal_quarter DESC NULLS LAST"
+                                                            ^} {gql_status: 42001} {gql_status_description: error: syntax error or access rule violation - invalid syntax}
+Query: 
+        MATCH (c:Company {ticker: $ticker})<-[:FILED_BY]-(f:Filing)
+        RETURN c, f
+        ORDER BY f.fiscal_year DESC, f.fiscal_quarter DESC NULLS LAST
+        ...
+2025-12-29 00:42:58.308 | INFO     | app:dispatch:50 | Response: GET /api/graph/AAPL | Status: 500 | Time: 0.028s
+2025-12-29 00:43:05.509 | INFO     | app:shutdown_event:97 | ============================================================
+2025-12-29 00:43:05.510 | INFO     | app:shutdown_event:98 | Neo4j EDGAR Graph API - Shutting down
+2025-12-29 00:43:05.511 | INFO     | app:shutdown_event:99 | ============================================================

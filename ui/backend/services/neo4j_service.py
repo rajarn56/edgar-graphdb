@@ -4,14 +4,25 @@ Neo4j service for graph queries.
 
 import sys
 import time
+import importlib.util
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 
-# Add scripts directory to path to import Neo4jClient
-scripts_dir = Path(__file__).parent.parent.parent.parent / "scripts"
-sys.path.insert(0, str(scripts_dir))
+# Import Neo4jClient directly from file path to avoid sys.path issues with uvicorn reloader
+# This file lives at: edgar-graphdb/ui/backend/services/neo4j_service.py
+# We want:           edgar-graphdb/scripts/utils/neo4j_client.py
+scripts_dir = Path(__file__).resolve().parent.parent.parent.parent / "scripts"
+neo4j_client_path = scripts_dir / "utils" / "neo4j_client.py"
 
-from utils.neo4j_client import Neo4jClient
+if not neo4j_client_path.exists():
+    raise ImportError(f"Could not find neo4j_client.py at: {neo4j_client_path}")
+
+# Load module directly from file path
+spec = importlib.util.spec_from_file_location("neo4j_client", neo4j_client_path)
+neo4j_client_module = importlib.util.module_from_spec(spec)
+sys.modules["neo4j_client"] = neo4j_client_module
+spec.loader.exec_module(neo4j_client_module)
+Neo4jClient = neo4j_client_module.Neo4jClient
 
 # Import models from parent directory
 sys.path.insert(0, str(Path(__file__).parent.parent))

@@ -1,0 +1,795 @@
+2025-12-29 00:18:27.573 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:18:27.573 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:18:27.573 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:18:27.573 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:18:27.573 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:18:27.573 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:18:27.573 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:18:27.573 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:18:27.573 | INFO     | __main__:main:704 | Form Type: 10-K
+2025-12-29 00:18:27.573 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:18:35.675 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:18:35.675 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:18:35.728 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:18:35.728 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:18:35.744 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:18:35.749 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:18:35.749 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (10-K)...
+2025-12-29 00:18:35.749 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:18:40.599 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:18:40.924 | INFO     | utils.edgar_client:get_filing:188 | Found filing using form type: 10-K
+2025-12-29 00:18:40.937 | INFO     | utils.form_registry:_load_config:41 | Loaded 21 form configurations from /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/scripts/config/form_config.yaml
+2025-12-29 00:18:42.271 | INFO     | utils.extraction_strategies:extract_sections:106 | Extracted 1: Business (16054 chars)
+2025-12-29 00:18:42.316 | INFO     | utils.extraction_strategies:extract_sections:106 | Extracted 1A: Risk Factors (50000 chars)
+2025-12-29 00:18:42.358 | INFO     | utils.extraction_strategies:extract_sections:106 | Extracted 7: Management's Discussion and Analysis (17999 chars)
+2025-12-29 00:18:42.359 | INFO     | utils.edgar_client:get_filing:232 | Extracted 3 items using structured_object strategy
+2025-12-29 00:18:42.359 | INFO     | utils.edgar_client:get_filing:265 | [SUCCESS] Extracted 3 items/sections from filing 0000320193-25-000079
+2025-12-29 00:18:42.359 | INFO     | utils.edgar_client:get_filing:287 | Fetched filing data for AAPL 10-K: 0000320193-25-000079
+2025-12-29 00:18:42.359 | INFO     | __main__:ingest_filing:557 | Transforming data to graph format...
+2025-12-29 00:18:42.359 | INFO     | __main__:ingest_filing:567 | [SUCCESS] Found 3 items/sections to process
+2025-12-29 00:18:42.359 | WARNING  | utils.data_transformer:_transform_filing:265 | Period end date is missing - will be set to null in database
+2025-12-29 00:18:42.587 | INFO     | __main__:ingest_filing:613 | Creating company node...
+2025-12-29 00:18:42.605 | INFO     | __main__:create_company_node:98 | Created/updated Company node: 0000320193 (Apple Inc.)
+2025-12-29 00:18:42.606 | INFO     | __main__:ingest_filing:619 | Creating filing node...
+2025-12-29 00:18:42.637 | INFO     | __main__:create_filing_node:213 | Created/updated Filing node: 0000320193-25-000079
+2025-12-29 00:18:42.638 | INFO     | __main__:ingest_filing:630 | Creating 3 sections with 24 total chunks...
+2025-12-29 00:18:42.666 | INFO     | __main__:create_chunk_nodes:399 | Creating 17 chunk nodes for section 0000320193-25-000079_Item1...
+2025-12-29 00:18:42.667 | INFO     | __main__:create_chunk_nodes:419 | Generating embeddings...
+2025-12-29 00:18:43.613 | INFO     | utils.embedding_generator:generate_embeddings_batch:181 | Generating embeddings: 10/17
+2025-12-29 00:18:44.096 | INFO     | __main__:create_chunk_nodes:531 | Created 10/17 chunks...
+2025-12-29 00:18:44.216 | INFO     | __main__:create_chunk_nodes:399 | Creating 13 chunk nodes for section 0000320193-25-000079_Item1A...
+2025-12-29 00:18:44.216 | INFO     | __main__:create_chunk_nodes:419 | Generating embeddings...
+2025-12-29 00:18:44.562 | INFO     | utils.embedding_generator:generate_embeddings_batch:181 | Generating embeddings: 10/13
+2025-12-29 00:18:44.785 | INFO     | __main__:create_chunk_nodes:531 | Created 10/13 chunks...
+2025-12-29 00:18:44.823 | INFO     | __main__:create_chunk_nodes:399 | Creating 7 chunk nodes for section 0000320193-25-000079_Item7...
+2025-12-29 00:18:44.823 | INFO     | __main__:create_chunk_nodes:419 | Generating embeddings...
+2025-12-29 00:18:45.152 | INFO     | __main__:ingest_filing:685 | Successfully ingested filing 0000320193-25-000079
+2025-12-29 00:18:45.153 | INFO     | __main__:main:734 | ============================================================
+2025-12-29 00:18:45.153 | INFO     | __main__:main:735 | Ingestion completed successfully!
+2025-12-29 00:18:45.153 | INFO     | __main__:main:736 | ============================================================
+2025-12-29 00:18:45.154 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:18:46.401 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:18:46.401 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:18:46.401 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:18:46.402 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:18:46.402 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:18:46.402 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:18:46.402 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:18:46.402 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:18:46.402 | INFO     | __main__:main:704 | Form Type: 10-Q
+2025-12-29 00:18:46.402 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:18:46.542 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:18:46.542 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:18:46.592 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:18:46.593 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:18:46.601 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:18:46.603 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:18:46.603 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (10-Q)...
+2025-12-29 00:18:46.603 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:18:47.880 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:18:48.195 | INFO     | utils.edgar_client:get_filing:188 | Found filing using form type: 10-Q
+2025-12-29 00:18:48.203 | INFO     | utils.form_registry:_load_config:41 | Loaded 21 form configurations from /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/scripts/config/form_config.yaml
+2025-12-29 00:18:48.225 | WARNING  | utils.extraction_strategies:extract_sections:113 | [FALLBACK_INSPECTION] No items found using mappings for TenQ, inspecting object structure...
+2025-12-29 00:18:48.225 | INFO     | utils.extraction_strategies:extract_sections:114 | [EXPLANATION] Fallback inspection means the script doesn't know the exact structure of this form type's data
+2025-12-29 00:18:48.225 | INFO     | utils.extraction_strategies:extract_sections:115 | [EXPLANATION] It will automatically search through all object attributes to find content - data will NOT be lost
+2025-12-29 00:18:48.359 | INFO     | utils.extraction_strategies:_inspect_object_attributes:179 | [FALLBACK_INSPECTION] Extracted balance_sheet from TenQ via attribute inspection
+2025-12-29 00:18:48.368 | INFO     | utils.extraction_strategies:_inspect_object_attributes:179 | [FALLBACK_INSPECTION] Extracted cash_flow_statement from TenQ via attribute inspection
+2025-12-29 00:18:48.452 | INFO     | utils.extraction_strategies:_inspect_object_attributes:179 | [FALLBACK_INSPECTION] Extracted chunked_document from TenQ via attribute inspection
+2025-12-29 00:18:48.590 | INFO     | utils.extraction_strategies:_inspect_object_attributes:179 | [FALLBACK_INSPECTION] Extracted doc from TenQ via attribute inspection
+2025-12-29 00:18:48.598 | INFO     | utils.extraction_strategies:_inspect_object_attributes:179 | [FALLBACK_INSPECTION] Extracted document from TenQ via attribute inspection
+2025-12-29 00:18:48.600 | INFO     | utils.extraction_strategies:_inspect_object_attributes:179 | [FALLBACK_INSPECTION] Extracted financials from TenQ via attribute inspection
+2025-12-29 00:18:48.613 | INFO     | utils.extraction_strategies:_inspect_object_attributes:179 | [FALLBACK_INSPECTION] Extracted income_statement from TenQ via attribute inspection
+2025-12-29 00:18:48.613 | INFO     | utils.extraction_strategies:extract_sections:118 | [SUCCESS] Fallback inspection found 7 items - data preserved
+2025-12-29 00:18:48.613 | INFO     | utils.edgar_client:get_filing:232 | Extracted 7 items using structured_object strategy
+2025-12-29 00:18:48.613 | INFO     | utils.edgar_client:get_filing:265 | [SUCCESS] Extracted 7 items/sections from filing 0000320193-25-000073
+2025-12-29 00:18:48.614 | INFO     | utils.edgar_client:get_filing:287 | Fetched filing data for AAPL 10-Q: 0000320193-25-000073
+2025-12-29 00:18:48.614 | INFO     | __main__:ingest_filing:557 | Transforming data to graph format...
+2025-12-29 00:18:48.614 | INFO     | __main__:ingest_filing:567 | [SUCCESS] Found 7 items/sections to process
+2025-12-29 00:18:48.614 | WARNING  | utils.data_transformer:_transform_filing:265 | Period end date is missing - will be set to null in database
+2025-12-29 00:18:48.674 | INFO     | __main__:ingest_filing:613 | Creating company node...
+2025-12-29 00:18:48.679 | INFO     | __main__:create_company_node:98 | Created/updated Company node: 0000320193 (Apple Inc.)
+2025-12-29 00:18:48.679 | INFO     | __main__:ingest_filing:619 | Creating filing node...
+2025-12-29 00:18:48.682 | INFO     | __main__:create_filing_node:213 | Created/updated Filing node: 0000320193-25-000073
+2025-12-29 00:18:48.683 | INFO     | __main__:ingest_filing:630 | Creating 7 sections with 29 total chunks...
+2025-12-29 00:18:48.718 | INFO     | __main__:create_chunk_nodes:399 | Creating 3 chunk nodes for section 0000320193-25-000073_Itembalance_sheet...
+2025-12-29 00:18:48.718 | INFO     | __main__:create_chunk_nodes:419 | Generating embeddings...
+2025-12-29 00:18:49.029 | INFO     | __main__:create_chunk_nodes:399 | Creating 1 chunk nodes for section 0000320193-25-000073_Itemcash_flow_statement...
+2025-12-29 00:18:49.030 | INFO     | __main__:create_chunk_nodes:419 | Generating embeddings...
+2025-12-29 00:18:49.115 | INFO     | __main__:create_chunk_nodes:399 | Creating 1 chunk nodes for section 0000320193-25-000073_Itemchunked_document...
+2025-12-29 00:18:49.116 | INFO     | __main__:create_chunk_nodes:419 | Generating embeddings...
+2025-12-29 00:18:49.158 | INFO     | __main__:create_chunk_nodes:399 | Creating 20 chunk nodes for section 0000320193-25-000073_Itemdoc...
+2025-12-29 00:18:49.158 | INFO     | __main__:create_chunk_nodes:419 | Generating embeddings...
+2025-12-29 00:18:49.511 | INFO     | utils.embedding_generator:generate_embeddings_batch:181 | Generating embeddings: 10/20
+2025-12-29 00:18:49.853 | INFO     | utils.embedding_generator:generate_embeddings_batch:181 | Generating embeddings: 20/20
+2025-12-29 00:18:50.027 | INFO     | __main__:create_chunk_nodes:531 | Created 10/20 chunks...
+2025-12-29 00:18:50.174 | INFO     | __main__:create_chunk_nodes:531 | Created 20/20 chunks...
+2025-12-29 00:18:50.201 | INFO     | __main__:create_chunk_nodes:399 | Creating 10 chunk nodes for section 0000320193-25-000073_Itemdocument...
+2025-12-29 00:18:50.201 | INFO     | __main__:create_chunk_nodes:419 | Generating embeddings...
+2025-12-29 00:18:50.579 | INFO     | utils.embedding_generator:generate_embeddings_batch:181 | Generating embeddings: 10/10
+2025-12-29 00:18:50.693 | INFO     | __main__:create_chunk_nodes:531 | Created 10/10 chunks...
+2025-12-29 00:18:50.720 | INFO     | __main__:create_chunk_nodes:399 | Creating 1 chunk nodes for section 0000320193-25-000073_Itemfinancials...
+2025-12-29 00:18:50.720 | INFO     | __main__:create_chunk_nodes:419 | Generating embeddings...
+2025-12-29 00:18:50.830 | INFO     | __main__:create_chunk_nodes:399 | Creating 3 chunk nodes for section 0000320193-25-000073_Itemincome_statement...
+2025-12-29 00:18:50.830 | INFO     | __main__:create_chunk_nodes:419 | Generating embeddings...
+2025-12-29 00:18:50.937 | INFO     | __main__:ingest_filing:685 | Successfully ingested filing 0000320193-25-000073
+2025-12-29 00:18:50.938 | INFO     | __main__:main:734 | ============================================================
+2025-12-29 00:18:50.938 | INFO     | __main__:main:735 | Ingestion completed successfully!
+2025-12-29 00:18:50.938 | INFO     | __main__:main:736 | ============================================================
+2025-12-29 00:18:50.938 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:18:52.117 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:18:52.118 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:18:52.118 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:18:52.118 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:18:52.118 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:18:52.118 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:18:52.118 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:18:52.118 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:18:52.118 | INFO     | __main__:main:704 | Form Type: 8-K
+2025-12-29 00:18:52.118 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:18:52.254 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:18:52.254 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:18:52.305 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:18:52.305 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:18:52.314 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:18:52.316 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:18:52.316 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (8-K)...
+2025-12-29 00:18:52.316 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:18:53.589 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:18:53.912 | INFO     | utils.edgar_client:get_filing:188 | Found filing using form type: 8-K
+2025-12-29 00:18:53.925 | INFO     | utils.form_registry:_load_config:41 | Loaded 21 form configurations from /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/scripts/config/form_config.yaml
+2025-12-29 00:18:53.950 | WARNING  | utils.extraction_strategies:extract_sections:113 | [FALLBACK_INSPECTION] No items found using mappings for CurrentReport, inspecting object structure...
+2025-12-29 00:18:53.951 | INFO     | utils.extraction_strategies:extract_sections:114 | [EXPLANATION] Fallback inspection means the script doesn't know the exact structure of this form type's data
+2025-12-29 00:18:53.951 | INFO     | utils.extraction_strategies:extract_sections:115 | [EXPLANATION] It will automatically search through all object attributes to find content - data will NOT be lost
+2025-12-29 00:18:54.027 | INFO     | utils.extraction_strategies:_inspect_object_attributes:179 | [FALLBACK_INSPECTION] Extracted chunked_document from CurrentReport via attribute inspection
+2025-12-29 00:18:54.028 | INFO     | utils.extraction_strategies:_inspect_object_attributes:179 | [FALLBACK_INSPECTION] Extracted doc from CurrentReport via attribute inspection
+2025-12-29 00:18:54.029 | INFO     | utils.extraction_strategies:_inspect_object_attributes:179 | [FALLBACK_INSPECTION] Extracted document from CurrentReport via attribute inspection
+2025-12-29 00:18:54.030 | INFO     | utils.extraction_strategies:_inspect_object_attributes:179 | [FALLBACK_INSPECTION] Extracted financials from CurrentReport via attribute inspection
+2025-12-29 00:18:54.031 | INFO     | utils.extraction_strategies:extract_sections:118 | [SUCCESS] Fallback inspection found 4 items - data preserved
+2025-12-29 00:18:54.031 | INFO     | utils.edgar_client:get_filing:232 | Extracted 4 items using structured_object strategy
+2025-12-29 00:18:54.031 | INFO     | utils.edgar_client:get_filing:265 | [SUCCESS] Extracted 4 items/sections from filing 0001140361-25-044561
+2025-12-29 00:18:54.032 | INFO     | utils.edgar_client:get_filing:287 | Fetched filing data for AAPL 8-K: 0001140361-25-044561
+2025-12-29 00:18:54.032 | INFO     | __main__:ingest_filing:557 | Transforming data to graph format...
+2025-12-29 00:18:54.032 | INFO     | __main__:ingest_filing:567 | [SUCCESS] Found 4 items/sections to process
+2025-12-29 00:18:54.032 | WARNING  | utils.data_transformer:_transform_filing:265 | Period end date is missing - will be set to null in database
+2025-12-29 00:18:54.057 | INFO     | __main__:ingest_filing:613 | Creating company node...
+2025-12-29 00:18:54.071 | INFO     | __main__:create_company_node:98 | Created/updated Company node: 0000320193 (Apple Inc.)
+2025-12-29 00:18:54.072 | INFO     | __main__:ingest_filing:619 | Creating filing node...
+2025-12-29 00:18:54.100 | INFO     | __main__:create_filing_node:213 | Created/updated Filing node: 0001140361-25-044561
+2025-12-29 00:18:54.100 | INFO     | __main__:ingest_filing:630 | Creating 4 sections with 3 total chunks...
+2025-12-29 00:18:54.133 | INFO     | __main__:create_chunk_nodes:399 | Creating 1 chunk nodes for section 0001140361-25-044561_Itemchunked_document...
+2025-12-29 00:18:54.133 | INFO     | __main__:create_chunk_nodes:419 | Generating embeddings...
+2025-12-29 00:18:54.285 | INFO     | __main__:create_chunk_nodes:399 | Creating 1 chunk nodes for section 0001140361-25-044561_Itemdoc...
+2025-12-29 00:18:54.286 | INFO     | __main__:create_chunk_nodes:419 | Generating embeddings...
+2025-12-29 00:18:54.411 | INFO     | __main__:create_chunk_nodes:399 | Creating 1 chunk nodes for section 0001140361-25-044561_Itemfinancials...
+2025-12-29 00:18:54.411 | INFO     | __main__:create_chunk_nodes:419 | Generating embeddings...
+2025-12-29 00:18:54.477 | INFO     | __main__:ingest_filing:685 | Successfully ingested filing 0001140361-25-044561
+2025-12-29 00:18:54.477 | INFO     | __main__:main:734 | ============================================================
+2025-12-29 00:18:54.477 | INFO     | __main__:main:735 | Ingestion completed successfully!
+2025-12-29 00:18:54.477 | INFO     | __main__:main:736 | ============================================================
+2025-12-29 00:18:54.478 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:18:55.668 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:18:55.668 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:18:55.668 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:18:55.668 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:18:55.668 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:18:55.669 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:18:55.669 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:18:55.669 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:18:55.669 | INFO     | __main__:main:704 | Form Type: DEF 14A
+2025-12-29 00:18:55.669 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:18:55.808 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:18:55.809 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:18:55.860 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:18:55.860 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:18:55.868 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:18:55.869 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:18:55.869 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (DEF 14A)...
+2025-12-29 00:18:55.869 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:18:57.155 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:18:57.442 | INFO     | utils.edgar_client:get_filing:188 | Found filing using form type: DEF 14A
+2025-12-29 00:18:57.455 | INFO     | utils.form_registry:_load_config:41 | Loaded 21 form configurations from /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/scripts/config/form_config.yaml
+2025-12-29 00:18:57.759 | INFO     | utils.extraction_strategies:extract_sections:596 | Extracted generic content for DEF 14A (0 chars)
+2025-12-29 00:18:57.759 | INFO     | utils.edgar_client:get_filing:242 | Extracted 1 items using fallback generic strategy
+2025-12-29 00:18:57.759 | INFO     | utils.edgar_client:get_filing:265 | [SUCCESS] Extracted 1 items/sections from filing 0001308179-25-000008
+2025-12-29 00:18:57.759 | INFO     | utils.edgar_client:get_filing:287 | Fetched filing data for AAPL DEF 14A: 0001308179-25-000008
+2025-12-29 00:18:57.759 | INFO     | __main__:ingest_filing:557 | Transforming data to graph format...
+2025-12-29 00:18:57.759 | INFO     | __main__:ingest_filing:567 | [SUCCESS] Found 1 items/sections to process
+2025-12-29 00:18:57.759 | WARNING  | utils.data_transformer:_transform_filing:265 | Period end date is missing - will be set to null in database
+2025-12-29 00:18:57.765 | INFO     | __main__:ingest_filing:613 | Creating company node...
+2025-12-29 00:18:57.769 | INFO     | __main__:create_company_node:98 | Created/updated Company node: 0000320193 (Apple Inc.)
+2025-12-29 00:18:57.769 | INFO     | __main__:ingest_filing:619 | Creating filing node...
+2025-12-29 00:18:57.774 | INFO     | __main__:create_filing_node:213 | Created/updated Filing node: 0001308179-25-000008
+2025-12-29 00:18:57.774 | INFO     | __main__:ingest_filing:630 | Creating 1 sections with 0 total chunks...
+2025-12-29 00:18:57.774 | WARNING  | __main__:ingest_filing:639 | [CHUNKING_WARNING] No chunks created from 1 sections
+2025-12-29 00:18:57.774 | WARNING  | __main__:ingest_filing:640 | [STATUS] Sections created but no chunks - content may be too short or chunking logic issue
+2025-12-29 00:18:57.774 | WARNING  | __main__:ingest_filing:641 | [ACTION] Review chunking parameters and content length
+2025-12-29 00:18:57.816 | INFO     | __main__:ingest_filing:685 | Successfully ingested filing 0001308179-25-000008
+2025-12-29 00:18:57.817 | INFO     | __main__:main:734 | ============================================================
+2025-12-29 00:18:57.817 | INFO     | __main__:main:735 | Ingestion completed successfully!
+2025-12-29 00:18:57.817 | INFO     | __main__:main:736 | ============================================================
+2025-12-29 00:18:57.817 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:18:58.969 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:18:58.970 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:18:58.970 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:18:58.970 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:18:58.970 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:18:58.970 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:18:58.970 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:18:58.970 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:18:58.970 | INFO     | __main__:main:704 | Form Type: DEF 14C
+2025-12-29 00:18:58.970 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:18:59.107 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:18:59.107 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:18:59.158 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:18:59.158 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:18:59.171 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:18:59.175 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:18:59.175 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (DEF 14C)...
+2025-12-29 00:18:59.175 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:00.454 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:00.748 | WARNING  | utils.edgar_client:get_filing:195 | [DATA_NOT_AVAILABLE] No DEF 14C filing found for AAPL (tried variants: ['DEF 14C', 'DEF14C', 'DEF-14C'])
+2025-12-29 00:19:00.749 | INFO     | utils.edgar_client:get_filing:196 | [STATUS] Form DEF 14C does not exist in edgar-tools for AAPL - this is expected if the company hasn't filed this form type
+2025-12-29 00:19:00.749 | INFO     | utils.edgar_client:get_filing:197 | [ACTION] Skipping DEF 14C ingestion for AAPL - no action needed
+2025-12-29 00:19:00.749 | WARNING  | __main__:ingest_filing:551 | [DATA_NOT_AVAILABLE] No DEF 14C filing found for AAPL - form may not exist for this company
+2025-12-29 00:19:00.750 | INFO     | __main__:ingest_filing:552 | [STATUS] Form DEF 14C does not exist in edgar-tools for AAPL
+2025-12-29 00:19:00.750 | INFO     | __main__:ingest_filing:553 | [ACTION] Skipping DEF 14C ingestion for AAPL - no action needed
+2025-12-29 00:19:00.750 | ERROR    | __main__:main:739 | Ingestion failed!
+2025-12-29 00:19:00.750 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:19:01.966 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:19:01.966 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:19:01.966 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:19:01.966 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:19:01.966 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:19:01.966 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:19:01.966 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:19:01.966 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:19:01.966 | INFO     | __main__:main:704 | Form Type: S-1
+2025-12-29 00:19:01.966 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:19:02.104 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:19:02.104 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:19:02.156 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:19:02.156 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:19:02.164 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:19:02.166 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:19:02.166 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (S-1)...
+2025-12-29 00:19:02.167 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:03.410 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:03.716 | WARNING  | utils.edgar_client:get_filing:195 | [DATA_NOT_AVAILABLE] No S-1 filing found for AAPL (tried variants: ['S-1', 'S1'])
+2025-12-29 00:19:03.716 | INFO     | utils.edgar_client:get_filing:196 | [STATUS] Form S-1 does not exist in edgar-tools for AAPL - this is expected if the company hasn't filed this form type
+2025-12-29 00:19:03.716 | INFO     | utils.edgar_client:get_filing:197 | [ACTION] Skipping S-1 ingestion for AAPL - no action needed
+2025-12-29 00:19:03.717 | WARNING  | __main__:ingest_filing:551 | [DATA_NOT_AVAILABLE] No S-1 filing found for AAPL - form may not exist for this company
+2025-12-29 00:19:03.717 | INFO     | __main__:ingest_filing:552 | [STATUS] Form S-1 does not exist in edgar-tools for AAPL
+2025-12-29 00:19:03.717 | INFO     | __main__:ingest_filing:553 | [ACTION] Skipping S-1 ingestion for AAPL - no action needed
+2025-12-29 00:19:03.717 | ERROR    | __main__:main:739 | Ingestion failed!
+2025-12-29 00:19:03.718 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:19:04.870 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:19:04.871 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:19:04.871 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:19:04.871 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:19:04.871 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:19:04.871 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:19:04.871 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:19:04.871 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:19:04.871 | INFO     | __main__:main:704 | Form Type: S-3
+2025-12-29 00:19:04.871 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:19:05.011 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:19:05.011 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:19:05.062 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:19:05.062 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:19:05.070 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:19:05.072 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:19:05.072 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (S-3)...
+2025-12-29 00:19:05.072 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:06.339 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:06.626 | INFO     | utils.edgar_client:get_filing:188 | Found filing using form type: S-3
+2025-12-29 00:19:06.638 | INFO     | utils.form_registry:_load_config:41 | Loaded 21 form configurations from /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/scripts/config/form_config.yaml
+2025-12-29 00:19:06.650 | INFO     | utils.extraction_strategies:extract_sections:596 | Extracted generic content for S-3 (0 chars)
+2025-12-29 00:19:06.650 | INFO     | utils.edgar_client:get_filing:242 | Extracted 1 items using fallback generic strategy
+2025-12-29 00:19:06.650 | INFO     | utils.edgar_client:get_filing:265 | [SUCCESS] Extracted 1 items/sections from filing 0000912057-97-019277
+2025-12-29 00:19:06.650 | INFO     | utils.edgar_client:get_filing:287 | Fetched filing data for AAPL S-3: 0000912057-97-019277
+2025-12-29 00:19:06.650 | INFO     | __main__:ingest_filing:557 | Transforming data to graph format...
+2025-12-29 00:19:06.650 | INFO     | __main__:ingest_filing:567 | [SUCCESS] Found 1 items/sections to process
+2025-12-29 00:19:06.650 | WARNING  | utils.data_transformer:_transform_filing:265 | Period end date is missing - will be set to null in database
+2025-12-29 00:19:06.654 | INFO     | __main__:ingest_filing:613 | Creating company node...
+2025-12-29 00:19:06.658 | INFO     | __main__:create_company_node:98 | Created/updated Company node: 0000320193 (Apple Inc.)
+2025-12-29 00:19:06.659 | INFO     | __main__:ingest_filing:619 | Creating filing node...
+2025-12-29 00:19:06.664 | INFO     | __main__:create_filing_node:213 | Created/updated Filing node: 0000912057-97-019277
+2025-12-29 00:19:06.664 | INFO     | __main__:ingest_filing:630 | Creating 1 sections with 0 total chunks...
+2025-12-29 00:19:06.665 | WARNING  | __main__:ingest_filing:639 | [CHUNKING_WARNING] No chunks created from 1 sections
+2025-12-29 00:19:06.665 | WARNING  | __main__:ingest_filing:640 | [STATUS] Sections created but no chunks - content may be too short or chunking logic issue
+2025-12-29 00:19:06.665 | WARNING  | __main__:ingest_filing:641 | [ACTION] Review chunking parameters and content length
+2025-12-29 00:19:06.702 | INFO     | __main__:ingest_filing:685 | Successfully ingested filing 0000912057-97-019277
+2025-12-29 00:19:06.703 | INFO     | __main__:main:734 | ============================================================
+2025-12-29 00:19:06.703 | INFO     | __main__:main:735 | Ingestion completed successfully!
+2025-12-29 00:19:06.703 | INFO     | __main__:main:736 | ============================================================
+2025-12-29 00:19:06.703 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:19:07.852 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:19:07.852 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:19:07.852 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:19:07.852 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:19:07.852 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:19:07.852 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:19:07.852 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:19:07.852 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:19:07.852 | INFO     | __main__:main:704 | Form Type: S-4
+2025-12-29 00:19:07.852 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:19:07.990 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:19:07.990 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:19:08.041 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:19:08.041 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:19:08.048 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:19:08.050 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:19:08.050 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (S-4)...
+2025-12-29 00:19:08.050 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:09.364 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:09.665 | INFO     | utils.edgar_client:get_filing:188 | Found filing using form type: S-4
+2025-12-29 00:19:09.678 | INFO     | utils.form_registry:_load_config:41 | Loaded 21 form configurations from /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/scripts/config/form_config.yaml
+2025-12-29 00:19:09.695 | INFO     | utils.extraction_strategies:extract_sections:596 | Extracted generic content for S-4 (0 chars)
+2025-12-29 00:19:09.696 | INFO     | utils.edgar_client:get_filing:242 | Extracted 1 items using fallback generic strategy
+2025-12-29 00:19:09.696 | INFO     | utils.edgar_client:get_filing:265 | [SUCCESS] Extracted 1 items/sections from filing 0001047469-98-000148
+2025-12-29 00:19:09.696 | INFO     | utils.edgar_client:get_filing:287 | Fetched filing data for AAPL S-4: 0001047469-98-000148
+2025-12-29 00:19:09.696 | INFO     | __main__:ingest_filing:557 | Transforming data to graph format...
+2025-12-29 00:19:09.696 | INFO     | __main__:ingest_filing:567 | [SUCCESS] Found 1 items/sections to process
+2025-12-29 00:19:09.696 | WARNING  | utils.data_transformer:_transform_filing:265 | Period end date is missing - will be set to null in database
+2025-12-29 00:19:09.701 | INFO     | __main__:ingest_filing:613 | Creating company node...
+2025-12-29 00:19:09.705 | INFO     | __main__:create_company_node:98 | Created/updated Company node: 0000320193 (Apple Inc.)
+2025-12-29 00:19:09.705 | INFO     | __main__:ingest_filing:619 | Creating filing node...
+2025-12-29 00:19:09.709 | INFO     | __main__:create_filing_node:213 | Created/updated Filing node: 0001047469-98-000148
+2025-12-29 00:19:09.709 | INFO     | __main__:ingest_filing:630 | Creating 1 sections with 0 total chunks...
+2025-12-29 00:19:09.709 | WARNING  | __main__:ingest_filing:639 | [CHUNKING_WARNING] No chunks created from 1 sections
+2025-12-29 00:19:09.709 | WARNING  | __main__:ingest_filing:640 | [STATUS] Sections created but no chunks - content may be too short or chunking logic issue
+2025-12-29 00:19:09.709 | WARNING  | __main__:ingest_filing:641 | [ACTION] Review chunking parameters and content length
+2025-12-29 00:19:09.724 | INFO     | __main__:ingest_filing:685 | Successfully ingested filing 0001047469-98-000148
+2025-12-29 00:19:09.724 | INFO     | __main__:main:734 | ============================================================
+2025-12-29 00:19:09.724 | INFO     | __main__:main:735 | Ingestion completed successfully!
+2025-12-29 00:19:09.724 | INFO     | __main__:main:736 | ============================================================
+2025-12-29 00:19:09.725 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:19:10.856 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:19:10.856 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:19:10.856 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:19:10.856 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:19:10.857 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:19:10.857 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:19:10.857 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:19:10.857 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:19:10.857 | INFO     | __main__:main:704 | Form Type: 10
+2025-12-29 00:19:10.857 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:19:10.999 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:19:11.000 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:19:11.050 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:19:11.050 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:19:11.058 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:19:11.061 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:19:11.061 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (10)...
+2025-12-29 00:19:11.061 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:12.362 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:12.653 | INFO     | utils.edgar_client:get_filing:188 | Found filing using form type: 10-K
+2025-12-29 00:19:12.666 | INFO     | utils.form_registry:_load_config:41 | Loaded 21 form configurations from /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/scripts/config/form_config.yaml
+2025-12-29 00:19:12.746 | INFO     | utils.extraction_strategies:extract_sections:596 | Extracted generic content for 10 (0 chars)
+2025-12-29 00:19:12.746 | INFO     | utils.edgar_client:get_filing:242 | Extracted 1 items using fallback generic strategy
+2025-12-29 00:19:12.746 | INFO     | utils.edgar_client:get_filing:265 | [SUCCESS] Extracted 1 items/sections from filing 0000320193-25-000079
+2025-12-29 00:19:12.746 | INFO     | utils.edgar_client:get_filing:287 | Fetched filing data for AAPL 10: 0000320193-25-000079
+2025-12-29 00:19:12.746 | INFO     | __main__:ingest_filing:557 | Transforming data to graph format...
+2025-12-29 00:19:12.746 | INFO     | __main__:ingest_filing:567 | [SUCCESS] Found 1 items/sections to process
+2025-12-29 00:19:12.746 | WARNING  | utils.data_transformer:_transform_filing:265 | Period end date is missing - will be set to null in database
+2025-12-29 00:19:12.752 | INFO     | __main__:ingest_filing:613 | Creating company node...
+2025-12-29 00:19:12.755 | INFO     | __main__:create_company_node:98 | Created/updated Company node: 0000320193 (Apple Inc.)
+2025-12-29 00:19:12.756 | INFO     | __main__:ingest_filing:619 | Creating filing node...
+2025-12-29 00:19:12.761 | INFO     | __main__:create_filing_node:213 | Created/updated Filing node: 0000320193-25-000079
+2025-12-29 00:19:12.761 | INFO     | __main__:ingest_filing:630 | Creating 1 sections with 0 total chunks...
+2025-12-29 00:19:12.761 | WARNING  | __main__:ingest_filing:639 | [CHUNKING_WARNING] No chunks created from 1 sections
+2025-12-29 00:19:12.761 | WARNING  | __main__:ingest_filing:640 | [STATUS] Sections created but no chunks - content may be too short or chunking logic issue
+2025-12-29 00:19:12.761 | WARNING  | __main__:ingest_filing:641 | [ACTION] Review chunking parameters and content length
+2025-12-29 00:19:12.796 | INFO     | __main__:ingest_filing:685 | Successfully ingested filing 0000320193-25-000079
+2025-12-29 00:19:12.797 | INFO     | __main__:main:734 | ============================================================
+2025-12-29 00:19:12.797 | INFO     | __main__:main:735 | Ingestion completed successfully!
+2025-12-29 00:19:12.797 | INFO     | __main__:main:736 | ============================================================
+2025-12-29 00:19:12.797 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:19:13.965 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:19:13.965 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:19:13.965 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:19:13.965 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:19:13.965 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:19:13.965 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:19:13.966 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:19:13.966 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:19:13.966 | INFO     | __main__:main:704 | Form Type: 3
+2025-12-29 00:19:13.966 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:19:14.107 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:19:14.107 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:19:14.158 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:19:14.159 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:19:14.167 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:19:14.169 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:19:14.169 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (3)...
+2025-12-29 00:19:14.169 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:15.431 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:15.730 | INFO     | utils.edgar_client:get_filing:188 | Found filing using form type: 3
+2025-12-29 00:19:15.743 | INFO     | utils.form_registry:_load_config:41 | Loaded 21 form configurations from /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/scripts/config/form_config.yaml
+2025-12-29 00:19:15.910 | INFO     | utils.extraction_strategies:extract_sections:596 | Extracted generic content for 3 (0 chars)
+2025-12-29 00:19:15.910 | INFO     | utils.edgar_client:get_filing:242 | Extracted 1 items using fallback generic strategy
+2025-12-29 00:19:15.910 | INFO     | utils.edgar_client:get_filing:265 | [SUCCESS] Extracted 1 items/sections from filing 0000320193-25-000066
+2025-12-29 00:19:15.910 | INFO     | utils.edgar_client:get_filing:287 | Fetched filing data for AAPL 3: 0000320193-25-000066
+2025-12-29 00:19:15.910 | INFO     | __main__:ingest_filing:557 | Transforming data to graph format...
+2025-12-29 00:19:15.910 | INFO     | __main__:ingest_filing:567 | [SUCCESS] Found 1 items/sections to process
+2025-12-29 00:19:15.911 | WARNING  | utils.data_transformer:_transform_filing:265 | Period end date is missing - will be set to null in database
+2025-12-29 00:19:15.917 | INFO     | __main__:ingest_filing:613 | Creating company node...
+2025-12-29 00:19:15.922 | INFO     | __main__:create_company_node:98 | Created/updated Company node: 0000320193 (Apple Inc.)
+2025-12-29 00:19:15.923 | INFO     | __main__:ingest_filing:619 | Creating filing node...
+2025-12-29 00:19:15.963 | INFO     | __main__:create_filing_node:213 | Created/updated Filing node: 0000320193-25-000066
+2025-12-29 00:19:15.963 | INFO     | __main__:ingest_filing:630 | Creating 1 sections with 0 total chunks...
+2025-12-29 00:19:15.963 | WARNING  | __main__:ingest_filing:639 | [CHUNKING_WARNING] No chunks created from 1 sections
+2025-12-29 00:19:15.963 | WARNING  | __main__:ingest_filing:640 | [STATUS] Sections created but no chunks - content may be too short or chunking logic issue
+2025-12-29 00:19:15.963 | WARNING  | __main__:ingest_filing:641 | [ACTION] Review chunking parameters and content length
+2025-12-29 00:19:15.994 | INFO     | __main__:ingest_filing:685 | Successfully ingested filing 0000320193-25-000066
+2025-12-29 00:19:15.994 | INFO     | __main__:main:734 | ============================================================
+2025-12-29 00:19:15.994 | INFO     | __main__:main:735 | Ingestion completed successfully!
+2025-12-29 00:19:15.994 | INFO     | __main__:main:736 | ============================================================
+2025-12-29 00:19:15.994 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:19:17.137 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:19:17.138 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:19:17.138 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:19:17.138 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:19:17.138 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:19:17.138 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:19:17.138 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:19:17.138 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:19:17.138 | INFO     | __main__:main:704 | Form Type: 4
+2025-12-29 00:19:17.138 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:19:17.277 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:19:17.277 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:19:17.328 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:19:17.329 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:19:17.337 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:19:17.341 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:19:17.341 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (4)...
+2025-12-29 00:19:17.341 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:18.623 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:18.913 | INFO     | utils.edgar_client:get_filing:188 | Found filing using form type: 4
+2025-12-29 00:19:18.925 | INFO     | utils.form_registry:_load_config:41 | Loaded 21 form configurations from /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/scripts/config/form_config.yaml
+2025-12-29 00:19:19.076 | INFO     | utils.extraction_strategies:extract_sections:596 | Extracted generic content for 4 (0 chars)
+2025-12-29 00:19:19.077 | INFO     | utils.edgar_client:get_filing:242 | Extracted 1 items using fallback generic strategy
+2025-12-29 00:19:19.077 | INFO     | utils.edgar_client:get_filing:265 | [SUCCESS] Extracted 1 items/sections from filing 0001462356-25-000012
+2025-12-29 00:19:19.077 | INFO     | utils.edgar_client:get_filing:287 | Fetched filing data for AAPL 4: 0001462356-25-000012
+2025-12-29 00:19:19.077 | INFO     | __main__:ingest_filing:557 | Transforming data to graph format...
+2025-12-29 00:19:19.077 | INFO     | __main__:ingest_filing:567 | [SUCCESS] Found 1 items/sections to process
+2025-12-29 00:19:19.077 | WARNING  | utils.data_transformer:_transform_filing:265 | Period end date is missing - will be set to null in database
+2025-12-29 00:19:19.083 | INFO     | __main__:ingest_filing:613 | Creating company node...
+2025-12-29 00:19:19.088 | INFO     | __main__:create_company_node:98 | Created/updated Company node: 0000320193 (Apple Inc.)
+2025-12-29 00:19:19.088 | INFO     | __main__:ingest_filing:619 | Creating filing node...
+2025-12-29 00:19:19.092 | INFO     | __main__:create_filing_node:213 | Created/updated Filing node: 0001462356-25-000012
+2025-12-29 00:19:19.092 | INFO     | __main__:ingest_filing:630 | Creating 1 sections with 0 total chunks...
+2025-12-29 00:19:19.092 | WARNING  | __main__:ingest_filing:639 | [CHUNKING_WARNING] No chunks created from 1 sections
+2025-12-29 00:19:19.092 | WARNING  | __main__:ingest_filing:640 | [STATUS] Sections created but no chunks - content may be too short or chunking logic issue
+2025-12-29 00:19:19.092 | WARNING  | __main__:ingest_filing:641 | [ACTION] Review chunking parameters and content length
+2025-12-29 00:19:19.109 | INFO     | __main__:ingest_filing:685 | Successfully ingested filing 0001462356-25-000012
+2025-12-29 00:19:19.109 | INFO     | __main__:main:734 | ============================================================
+2025-12-29 00:19:19.109 | INFO     | __main__:main:735 | Ingestion completed successfully!
+2025-12-29 00:19:19.109 | INFO     | __main__:main:736 | ============================================================
+2025-12-29 00:19:19.109 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:19:20.261 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:19:20.262 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:19:20.262 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:19:20.262 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:19:20.262 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:19:20.262 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:19:20.262 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:19:20.262 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:19:20.262 | INFO     | __main__:main:704 | Form Type: 5
+2025-12-29 00:19:20.262 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:19:20.402 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:19:20.403 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:19:20.454 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:19:20.454 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:19:20.462 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:19:20.464 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:19:20.464 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (5)...
+2025-12-29 00:19:20.464 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:21.753 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:22.058 | INFO     | utils.edgar_client:get_filing:188 | Found filing using form type: 5
+2025-12-29 00:19:22.070 | INFO     | utils.form_registry:_load_config:41 | Loaded 21 form configurations from /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/scripts/config/form_config.yaml
+2025-12-29 00:19:22.215 | INFO     | utils.extraction_strategies:extract_sections:596 | Extracted generic content for 5 (0 chars)
+2025-12-29 00:19:22.216 | INFO     | utils.edgar_client:get_filing:242 | Extracted 1 items using fallback generic strategy
+2025-12-29 00:19:22.216 | INFO     | utils.edgar_client:get_filing:265 | [SUCCESS] Extracted 1 items/sections from filing 0000320193-24-000102
+2025-12-29 00:19:22.216 | INFO     | utils.edgar_client:get_filing:287 | Fetched filing data for AAPL 5: 0000320193-24-000102
+2025-12-29 00:19:22.216 | INFO     | __main__:ingest_filing:557 | Transforming data to graph format...
+2025-12-29 00:19:22.216 | INFO     | __main__:ingest_filing:567 | [SUCCESS] Found 1 items/sections to process
+2025-12-29 00:19:22.216 | WARNING  | utils.data_transformer:_transform_filing:265 | Period end date is missing - will be set to null in database
+2025-12-29 00:19:22.222 | INFO     | __main__:ingest_filing:613 | Creating company node...
+2025-12-29 00:19:22.226 | INFO     | __main__:create_company_node:98 | Created/updated Company node: 0000320193 (Apple Inc.)
+2025-12-29 00:19:22.226 | INFO     | __main__:ingest_filing:619 | Creating filing node...
+2025-12-29 00:19:22.230 | INFO     | __main__:create_filing_node:213 | Created/updated Filing node: 0000320193-24-000102
+2025-12-29 00:19:22.230 | INFO     | __main__:ingest_filing:630 | Creating 1 sections with 0 total chunks...
+2025-12-29 00:19:22.230 | WARNING  | __main__:ingest_filing:639 | [CHUNKING_WARNING] No chunks created from 1 sections
+2025-12-29 00:19:22.230 | WARNING  | __main__:ingest_filing:640 | [STATUS] Sections created but no chunks - content may be too short or chunking logic issue
+2025-12-29 00:19:22.230 | WARNING  | __main__:ingest_filing:641 | [ACTION] Review chunking parameters and content length
+2025-12-29 00:19:22.261 | INFO     | __main__:ingest_filing:685 | Successfully ingested filing 0000320193-24-000102
+2025-12-29 00:19:22.261 | INFO     | __main__:main:734 | ============================================================
+2025-12-29 00:19:22.262 | INFO     | __main__:main:735 | Ingestion completed successfully!
+2025-12-29 00:19:22.262 | INFO     | __main__:main:736 | ============================================================
+2025-12-29 00:19:22.262 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:19:23.434 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:19:23.435 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:19:23.435 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:19:23.435 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:19:23.435 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:19:23.435 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:19:23.435 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:19:23.435 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:19:23.435 | INFO     | __main__:main:704 | Form Type: 13D
+2025-12-29 00:19:23.435 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:19:23.574 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:19:23.574 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:19:23.625 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:19:23.625 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:19:23.633 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:19:23.635 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:19:23.635 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (13D)...
+2025-12-29 00:19:23.635 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:24.895 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:25.216 | WARNING  | utils.edgar_client:get_filing:195 | [DATA_NOT_AVAILABLE] No 13D filing found for AAPL (tried variants: ['13D', '13-D', 'SCHEDULE 13D'])
+2025-12-29 00:19:25.216 | INFO     | utils.edgar_client:get_filing:196 | [STATUS] Form 13D does not exist in edgar-tools for AAPL - this is expected if the company hasn't filed this form type
+2025-12-29 00:19:25.217 | INFO     | utils.edgar_client:get_filing:197 | [ACTION] Skipping 13D ingestion for AAPL - no action needed
+2025-12-29 00:19:25.217 | WARNING  | __main__:ingest_filing:551 | [DATA_NOT_AVAILABLE] No 13D filing found for AAPL - form may not exist for this company
+2025-12-29 00:19:25.217 | INFO     | __main__:ingest_filing:552 | [STATUS] Form 13D does not exist in edgar-tools for AAPL
+2025-12-29 00:19:25.217 | INFO     | __main__:ingest_filing:553 | [ACTION] Skipping 13D ingestion for AAPL - no action needed
+2025-12-29 00:19:25.217 | ERROR    | __main__:main:739 | Ingestion failed!
+2025-12-29 00:19:25.218 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:19:26.373 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:19:26.373 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:19:26.373 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:19:26.373 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:19:26.373 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:19:26.373 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:19:26.373 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:19:26.373 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:19:26.373 | INFO     | __main__:main:704 | Form Type: 13G
+2025-12-29 00:19:26.373 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:19:26.513 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:19:26.513 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:19:26.565 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:19:26.565 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:19:26.573 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:19:26.575 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:19:26.575 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (13G)...
+2025-12-29 00:19:26.575 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:27.880 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:28.200 | INFO     | utils.edgar_client:get_filing:188 | Found filing using form type: SCHEDULE 13G
+2025-12-29 00:19:28.208 | INFO     | utils.form_registry:_load_config:41 | Loaded 21 form configurations from /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/scripts/config/form_config.yaml
+2025-12-29 00:19:28.216 | INFO     | utils.extraction_strategies:extract_sections:596 | Extracted generic content for 13G (0 chars)
+2025-12-29 00:19:28.217 | INFO     | utils.edgar_client:get_filing:242 | Extracted 1 items using fallback generic strategy
+2025-12-29 00:19:28.217 | INFO     | utils.edgar_client:get_filing:265 | [SUCCESS] Extracted 1 items/sections from filing 0000932471-25-000778
+2025-12-29 00:19:28.217 | INFO     | utils.edgar_client:get_filing:287 | Fetched filing data for AAPL 13G: 0000932471-25-000778
+2025-12-29 00:19:28.217 | INFO     | __main__:ingest_filing:557 | Transforming data to graph format...
+2025-12-29 00:19:28.217 | INFO     | __main__:ingest_filing:567 | [SUCCESS] Found 1 items/sections to process
+2025-12-29 00:19:28.217 | WARNING  | utils.data_transformer:_transform_filing:265 | Period end date is missing - will be set to null in database
+2025-12-29 00:19:28.221 | INFO     | __main__:ingest_filing:613 | Creating company node...
+2025-12-29 00:19:28.226 | INFO     | __main__:create_company_node:98 | Created/updated Company node: 0000320193 (Apple Inc.)
+2025-12-29 00:19:28.226 | INFO     | __main__:ingest_filing:619 | Creating filing node...
+2025-12-29 00:19:28.260 | INFO     | __main__:create_filing_node:213 | Created/updated Filing node: 0000932471-25-000778
+2025-12-29 00:19:28.260 | INFO     | __main__:ingest_filing:630 | Creating 1 sections with 0 total chunks...
+2025-12-29 00:19:28.260 | WARNING  | __main__:ingest_filing:639 | [CHUNKING_WARNING] No chunks created from 1 sections
+2025-12-29 00:19:28.260 | WARNING  | __main__:ingest_filing:640 | [STATUS] Sections created but no chunks - content may be too short or chunking logic issue
+2025-12-29 00:19:28.260 | WARNING  | __main__:ingest_filing:641 | [ACTION] Review chunking parameters and content length
+2025-12-29 00:19:28.275 | INFO     | __main__:ingest_filing:685 | Successfully ingested filing 0000932471-25-000778
+2025-12-29 00:19:28.276 | INFO     | __main__:main:734 | ============================================================
+2025-12-29 00:19:28.276 | INFO     | __main__:main:735 | Ingestion completed successfully!
+2025-12-29 00:19:28.276 | INFO     | __main__:main:736 | ============================================================
+2025-12-29 00:19:28.276 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:19:29.431 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:19:29.432 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:19:29.432 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:19:29.432 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:19:29.432 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:19:29.432 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:19:29.432 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:19:29.432 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:19:29.432 | INFO     | __main__:main:704 | Form Type: 13F
+2025-12-29 00:19:29.432 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:19:29.580 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:19:29.580 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:19:29.632 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:19:29.632 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:19:29.646 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:19:29.650 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:19:29.650 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (13F)...
+2025-12-29 00:19:29.650 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:30.928 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:31.221 | WARNING  | utils.edgar_client:get_filing:195 | [DATA_NOT_AVAILABLE] No 13F filing found for AAPL (tried variants: ['13F', '13-F'])
+2025-12-29 00:19:31.222 | INFO     | utils.edgar_client:get_filing:196 | [STATUS] Form 13F does not exist in edgar-tools for AAPL - this is expected if the company hasn't filed this form type
+2025-12-29 00:19:31.222 | INFO     | utils.edgar_client:get_filing:197 | [ACTION] Skipping 13F ingestion for AAPL - no action needed
+2025-12-29 00:19:31.223 | WARNING  | __main__:ingest_filing:551 | [DATA_NOT_AVAILABLE] No 13F filing found for AAPL - form may not exist for this company
+2025-12-29 00:19:31.223 | INFO     | __main__:ingest_filing:552 | [STATUS] Form 13F does not exist in edgar-tools for AAPL
+2025-12-29 00:19:31.223 | INFO     | __main__:ingest_filing:553 | [ACTION] Skipping 13F ingestion for AAPL - no action needed
+2025-12-29 00:19:31.223 | ERROR    | __main__:main:739 | Ingestion failed!
+2025-12-29 00:19:31.224 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:19:32.403 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:19:32.403 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:19:32.403 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:19:32.403 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:19:32.403 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:19:32.403 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:19:32.403 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:19:32.403 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:19:32.403 | INFO     | __main__:main:704 | Form Type: N-CSR
+2025-12-29 00:19:32.403 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:19:32.541 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:19:32.542 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:19:32.592 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:19:32.592 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:19:32.601 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:19:32.604 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:19:32.604 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (N-CSR)...
+2025-12-29 00:19:32.604 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:33.870 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:34.198 | WARNING  | utils.edgar_client:get_filing:195 | [DATA_NOT_AVAILABLE] No N-CSR filing found for AAPL (tried variants: ['N-CSR', 'NCSR', 'NCSR'])
+2025-12-29 00:19:34.198 | INFO     | utils.edgar_client:get_filing:196 | [STATUS] Form N-CSR does not exist in edgar-tools for AAPL - this is expected if the company hasn't filed this form type
+2025-12-29 00:19:34.199 | INFO     | utils.edgar_client:get_filing:197 | [ACTION] Skipping N-CSR ingestion for AAPL - no action needed
+2025-12-29 00:19:34.199 | WARNING  | __main__:ingest_filing:551 | [DATA_NOT_AVAILABLE] No N-CSR filing found for AAPL - form may not exist for this company
+2025-12-29 00:19:34.199 | INFO     | __main__:ingest_filing:552 | [STATUS] Form N-CSR does not exist in edgar-tools for AAPL
+2025-12-29 00:19:34.199 | INFO     | __main__:ingest_filing:553 | [ACTION] Skipping N-CSR ingestion for AAPL - no action needed
+2025-12-29 00:19:34.199 | ERROR    | __main__:main:739 | Ingestion failed!
+2025-12-29 00:19:34.200 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:19:35.355 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:19:35.355 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:19:35.355 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:19:35.355 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:19:35.355 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:19:35.355 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:19:35.355 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:19:35.355 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:19:35.355 | INFO     | __main__:main:704 | Form Type: 11-K
+2025-12-29 00:19:35.355 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:19:35.494 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:19:35.494 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:19:35.545 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:19:35.545 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:19:35.553 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:19:35.555 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:19:35.555 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (11-K)...
+2025-12-29 00:19:35.555 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:36.870 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:37.181 | WARNING  | utils.edgar_client:get_filing:195 | [DATA_NOT_AVAILABLE] No 11-K filing found for AAPL (tried variants: ['11-K', '11K'])
+2025-12-29 00:19:37.181 | INFO     | utils.edgar_client:get_filing:196 | [STATUS] Form 11-K does not exist in edgar-tools for AAPL - this is expected if the company hasn't filed this form type
+2025-12-29 00:19:37.181 | INFO     | utils.edgar_client:get_filing:197 | [ACTION] Skipping 11-K ingestion for AAPL - no action needed
+2025-12-29 00:19:37.181 | WARNING  | __main__:ingest_filing:551 | [DATA_NOT_AVAILABLE] No 11-K filing found for AAPL - form may not exist for this company
+2025-12-29 00:19:37.182 | INFO     | __main__:ingest_filing:552 | [STATUS] Form 11-K does not exist in edgar-tools for AAPL
+2025-12-29 00:19:37.182 | INFO     | __main__:ingest_filing:553 | [ACTION] Skipping 11-K ingestion for AAPL - no action needed
+2025-12-29 00:19:37.182 | ERROR    | __main__:main:739 | Ingestion failed!
+2025-12-29 00:19:37.182 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:19:38.407 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:19:38.407 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:19:38.407 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:19:38.407 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:19:38.407 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:19:38.407 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:19:38.407 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:19:38.407 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:19:38.407 | INFO     | __main__:main:704 | Form Type: 20-F
+2025-12-29 00:19:38.407 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:19:38.546 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:19:38.547 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:19:38.597 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:19:38.598 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:19:38.606 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:19:38.608 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:19:38.608 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (20-F)...
+2025-12-29 00:19:38.608 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:39.918 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:40.233 | WARNING  | utils.edgar_client:get_filing:195 | [DATA_NOT_AVAILABLE] No 20-F filing found for AAPL (tried variants: ['20-F', '20F'])
+2025-12-29 00:19:40.234 | INFO     | utils.edgar_client:get_filing:196 | [STATUS] Form 20-F does not exist in edgar-tools for AAPL - this is expected if the company hasn't filed this form type
+2025-12-29 00:19:40.234 | INFO     | utils.edgar_client:get_filing:197 | [ACTION] Skipping 20-F ingestion for AAPL - no action needed
+2025-12-29 00:19:40.234 | WARNING  | __main__:ingest_filing:551 | [DATA_NOT_AVAILABLE] No 20-F filing found for AAPL - form may not exist for this company
+2025-12-29 00:19:40.234 | INFO     | __main__:ingest_filing:552 | [STATUS] Form 20-F does not exist in edgar-tools for AAPL
+2025-12-29 00:19:40.234 | INFO     | __main__:ingest_filing:553 | [ACTION] Skipping 20-F ingestion for AAPL - no action needed
+2025-12-29 00:19:40.234 | ERROR    | __main__:main:739 | Ingestion failed!
+2025-12-29 00:19:40.235 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:19:41.399 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:19:41.399 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:19:41.399 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:19:41.399 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:19:41.399 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:19:41.399 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:19:41.400 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:19:41.400 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:19:41.400 | INFO     | __main__:main:704 | Form Type: 40-F
+2025-12-29 00:19:41.400 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:19:41.539 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:19:41.539 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:19:41.590 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:19:41.590 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:19:41.600 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:19:41.601 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:19:41.601 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (40-F)...
+2025-12-29 00:19:41.602 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:42.935 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:43.230 | WARNING  | utils.edgar_client:get_filing:195 | [DATA_NOT_AVAILABLE] No 40-F filing found for AAPL (tried variants: ['40-F', '40F'])
+2025-12-29 00:19:43.230 | INFO     | utils.edgar_client:get_filing:196 | [STATUS] Form 40-F does not exist in edgar-tools for AAPL - this is expected if the company hasn't filed this form type
+2025-12-29 00:19:43.230 | INFO     | utils.edgar_client:get_filing:197 | [ACTION] Skipping 40-F ingestion for AAPL - no action needed
+2025-12-29 00:19:43.230 | WARNING  | __main__:ingest_filing:551 | [DATA_NOT_AVAILABLE] No 40-F filing found for AAPL - form may not exist for this company
+2025-12-29 00:19:43.230 | INFO     | __main__:ingest_filing:552 | [STATUS] Form 40-F does not exist in edgar-tools for AAPL
+2025-12-29 00:19:43.230 | INFO     | __main__:ingest_filing:553 | [ACTION] Skipping 40-F ingestion for AAPL - no action needed
+2025-12-29 00:19:43.230 | ERROR    | __main__:main:739 | Ingestion failed!
+2025-12-29 00:19:43.231 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:19:44.415 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:19:44.415 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:19:44.415 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:19:44.415 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:19:44.415 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:19:44.416 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:19:44.416 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:19:44.416 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:19:44.416 | INFO     | __main__:main:704 | Form Type: 144
+2025-12-29 00:19:44.416 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:19:44.555 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:19:44.555 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:19:44.605 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:19:44.606 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:19:44.613 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:19:44.615 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:19:44.615 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (144)...
+2025-12-29 00:19:44.615 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:45.873 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:46.179 | INFO     | utils.edgar_client:get_filing:188 | Found filing using form type: 144
+2025-12-29 00:19:46.192 | INFO     | utils.form_registry:_load_config:41 | Loaded 21 form configurations from /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/scripts/config/form_config.yaml
+2025-12-29 00:19:46.331 | INFO     | utils.extraction_strategies:extract_sections:596 | Extracted generic content for 144 (0 chars)
+2025-12-29 00:19:46.331 | INFO     | utils.edgar_client:get_filing:232 | Extracted 1 items using generic strategy
+2025-12-29 00:19:46.332 | INFO     | utils.edgar_client:get_filing:265 | [SUCCESS] Extracted 1 items/sections from filing 0001950047-25-008030
+2025-12-29 00:19:46.332 | INFO     | utils.edgar_client:get_filing:287 | Fetched filing data for AAPL 144: 0001950047-25-008030
+2025-12-29 00:19:46.332 | INFO     | __main__:ingest_filing:557 | Transforming data to graph format...
+2025-12-29 00:19:46.332 | INFO     | __main__:ingest_filing:567 | [SUCCESS] Found 1 items/sections to process
+2025-12-29 00:19:46.333 | WARNING  | utils.data_transformer:_transform_filing:265 | Period end date is missing - will be set to null in database
+2025-12-29 00:19:46.357 | INFO     | __main__:ingest_filing:613 | Creating company node...
+2025-12-29 00:19:46.360 | INFO     | __main__:create_company_node:98 | Created/updated Company node: 0000320193 (Apple Inc.)
+2025-12-29 00:19:46.361 | INFO     | __main__:ingest_filing:619 | Creating filing node...
+2025-12-29 00:19:46.364 | INFO     | __main__:create_filing_node:213 | Created/updated Filing node: 0001950047-25-008030
+2025-12-29 00:19:46.364 | INFO     | __main__:ingest_filing:630 | Creating 1 sections with 0 total chunks...
+2025-12-29 00:19:46.364 | WARNING  | __main__:ingest_filing:639 | [CHUNKING_WARNING] No chunks created from 1 sections
+2025-12-29 00:19:46.364 | WARNING  | __main__:ingest_filing:640 | [STATUS] Sections created but no chunks - content may be too short or chunking logic issue
+2025-12-29 00:19:46.364 | WARNING  | __main__:ingest_filing:641 | [ACTION] Review chunking parameters and content length
+2025-12-29 00:19:46.409 | INFO     | __main__:ingest_filing:685 | Successfully ingested filing 0001950047-25-008030
+2025-12-29 00:19:46.409 | INFO     | __main__:main:734 | ============================================================
+2025-12-29 00:19:46.409 | INFO     | __main__:main:735 | Ingestion completed successfully!
+2025-12-29 00:19:46.409 | INFO     | __main__:main:736 | ============================================================
+2025-12-29 00:19:46.409 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-29 00:19:47.590 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-29 00:19:47.590 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251229.log
+2025-12-29 00:19:47.590 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251229.log
+2025-12-29 00:19:47.590 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-29 00:19:47.590 | INFO     | __main__:main:700 | ============================================================
+2025-12-29 00:19:47.590 | INFO     | __main__:main:701 | EDGAR Data Ingestion
+2025-12-29 00:19:47.590 | INFO     | __main__:main:702 | ============================================================
+2025-12-29 00:19:47.590 | INFO     | __main__:main:703 | Ticker: AAPL
+2025-12-29 00:19:47.590 | INFO     | __main__:main:704 | Form Type: 424B
+2025-12-29 00:19:47.591 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-29 00:19:47.729 | INFO     | utils.edgar_client:_initialize_client:56 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-29 00:19:47.729 | INFO     | utils.edgar_client:_initialize_client:62 | Successfully imported edgartools library
+2025-12-29 00:19:47.781 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-29 00:19:47.782 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-29 00:19:47.790 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-29 00:19:47.792 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-29 00:19:47.792 | INFO     | __main__:ingest_filing:545 | Ingesting filing for AAPL (424B)...
+2025-12-29 00:19:47.792 | INFO     | __main__:ingest_filing:548 | Retrieving EDGAR data...
+2025-12-29 00:19:49.067 | INFO     | utils.edgar_client:get_company_by_ticker:117 | Fetched company data for AAPL: Apple Inc.
+2025-12-29 00:19:49.392 | INFO     | utils.edgar_client:get_filing:188 | Found filing using form type: 424B2
+2025-12-29 00:19:49.405 | INFO     | utils.form_registry:_load_config:41 | Loaded 21 form configurations from /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/scripts/config/form_config.yaml
+2025-12-29 00:19:49.421 | INFO     | utils.extraction_strategies:extract_sections:596 | Extracted generic content for 424B (0 chars)
+2025-12-29 00:19:49.421 | INFO     | utils.edgar_client:get_filing:232 | Extracted 1 items using generic strategy
+2025-12-29 00:19:49.421 | INFO     | utils.edgar_client:get_filing:265 | [SUCCESS] Extracted 1 items/sections from filing 0001140361-25-017543
+2025-12-29 00:19:49.421 | INFO     | utils.edgar_client:get_filing:287 | Fetched filing data for AAPL 424B: 0001140361-25-017543
+2025-12-29 00:19:49.421 | INFO     | __main__:ingest_filing:557 | Transforming data to graph format...
+2025-12-29 00:19:49.421 | INFO     | __main__:ingest_filing:567 | [SUCCESS] Found 1 items/sections to process
+2025-12-29 00:19:49.422 | WARNING  | utils.data_transformer:_transform_filing:265 | Period end date is missing - will be set to null in database
+2025-12-29 00:19:49.425 | INFO     | __main__:ingest_filing:613 | Creating company node...
+2025-12-29 00:19:49.436 | INFO     | __main__:create_company_node:98 | Created/updated Company node: 0000320193 (Apple Inc.)
+2025-12-29 00:19:49.436 | INFO     | __main__:ingest_filing:619 | Creating filing node...
+2025-12-29 00:19:49.439 | INFO     | __main__:create_filing_node:213 | Created/updated Filing node: 0001140361-25-017543
+2025-12-29 00:19:49.440 | INFO     | __main__:ingest_filing:630 | Creating 1 sections with 0 total chunks...
+2025-12-29 00:19:49.440 | WARNING  | __main__:ingest_filing:639 | [CHUNKING_WARNING] No chunks created from 1 sections
+2025-12-29 00:19:49.440 | WARNING  | __main__:ingest_filing:640 | [STATUS] Sections created but no chunks - content may be too short or chunking logic issue
+2025-12-29 00:19:49.440 | WARNING  | __main__:ingest_filing:641 | [ACTION] Review chunking parameters and content length
+2025-12-29 00:19:49.450 | INFO     | __main__:ingest_filing:685 | Successfully ingested filing 0001140361-25-017543
+2025-12-29 00:19:49.451 | INFO     | __main__:main:734 | ============================================================
+2025-12-29 00:19:49.451 | INFO     | __main__:main:735 | Ingestion completed successfully!
+2025-12-29 00:19:49.451 | INFO     | __main__:main:736 | ============================================================
+2025-12-29 00:19:49.451 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
