@@ -45,14 +45,21 @@ def create_company_node(client: Neo4jClient, company_node: dict) -> None:
     props = company_node["properties"]
     query = """
     MERGE (c:Company {cik: $cik})
-    SET c.name = $name,
+    ON CREATE SET c.created_at = datetime(),
+        c.name = $name,
         c.ticker = $ticker,
         c.sic = $sic,
         c.sic_description = $sic_description,
         c.exchange = $exchange,
         c.incorporation_state = $incorporation_state,
         c.updated_at = datetime()
-    ON CREATE SET c.created_at = datetime()
+    ON MATCH SET c.name = $name,
+        c.ticker = $ticker,
+        c.sic = $sic,
+        c.sic_description = $sic_description,
+        c.exchange = $exchange,
+        c.incorporation_state = $incorporation_state,
+        c.updated_at = datetime()
     RETURN c.cik AS cik
     """
     client.execute_write(query, props)
@@ -66,7 +73,8 @@ def create_filing_node(client: Neo4jClient, filing_node: dict, period_node: dict
     # Create/update Filing node
     query = """
     MERGE (f:Filing {accession_number: $accession_number})
-    SET f.form_type = $form_type,
+    ON CREATE SET f.created_at = datetime(),
+        f.form_type = $form_type,
         f.filing_date = date($filing_date),
         f.period_end_date = date($period_end_date),
         f.fiscal_year = $fiscal_year,
@@ -78,7 +86,18 @@ def create_filing_node(client: Neo4jClient, filing_node: dict, period_node: dict
         f.company_ticker = $company_ticker,
         f.updated_at = datetime(),
         f.ingestion_status = 'processing'
-    ON CREATE SET f.created_at = datetime()
+    ON MATCH SET f.form_type = $form_type,
+        f.filing_date = date($filing_date),
+        f.period_end_date = date($period_end_date),
+        f.fiscal_year = $fiscal_year,
+        f.fiscal_quarter = $fiscal_quarter,
+        f.fiscal_period = $fiscal_period,
+        f.url = $url,
+        f.company_cik = $company_cik,
+        f.company_name = $company_name,
+        f.company_ticker = $company_ticker,
+        f.updated_at = datetime(),
+        f.ingestion_status = 'processing'
     WITH f
     MATCH (c:Company {cik: $company_cik})
     MERGE (f)-[:FILED_BY {filed_at: datetime()}]->(c)
@@ -101,12 +120,17 @@ def create_filing_node(client: Neo4jClient, filing_node: dict, period_node: dict
         period_props = period_node["properties"]
         period_query = """
         MERGE (p:Period {period_id: $period_id})
-        SET p.fiscal_year = $fiscal_year,
+        ON CREATE SET p.created_at = datetime(),
+            p.fiscal_year = $fiscal_year,
             p.fiscal_quarter = $fiscal_quarter,
             p.period_start = date($period_start),
             p.period_end = date($period_end),
             p.period_type = $period_type
-        ON CREATE SET p.created_at = datetime()
+        ON MATCH SET p.fiscal_year = $fiscal_year,
+            p.fiscal_quarter = $fiscal_quarter,
+            p.period_start = date($period_start),
+            p.period_end = date($period_end),
+            p.period_type = $period_type
         WITH p
         MATCH (f:Filing {accession_number: $accession_number})
         MERGE (f)-[:FOR_PERIOD]->(p)
@@ -128,9 +152,9 @@ def create_section_node(client: Neo4jClient, section_node: dict, filing_accessio
     labels = section_node.get("labels", ["Section"])
     label_str = ":".join(labels)
     
-    query = f"""
-    MERGE (s:{label_str} {{section_id: $section_id}})
-    SET s.item_number = $item_number,
+    # Build base query
+    base_on_create = """s.created_at = datetime(),
+        s.item_number = $item_number,
         s.item_title = $item_title,
         s.content = $content,
         s.content_length = $content_length,
@@ -138,21 +162,30 @@ def create_section_node(client: Neo4jClient, section_node: dict, filing_accessio
         s.company_cik = $company_cik,
         s.fiscal_year = $fiscal_year,
         s.form_type = $form_type,
-        s.updated_at = datetime()
-    ON CREATE SET s.created_at = datetime()
-    """
+        s.updated_at = datetime()"""
     
-    # Add form-specific properties
+    base_on_match = """s.item_number = $item_number,
+        s.item_title = $item_title,
+        s.content = $content,
+        s.content_length = $content_length,
+        s.word_count = $word_count,
+        s.company_cik = $company_cik,
+        s.fiscal_year = $fiscal_year,
+        s.form_type = $form_type,
+        s.updated_at = datetime()"""
+    
+    # Add form-specific properties for Form8KItem
     if "Form8KItem" in labels:
-        query += """
-        SET s.item_code = $item_code,
-            s.event_type = $event_type
-        """
+        base_on_create += ",\n        s.item_code = $item_code,\n        s.event_type = $event_type"
+        base_on_match += ",\n        s.item_code = $item_code,\n        s.event_type = $event_type"
     
-    query += """
+    query = f"""
+    MERGE (s:{label_str} {{section_id: $section_id}})
+    ON CREATE SET {base_on_create}
+    ON MATCH SET {base_on_match}
     WITH s
-    MATCH (f:Filing {accession_number: $filing_accession})
-    MERGE (f)-[:CONTAINS {order: $order}]->(s)
+    MATCH (f:Filing {{accession_number: $filing_accession}})
+    MERGE (f)-[:CONTAINS {{order: $order}}]->(s)
     RETURN s.section_id AS section_id
     """
     
