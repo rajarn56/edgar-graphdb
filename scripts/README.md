@@ -144,12 +144,15 @@ python delete_schema.py --yes  # Skip confirmation prompt
 
 **What it does**:
 - Shows current database statistics (node count, relationship count, constraints, indexes, property keys)
+- Clears properties from all nodes before deletion (attempts to reduce property keys)
 - Deletes all nodes and relationships
 - Drops all constraints
 - Drops all indexes (property, vector, full-text)
-- Clears property keys metadata (using `db.purgeDatabase()`)
+- Checks property keys metadata (property keys are harmless and may persist)
 - Verifies deletion was successful
 - Idempotent (safe to run multiple times)
+
+**Note on Property Keys**: Property keys are metadata that may persist in Neo4j even after deleting all nodes. The script attempts to clear properties from nodes before deletion, which may help reduce property keys. However, property keys are harmless metadata and don't affect database functionality. They will be automatically cleared when Neo4j is restarted or the database is recreated.
 
 **Equivalent Cypher Queries**:
 
@@ -175,8 +178,17 @@ DROP INDEX company_ticker IF EXISTS
 // Drop a vector index (example)
 DROP INDEX textChunkEmbeddings IF EXISTS
 
-// Clear property keys and all database metadata (Neo4j 5.x+)
-CALL db.purgeDatabase()
+// Clear properties from all nodes before deletion (may help reduce property keys)
+MATCH (n)
+SET n = {}
+RETURN count(n) AS nodes_updated
+
+// List property keys (for information - property keys are harmless metadata)
+CALL db.propertyKeys() YIELD propertyKey RETURN propertyKey
+
+// Note: Property keys persist as metadata even after deleting nodes.
+// They are harmless and don't affect functionality.
+// To clear them: Restart Neo4j or recreate the database.
 ```
 
 **When to use**:

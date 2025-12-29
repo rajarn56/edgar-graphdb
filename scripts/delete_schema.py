@@ -280,45 +280,108 @@ def drop_all_indexes(client: Neo4jClient) -> None:
         raise
 
 
-def clear_property_keys(client: Neo4jClient) -> None:
+def clear_property_keys_from_nodes(client: Neo4jClient) -> None:
     """
-    Clear all property keys from the database metadata.
+    Attempt to clear property keys by setting all node properties to empty.
     
-    Property keys persist in Neo4j metadata even after deleting all nodes.
-    This function uses db.purgeDatabase() to clear all metadata including property keys.
+    This approach tries to clear properties from all nodes before deletion,
+    which may help reduce property keys in metadata.
     
     Equivalent Cypher query:
     ```
-    CALL db.purgeDatabase()
+    MATCH (n)
+    SET n = {}
+    RETURN count(n) AS nodes_updated
     ```
     
-    Note: This procedure clears all database metadata including property keys.
-    It's safe to call after deleting all nodes, relationships, constraints, and indexes.
+    Note: This only works if nodes exist. After nodes are deleted,
+    property keys may still persist in metadata (this is expected Neo4j behavior).
     """
-    logger.info("Clearing property keys...")
+    logger.info("Attempting to clear properties from nodes...")
     
     try:
-        # Use db.purgeDatabase() to clear all metadata including property keys
-        # Equivalent Cypher: CALL db.purgeDatabase()
-        query = "CALL db.purgeDatabase()"
+        # First check if there are any nodes
+        check_query = "MATCH (n) RETURN count(n) AS count LIMIT 1"
+        result = client.execute_query(check_query)
+        node_count = result[0].get("count", 0) if result else 0
         
-        try:
-            client.execute_write(query)
-            logger.info("✓ Cleared property keys and database metadata")
-        except Exception as e:
-            error_str = str(e).lower()
-            # Check if procedure doesn't exist (older Neo4j versions)
-            if "unknown procedure" in error_str or "not found" in error_str:
-                logger.warning("⚠ db.purgeDatabase() procedure not available in this Neo4j version")
-                logger.info("Property keys will remain but are harmless (they're just metadata)")
-                logger.info("To fully clear property keys, restart Neo4j or recreate the database")
-            else:
-                logger.warning(f"Failed to clear property keys: {e}")
-                logger.info("Property keys may still remain but are harmless (they're just metadata)")
-                
+        if node_count == 0:
+            logger.debug("No nodes found - skipping property clearing (nodes already deleted)")
+            return
+        
+        # Clear all properties from all nodes
+        # Equivalent Cypher: MATCH (n) SET n = {} RETURN count(n) AS nodes_updated
+        clear_query = """
+        MATCH (n)
+        SET n = {}
+        RETURN count(n) AS nodes_updated
+        """
+        
+        result = client.execute_write(clear_query)
+        if result and result[0].get("nodes_updated", 0) > 0:
+            nodes_updated = result[0].get("nodes_updated", 0)
+            logger.info(f"✓ Cleared properties from {nodes_updated} node(s)")
+        else:
+            logger.debug("No nodes were updated")
+            
     except Exception as e:
-        logger.warning(f"Error clearing property keys: {e}")
-        logger.info("Property keys may still remain but are harmless (they're just metadata)")
+        logger.warning(f"Could not clear properties from nodes: {e}")
+        logger.debug("This is non-critical - properties will be removed when nodes are deleted")
+
+
+def check_property_keys(client: Neo4jClient) -> None:
+    """
+    Check and report property keys in the database metadata.
+    
+    Property keys persist in Neo4j metadata even after deleting all nodes.
+    This is expected behavior - property keys are metadata that Neo4j retains.
+    
+    Note: Property keys are harmless metadata and don't affect database functionality.
+    They will be automatically cleared when:
+    - Neo4j is restarted (in some versions)
+    - The database is recreated
+    
+    To manually clear property keys, you can:
+    1. Restart Neo4j (property keys are cleared on restart in some versions)
+    2. Recreate the database using: CREATE OR REPLACE DATABASE <database_name>
+    3. Use Neo4j Admin tool: neo4j-admin database drop <database_name> && neo4j-admin database create <database_name>
+    
+    Equivalent manual Cypher queries (if supported):
+    ```
+    # List property keys
+    CALL db.propertyKeys() YIELD propertyKey RETURN propertyKey
+    
+    # Note: There is no direct Cypher command to delete property keys.
+    # They are metadata that persist until database restart or recreation.
+    ```
+    """
+    logger.info("Checking property keys in metadata...")
+    
+    try:
+        # Get property keys count
+        property_keys_query = "CALL db.propertyKeys() YIELD propertyKey RETURN count(propertyKey) AS count"
+        result = client.execute_query(property_keys_query)
+        
+        if result and result[0].get("count", 0) > 0:
+            property_key_count = result[0].get("count", 0)
+            logger.info(f"Found {property_key_count} property key(s) in metadata")
+            logger.info("Note: Property keys are harmless metadata that persist after node deletion.")
+            logger.info("They don't affect database functionality and will be cleared when:")
+            logger.info("  - Neo4j is restarted (in some versions)")
+            logger.info("  - The database is recreated")
+            logger.info("To manually clear: Restart Neo4j or recreate the database")
+        else:
+            logger.info("✓ No property keys found in metadata")
+            
+    except Exception as e:
+        error_str = str(e).lower()
+        if "unknown procedure" in error_str or "not found" in error_str:
+            logger.debug("db.propertyKeys() procedure not available - skipping property key check")
+        else:
+            logger.debug(f"Could not check property keys: {e}")
+        
+        logger.info("Note: Property keys are harmless metadata that may persist after deletion.")
+        logger.info("They don't affect database functionality.")
 
 
 def verify_deletion(client: Neo4jClient) -> dict:
@@ -472,19 +535,22 @@ Examples:
             # Delete in order: data first, then constraints, then indexes
             # (Constraints and indexes may depend on data existing)
             
-            # 1. Delete all data (nodes and relationships)
+            # 1. Clear properties from nodes before deletion (may help reduce property keys)
+            clear_property_keys_from_nodes(client)
+            
+            # 2. Delete all data (nodes and relationships)
             delete_all_data(client)
             
-            # 2. Drop all constraints
+            # 3. Drop all constraints
             drop_all_constraints(client)
             
-            # 3. Drop all indexes
+            # 4. Drop all indexes
             drop_all_indexes(client)
             
-            # 4. Clear property keys (metadata cleanup)
-            clear_property_keys(client)
+            # 5. Check property keys (metadata - may persist)
+            check_property_keys(client)
             
-            # 5. Verify deletion
+            # 6. Verify deletion
             verification = verify_deletion(client)
             
             # Summary
