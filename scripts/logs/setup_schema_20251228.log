@@ -1,263 +1,263 @@
-2025-12-28 19:26:52.944 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: setup_schema
-2025-12-28 19:26:52.945 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/setup_schema_20251228.log
-2025-12-28 19:26:52.945 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251228.log
-2025-12-28 19:26:52.945 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
-2025-12-28 19:26:52.945 | INFO     | __main__:main:295 | ============================================================
-2025-12-28 19:26:52.945 | INFO     | __main__:main:296 | Neo4j EDGAR Schema Setup
-2025-12-28 19:26:52.945 | INFO     | __main__:main:297 | ============================================================
-2025-12-28 19:26:52.945 | INFO     | utils.neo4j_client:__init__:44 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
-2025-12-28 19:26:52.978 | INFO     | utils.neo4j_client:connect:59 | Successfully connected to Neo4j
-2025-12-28 19:26:52.990 | INFO     | utils.neo4j_client:verify_connectivity:240 | Neo4j connectivity verified
-2025-12-28 19:26:52.990 | INFO     | __main__:main:309 | Using embedding dimension: 1536
-2025-12-28 19:26:52.990 | INFO     | __main__:create_unique_constraints:28 | Creating unique constraints...
-2025-12-28 19:26:53.062 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.446 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: setup_schema
+2025-12-28 19:38:59.446 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/setup_schema_20251228.log
+2025-12-28 19:38:59.446 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251228.log
+2025-12-28 19:38:59.446 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-28 19:38:59.446 | INFO     | __main__:main:295 | ============================================================
+2025-12-28 19:38:59.446 | INFO     | __main__:main:296 | Neo4j EDGAR Schema Setup
+2025-12-28 19:38:59.446 | INFO     | __main__:main:297 | ============================================================
+2025-12-28 19:38:59.446 | INFO     | utils.neo4j_client:__init__:45 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-28 19:38:59.469 | INFO     | utils.neo4j_client:connect:60 | Successfully connected to Neo4j
+2025-12-28 19:38:59.478 | INFO     | utils.neo4j_client:verify_connectivity:257 | Neo4j connectivity verified
+2025-12-28 19:38:59.479 | INFO     | __main__:main:309 | Using embedding dimension: 1536
+2025-12-28 19:38:59.479 | INFO     | __main__:create_unique_constraints:28 | Creating unique constraints...
+2025-12-28 19:38:59.479 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE CONSTRAINT company_cik_unique IF NOT EXISTS
         FOR (n:Company)
         REQUIRE n.cik IS UNIQUE
         ...
-2025-12-28 19:26:53.062 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Company.cik: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.077 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.479 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Company.cik: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.479 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE CONSTRAINT filing_accession_number_unique IF NOT EXISTS
         FOR (n:Filing)
         REQUIRE n.accession_number IS UNIQUE
         ...
-2025-12-28 19:26:53.077 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Filing.accession_number: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.091 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.479 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Filing.accession_number: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.479 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE CONSTRAINT section_section_id_unique IF NOT EXISTS
         FOR (n:Section)
         REQUIRE n.section_id IS UNIQUE
         ...
-2025-12-28 19:26:53.091 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Section.section_id: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.105 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.480 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Section.section_id: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.480 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE CONSTRAINT chunk_chunk_id_unique IF NOT EXISTS
         FOR (n:Chunk)
         REQUIRE n.chunk_id IS UNIQUE
         ...
-2025-12-28 19:26:53.106 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Chunk.chunk_id: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.122 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.480 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Chunk.chunk_id: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.480 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE CONSTRAINT period_period_id_unique IF NOT EXISTS
         FOR (n:Period)
         REQUIRE n.period_id IS UNIQUE
         ...
-2025-12-28 19:26:53.122 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Period.period_id: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.134 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.480 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Period.period_id: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.480 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE CONSTRAINT financialstatement_statement_id_unique IF NOT EXISTS
         FOR (n:FinancialStatement)
         REQUIRE n.statement_id IS UNIQUE
         ...
-2025-12-28 19:26:53.135 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint FinancialStatement.statement_id: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.148 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.480 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint FinancialStatement.statement_id: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.480 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE CONSTRAINT lineitem_line_item_id_unique IF NOT EXISTS
         FOR (n:LineItem)
         REQUIRE n.line_item_id IS UNIQUE
         ...
-2025-12-28 19:26:53.148 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint LineItem.line_item_id: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.168 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.480 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint LineItem.line_item_id: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.481 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE CONSTRAINT value_value_id_unique IF NOT EXISTS
         FOR (n:Value)
         REQUIRE n.value_id IS UNIQUE
         ...
-2025-12-28 19:26:53.169 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Value.value_id: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.181 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.481 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Value.value_id: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.481 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE CONSTRAINT metric_metric_id_unique IF NOT EXISTS
         FOR (n:Metric)
         REQUIRE n.metric_id IS UNIQUE
         ...
-2025-12-28 19:26:53.181 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Metric.metric_id: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.195 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.481 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Metric.metric_id: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.481 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE CONSTRAINT industry_industry_id_unique IF NOT EXISTS
         FOR (n:Industry)
         REQUIRE n.industry_id IS UNIQUE
         ...
-2025-12-28 19:26:53.195 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Industry.industry_id: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.209 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.481 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Industry.industry_id: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.481 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE CONSTRAINT sector_sector_id_unique IF NOT EXISTS
         FOR (n:Sector)
         REQUIRE n.sector_id IS UNIQUE
         ...
-2025-12-28 19:26:53.210 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Sector.sector_id: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.221 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.481 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Sector.sector_id: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.481 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE CONSTRAINT topic_topic_id_unique IF NOT EXISTS
         FOR (n:Topic)
         REQUIRE n.topic_id IS UNIQUE
         ...
-2025-12-28 19:26:53.222 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Topic.topic_id: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.235 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.481 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Topic.topic_id: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.481 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE CONSTRAINT person_person_id_unique IF NOT EXISTS
         FOR (n:Person)
         REQUIRE n.person_id IS UNIQUE
         ...
-2025-12-28 19:26:53.236 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Person.person_id: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.250 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.482 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Person.person_id: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.482 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE CONSTRAINT transaction_transaction_id_unique IF NOT EXISTS
         FOR (n:Transaction)
         REQUIRE n.transaction_id IS UNIQUE
         ...
-2025-12-28 19:26:53.250 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Transaction.transaction_id: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.266 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.482 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Transaction.transaction_id: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.482 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE CONSTRAINT compensation_compensation_id_unique IF NOT EXISTS
         FOR (n:Compensation)
         REQUIRE n.compensation_id IS UNIQUE
         ...
-2025-12-28 19:26:53.266 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Compensation.compensation_id: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.266 | INFO     | __main__:create_property_indexes:74 | Creating property indexes...
-2025-12-28 19:26:53.283 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.482 | ERROR    | __main__:create_unique_constraints:69 | Failed to create constraint Compensation.compensation_id: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.482 | INFO     | __main__:create_property_indexes:74 | Creating property indexes...
+2025-12-28 19:38:59.482 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX company_ticker IF NOT EXISTS
             FOR (n:Company)
             ON (n.ticker)
             ...
-2025-12-28 19:26:53.283 | ERROR    | __main__:create_property_indexes:142 | Failed to create index company_ticker: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.294 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.482 | ERROR    | __main__:create_property_indexes:142 | Failed to create index company_ticker: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.482 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX company_name IF NOT EXISTS
             FOR (n:Company)
             ON (n.name)
             ...
-2025-12-28 19:26:53.294 | ERROR    | __main__:create_property_indexes:142 | Failed to create index company_name: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.308 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.482 | ERROR    | __main__:create_property_indexes:142 | Failed to create index company_name: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.483 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX company_market_cap_tier IF NOT EXISTS
             FOR (n:Company)
             ON (n.market_cap_tier)
             ...
-2025-12-28 19:26:53.309 | ERROR    | __main__:create_property_indexes:142 | Failed to create index company_market_cap_tier: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.321 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.483 | ERROR    | __main__:create_property_indexes:142 | Failed to create index company_market_cap_tier: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.483 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX filing_company_cik_fiscal_year_form_type IF NOT EXISTS
             FOR (n:Filing)
             ON (n.company_cik, n.fiscal_year, n.form_type)
             ...
-2025-12-28 19:26:53.321 | ERROR    | __main__:create_property_indexes:142 | Failed to create index filing_company_cik_fiscal_year_form_type: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.332 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.483 | ERROR    | __main__:create_property_indexes:142 | Failed to create index filing_company_cik_fiscal_year_form_type: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.484 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX filing_form_type_filing_date IF NOT EXISTS
             FOR (n:Filing)
             ON (n.form_type, n.filing_date)
             ...
-2025-12-28 19:26:53.332 | ERROR    | __main__:create_property_indexes:142 | Failed to create index filing_form_type_filing_date: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.343 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.484 | ERROR    | __main__:create_property_indexes:142 | Failed to create index filing_form_type_filing_date: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.484 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX filing_fiscal_period IF NOT EXISTS
             FOR (n:Filing)
             ON (n.fiscal_period)
             ...
-2025-12-28 19:26:53.343 | ERROR    | __main__:create_property_indexes:142 | Failed to create index filing_fiscal_period: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.360 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.484 | ERROR    | __main__:create_property_indexes:142 | Failed to create index filing_fiscal_period: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.484 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX section_item_number IF NOT EXISTS
             FOR (n:Section)
             ON (n.item_number)
             ...
-2025-12-28 19:26:53.360 | ERROR    | __main__:create_property_indexes:142 | Failed to create index section_item_number: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.370 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.484 | ERROR    | __main__:create_property_indexes:142 | Failed to create index section_item_number: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.484 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX section_company_cik IF NOT EXISTS
             FOR (n:Section)
             ON (n.company_cik)
             ...
-2025-12-28 19:26:53.370 | ERROR    | __main__:create_property_indexes:142 | Failed to create index section_company_cik: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.382 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.484 | ERROR    | __main__:create_property_indexes:142 | Failed to create index section_company_cik: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.484 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX form8kitem_event_type_event_date IF NOT EXISTS
             FOR (n:Form8KItem)
             ON (n.event_type, n.event_date)
             ...
-2025-12-28 19:26:53.382 | ERROR    | __main__:create_property_indexes:142 | Failed to create index form8kitem_event_type_event_date: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.393 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.485 | ERROR    | __main__:create_property_indexes:142 | Failed to create index form8kitem_event_type_event_date: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.485 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX chunk_company_cik_fiscal_year_chunk_type IF NOT EXISTS
             FOR (n:Chunk)
             ON (n.company_cik, n.fiscal_year, n.chunk_type)
             ...
-2025-12-28 19:26:53.393 | ERROR    | __main__:create_property_indexes:142 | Failed to create index chunk_company_cik_fiscal_year_chunk_type: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.404 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.485 | ERROR    | __main__:create_property_indexes:142 | Failed to create index chunk_company_cik_fiscal_year_chunk_type: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.485 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX chunk_semantic_type IF NOT EXISTS
             FOR (n:Chunk)
             ON (n.semantic_type)
             ...
-2025-12-28 19:26:53.404 | ERROR    | __main__:create_property_indexes:142 | Failed to create index chunk_semantic_type: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.415 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.485 | ERROR    | __main__:create_property_indexes:142 | Failed to create index chunk_semantic_type: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.485 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX chunk_form_type IF NOT EXISTS
             FOR (n:Chunk)
             ON (n.form_type)
             ...
-2025-12-28 19:26:53.415 | ERROR    | __main__:create_property_indexes:142 | Failed to create index chunk_form_type: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.426 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.485 | ERROR    | __main__:create_property_indexes:142 | Failed to create index chunk_form_type: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.485 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX lineitem_line_name IF NOT EXISTS
             FOR (n:LineItem)
             ON (n.line_name)
             ...
-2025-12-28 19:26:53.426 | ERROR    | __main__:create_property_indexes:142 | Failed to create index lineitem_line_name: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.435 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.485 | ERROR    | __main__:create_property_indexes:142 | Failed to create index lineitem_line_name: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.485 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX lineitem_xbrl_tag IF NOT EXISTS
             FOR (n:LineItem)
             ON (n.xbrl_tag)
             ...
-2025-12-28 19:26:53.436 | ERROR    | __main__:create_property_indexes:142 | Failed to create index lineitem_xbrl_tag: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.470 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.485 | ERROR    | __main__:create_property_indexes:142 | Failed to create index lineitem_xbrl_tag: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.485 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX value_fiscal_year_fiscal_quarter IF NOT EXISTS
             FOR (n:Value)
             ON (n.fiscal_year, n.fiscal_quarter)
             ...
-2025-12-28 19:26:53.471 | ERROR    | __main__:create_property_indexes:142 | Failed to create index value_fiscal_year_fiscal_quarter: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.482 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.486 | ERROR    | __main__:create_property_indexes:142 | Failed to create index value_fiscal_year_fiscal_quarter: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.486 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX metric_company_cik_metric_name_fiscal_year IF NOT EXISTS
             FOR (n:Metric)
             ON (n.company_cik, n.metric_name, n.fiscal_year)
             ...
-2025-12-28 19:26:53.482 | ERROR    | __main__:create_property_indexes:142 | Failed to create index metric_company_cik_metric_name_fiscal_year: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.492 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.486 | ERROR    | __main__:create_property_indexes:142 | Failed to create index metric_company_cik_metric_name_fiscal_year: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.486 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX industry_sic_code IF NOT EXISTS
             FOR (n:Industry)
             ON (n.sic_code)
             ...
-2025-12-28 19:26:53.492 | ERROR    | __main__:create_property_indexes:142 | Failed to create index industry_sic_code: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.503 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.486 | ERROR    | __main__:create_property_indexes:142 | Failed to create index industry_sic_code: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.486 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX topic_topic_category IF NOT EXISTS
             FOR (n:Topic)
             ON (n.topic_category)
             ...
-2025-12-28 19:26:53.504 | ERROR    | __main__:create_property_indexes:142 | Failed to create index topic_topic_category: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.515 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.486 | ERROR    | __main__:create_property_indexes:142 | Failed to create index topic_topic_category: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.486 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX transaction_transaction_date IF NOT EXISTS
             FOR (n:Transaction)
             ON (n.transaction_date)
             ...
-2025-12-28 19:26:53.515 | ERROR    | __main__:create_property_indexes:142 | Failed to create index transaction_transaction_date: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.526 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.486 | ERROR    | __main__:create_property_indexes:142 | Failed to create index transaction_transaction_date: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.486 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
             CREATE INDEX transaction_transaction_type IF NOT EXISTS
             FOR (n:Transaction)
             ON (n.transaction_type)
             ...
-2025-12-28 19:26:53.526 | ERROR    | __main__:create_property_indexes:142 | Failed to create index transaction_transaction_type: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.526 | INFO     | __main__:create_vector_indexes:147 | Creating vector indexes (dimension: 1536)...
-2025-12-28 19:26:53.651 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.486 | ERROR    | __main__:create_property_indexes:142 | Failed to create index transaction_transaction_type: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.487 | INFO     | __main__:create_vector_indexes:147 | Creating vector indexes (dimension: 1536)...
+2025-12-28 19:38:59.487 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE VECTOR INDEX textChunkEmbeddings IF NOT EXISTS
         FOR (ch:Chunk)
@@ -266,8 +266,8 @@ Query:
             indexConfig: {
                 `vector.dimensions`: 1536,
   ...
-2025-12-28 19:26:53.652 | ERROR    | __main__:create_vector_indexes:214 | Failed to create vector index textChunkEmbeddings: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.667 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.487 | ERROR    | __main__:create_vector_indexes:214 | Failed to create vector index textChunkEmbeddings: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.487 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE VECTOR INDEX riskChunkEmbeddings IF NOT EXISTS
         FOR (ch:Chunk)
@@ -276,8 +276,8 @@ Query:
             indexConfig: {
                 `vector.dimensions`: 1536,
   ...
-2025-12-28 19:26:53.667 | ERROR    | __main__:create_vector_indexes:214 | Failed to create vector index riskChunkEmbeddings: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.680 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.487 | ERROR    | __main__:create_vector_indexes:214 | Failed to create vector index riskChunkEmbeddings: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.487 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE VECTOR INDEX financialChunkEmbeddings IF NOT EXISTS
         FOR (ch:Chunk)
@@ -285,8 +285,8 @@ Query:
         OPTIONS {
             indexConfig: {
                 `vector.dimensions`: 153...
-2025-12-28 19:26:53.681 | ERROR    | __main__:create_vector_indexes:214 | Failed to create vector index financialChunkEmbeddings: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.688 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.487 | ERROR    | __main__:create_vector_indexes:214 | Failed to create vector index financialChunkEmbeddings: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.487 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE VECTOR INDEX strategyChunkEmbeddings IF NOT EXISTS
         FOR (ch:Chunk)
@@ -294,8 +294,8 @@ Query:
         OPTIONS {
             indexConfig: {
                 `vector.dimensions`: 1536...
-2025-12-28 19:26:53.689 | ERROR    | __main__:create_vector_indexes:214 | Failed to create vector index strategyChunkEmbeddings: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.712 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.488 | ERROR    | __main__:create_vector_indexes:214 | Failed to create vector index strategyChunkEmbeddings: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.488 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE VECTOR INDEX maChunkEmbeddings IF NOT EXISTS
         FOR (ch:Chunk)
@@ -304,47 +304,47 @@ Query:
             indexConfig: {
                 `vector.dimensions`: 1536,
     ...
-2025-12-28 19:26:53.712 | ERROR    | __main__:create_vector_indexes:214 | Failed to create vector index maChunkEmbeddings: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.712 | INFO     | __main__:create_fulltext_indexes:220 | Creating full-text indexes...
-2025-12-28 19:26:53.745 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.488 | ERROR    | __main__:create_vector_indexes:214 | Failed to create vector index maChunkEmbeddings: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.488 | INFO     | __main__:create_fulltext_indexes:220 | Creating full-text indexes...
+2025-12-28 19:38:59.488 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE FULLTEXT INDEX chunkContentFulltext IF NOT EXISTS
         FOR (ch:Chunk)
         ON EACH [ch.content]
         ...
-2025-12-28 19:26:53.745 | WARNING  | __main__:create_fulltext_indexes:268 | Failed to create full-text index chunkContentFulltext: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.758 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.489 | WARNING  | __main__:create_fulltext_indexes:268 | Failed to create full-text index chunkContentFulltext: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.489 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
                 CREATE FULLTEXT INDEX sectionContentFulltext_item_title IF NOT EXISTS
                 FOR (ch:Section)
                 ON EACH [ch.item_title]
                 ...
-2025-12-28 19:26:53.758 | WARNING  | __main__:create_fulltext_indexes:253 | Failed to create full-text index sectionContentFulltext_item_title: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.776 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.489 | WARNING  | __main__:create_fulltext_indexes:253 | Failed to create full-text index sectionContentFulltext_item_title: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.489 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE FULLTEXT INDEX sectionContentFulltext IF NOT EXISTS
         FOR (ch:Section)
         ON EACH [ch.content]
         ...
-2025-12-28 19:26:53.776 | WARNING  | __main__:create_fulltext_indexes:268 | Failed to create full-text index sectionContentFulltext: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.790 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.489 | WARNING  | __main__:create_fulltext_indexes:268 | Failed to create full-text index sectionContentFulltext: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.489 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
                 CREATE FULLTEXT INDEX riskFactorFulltext_risk_title IF NOT EXISTS
                 FOR (ch:RiskFactor)
                 ON EACH [ch.risk_title]
                 ...
-2025-12-28 19:26:53.790 | WARNING  | __main__:create_fulltext_indexes:253 | Failed to create full-text index riskFactorFulltext_risk_title: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.803 | ERROR    | utils.neo4j_client:execute_write:180 | Write query execution failed: 'Session' object has no attribute 'commit'
+2025-12-28 19:38:59.489 | WARNING  | __main__:create_fulltext_indexes:253 | Failed to create full-text index riskFactorFulltext_risk_title: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.489 | ERROR    | utils.neo4j_client:execute_write:189 | Write query execution failed: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
 Query: 
         CREATE FULLTEXT INDEX riskFactorFulltext IF NOT EXISTS
         FOR (ch:RiskFactor)
         ON EACH [ch.risk_description]
         ...
-2025-12-28 19:26:53.804 | WARNING  | __main__:create_fulltext_indexes:268 | Failed to create full-text index riskFactorFulltext: 'Session' object has no attribute 'commit'
-2025-12-28 19:26:53.804 | INFO     | __main__:verify_schema:273 | Verifying schema...
-2025-12-28 19:26:53.825 | INFO     | __main__:verify_schema:279 | ✓ Found 15 constraints
-2025-12-28 19:26:53.838 | INFO     | __main__:verify_schema:287 | ✓ Found 43 indexes
-2025-12-28 19:26:53.839 | INFO     | __main__:main:320 | ============================================================
-2025-12-28 19:26:53.839 | INFO     | __main__:main:321 | Schema setup completed successfully!
-2025-12-28 19:26:53.839 | INFO     | __main__:main:322 | ============================================================
-2025-12-28 19:26:53.839 | INFO     | utils.neo4j_client:close:68 | Neo4j connection closed
+2025-12-28 19:38:59.489 | WARNING  | __main__:create_fulltext_indexes:268 | Failed to create full-text index riskFactorFulltext: [Errno 2] No such file or directory: '/Users/rnellapalle/learn-poc/fingpt-phase2/.cursor/debug.log'
+2025-12-28 19:38:59.489 | INFO     | __main__:verify_schema:273 | Verifying schema...
+2025-12-28 19:38:59.493 | INFO     | __main__:verify_schema:279 | ✓ Found 15 constraints
+2025-12-28 19:38:59.497 | INFO     | __main__:verify_schema:287 | ✓ Found 43 indexes
+2025-12-28 19:38:59.497 | INFO     | __main__:main:320 | ============================================================
+2025-12-28 19:38:59.497 | INFO     | __main__:main:321 | Schema setup completed successfully!
+2025-12-28 19:38:59.497 | INFO     | __main__:main:322 | ============================================================
+2025-12-28 19:38:59.498 | INFO     | utils.neo4j_client:close:69 | Neo4j connection closed
