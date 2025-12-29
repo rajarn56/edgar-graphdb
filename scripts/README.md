@@ -143,10 +143,11 @@ python delete_schema.py --yes  # Skip confirmation prompt
 - `--yes`: Skip confirmation prompt (use with extreme caution)
 
 **What it does**:
-- Shows current database statistics (node count, relationship count, constraints, indexes)
+- Shows current database statistics (node count, relationship count, constraints, indexes, property keys)
 - Deletes all nodes and relationships
 - Drops all constraints
 - Drops all indexes (property, vector, full-text)
+- Clears property keys metadata (using `db.purgeDatabase()`)
 - Verifies deletion was successful
 - Idempotent (safe to run multiple times)
 
@@ -173,6 +174,9 @@ DROP INDEX company_ticker IF EXISTS
 
 // Drop a vector index (example)
 DROP INDEX textChunkEmbeddings IF EXISTS
+
+// Clear property keys and all database metadata (Neo4j 5.x+)
+CALL db.purgeDatabase()
 ```
 
 **When to use**:

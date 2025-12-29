@@ -41,6 +41,7 @@ def get_database_stats(client: Neo4jClient) -> dict:
         "relationship_count": 0,
         "constraint_count": 0,
         "index_count": 0,
+        "property_key_count": 0,
     }
     
     try:
@@ -69,6 +70,18 @@ def get_database_stats(client: Neo4jClient) -> dict:
         indexes_query = "SHOW INDEXES"
         result = client.execute_query(indexes_query)
         stats["index_count"] = len(result) if result else 0
+        
+        # Count property keys
+        # Equivalent Cypher: CALL db.propertyKeys() YIELD propertyKey RETURN count(propertyKey) AS count
+        try:
+            property_keys_query = "CALL db.propertyKeys() YIELD propertyKey RETURN count(propertyKey) AS count"
+            result = client.execute_query(property_keys_query)
+            if result:
+                stats["property_key_count"] = result[0].get("count", 0)
+        except Exception:
+            # Property keys query may not be available in all Neo4j versions
+            # This is non-critical, so we just skip it
+            pass
         
     except Exception as e:
         logger.warning(f"Error getting database stats: {e}")
@@ -267,6 +280,47 @@ def drop_all_indexes(client: Neo4jClient) -> None:
         raise
 
 
+def clear_property_keys(client: Neo4jClient) -> None:
+    """
+    Clear all property keys from the database metadata.
+    
+    Property keys persist in Neo4j metadata even after deleting all nodes.
+    This function uses db.purgeDatabase() to clear all metadata including property keys.
+    
+    Equivalent Cypher query:
+    ```
+    CALL db.purgeDatabase()
+    ```
+    
+    Note: This procedure clears all database metadata including property keys.
+    It's safe to call after deleting all nodes, relationships, constraints, and indexes.
+    """
+    logger.info("Clearing property keys...")
+    
+    try:
+        # Use db.purgeDatabase() to clear all metadata including property keys
+        # Equivalent Cypher: CALL db.purgeDatabase()
+        query = "CALL db.purgeDatabase()"
+        
+        try:
+            client.execute_write(query)
+            logger.info("✓ Cleared property keys and database metadata")
+        except Exception as e:
+            error_str = str(e).lower()
+            # Check if procedure doesn't exist (older Neo4j versions)
+            if "unknown procedure" in error_str or "not found" in error_str:
+                logger.warning("⚠ db.purgeDatabase() procedure not available in this Neo4j version")
+                logger.info("Property keys will remain but are harmless (they're just metadata)")
+                logger.info("To fully clear property keys, restart Neo4j or recreate the database")
+            else:
+                logger.warning(f"Failed to clear property keys: {e}")
+                logger.info("Property keys may still remain but are harmless (they're just metadata)")
+                
+    except Exception as e:
+        logger.warning(f"Error clearing property keys: {e}")
+        logger.info("Property keys may still remain but are harmless (they're just metadata)")
+
+
 def verify_deletion(client: Neo4jClient) -> dict:
     """
     Verify that all data, constraints, and indexes have been deleted.
@@ -281,6 +335,7 @@ def verify_deletion(client: Neo4jClient) -> dict:
         "relationships_remaining": 0,
         "constraints_remaining": 0,
         "indexes_remaining": 0,
+        "property_keys_remaining": 0,
         "is_clean": False,
     }
     
@@ -310,6 +365,16 @@ def verify_deletion(client: Neo4jClient) -> dict:
         ]
         verification["indexes_remaining"] = len(user_indexes)
         
+        # Check property keys (if available)
+        try:
+            property_keys_query = "CALL db.propertyKeys() YIELD propertyKey RETURN count(propertyKey) AS count"
+            result = client.execute_query(property_keys_query)
+            if result:
+                verification["property_keys_remaining"] = result[0].get("count", 0)
+        except Exception:
+            # Property keys query may not be available, skip it
+            pass
+        
         # Determine if database is clean
         verification["is_clean"] = (
             verification["nodes_remaining"] == 0 and
@@ -330,6 +395,9 @@ def verify_deletion(client: Neo4jClient) -> dict:
                 logger.warning(f"  - {verification['constraints_remaining']} constraints remaining")
             if verification["indexes_remaining"] > 0:
                 logger.warning(f"  - {verification['indexes_remaining']} indexes remaining")
+            if verification.get("property_keys_remaining", 0) > 0:
+                logger.warning(f"  - {verification['property_keys_remaining']} property keys remaining")
+                logger.info("  Note: Property keys are metadata and harmless. They can be cleared by restarting Neo4j.")
         
     except Exception as e:
         logger.error(f"Error during verification: {e}")
@@ -385,6 +453,8 @@ Examples:
             logger.info(f"  - Relationships: {stats_before['relationship_count']}")
             logger.info(f"  - Constraints: {stats_before['constraint_count']}")
             logger.info(f"  - Indexes: {stats_before['index_count']}")
+            if stats_before.get('property_key_count', 0) > 0:
+                logger.info(f"  - Property Keys: {stats_before['property_key_count']}")
             
             # Confirmation prompt (unless --yes flag is used)
             if not args.yes:
@@ -411,7 +481,10 @@ Examples:
             # 3. Drop all indexes
             drop_all_indexes(client)
             
-            # 4. Verify deletion
+            # 4. Clear property keys (metadata cleanup)
+            clear_property_keys(client)
+            
+            # 5. Verify deletion
             verification = verify_deletion(client)
             
             # Summary
