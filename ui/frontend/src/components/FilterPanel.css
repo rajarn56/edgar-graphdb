@@ -1,9 +1,9 @@
 .filter-panel {
   position: fixed;
   left: 0;
-  top: 0;
+  top: 100px; /* Start below header */
   width: 250px;
-  height: 100vh;
+  height: calc(100vh - 100px); /* Full height minus header */
   background: white;
   box-shadow: 2px 0 8px rgba(0,0,0,0.1);
   padding: 16px;

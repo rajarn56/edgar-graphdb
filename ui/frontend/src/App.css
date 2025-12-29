@@ -8,6 +8,8 @@
 
 .app-header {
   flex-shrink: 0;
+  position: relative;
+  z-index: 200;
 }
 
 .app-body {

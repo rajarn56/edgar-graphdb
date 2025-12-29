@@ -125,7 +125,7 @@ class Neo4jGraphService:
         query = """
         MATCH (c:Company {ticker: $ticker})<-[:FILED_BY]-(f:Filing)
         RETURN c, f
-        ORDER BY f.fiscal_year DESC, f.fiscal_quarter DESC NULLS LAST
+        ORDER BY f.fiscal_year DESC, f.fiscal_quarter DESC
         """
         
         logger.debug(f"Query: {query.strip()}")
@@ -458,7 +458,7 @@ class Neo4jGraphService:
                f.fiscal_quarter AS fiscal_quarter,
                f.fiscal_period AS fiscal_period,
                f.url AS url
-        ORDER BY f.fiscal_year DESC, f.fiscal_quarter DESC NULLS LAST
+        ORDER BY f.fiscal_year DESC, f.fiscal_quarter DESC
         """
         
         results = self.client.execute_query(query, params)
