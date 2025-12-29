@@ -6,9 +6,10 @@ This document collects troubleshooting information, fixes, and debugging techniq
 
 1. [Neo4j Session Commit Error](#neo4j-session-commit-error)
 2. [Cypher MERGE Syntax Error](#cypher-merge-syntax-error)
-3. [Mock Data Instead of Real EDGAR Data](#mock-data-instead-of-real-edgar-data)
-4. [Debug Logging](#debug-logging)
-5. [Common Issues](#common-issues)
+3. [Date Parsing Error](#date-parsing-error)
+4. [Mock Data Instead of Real EDGAR Data](#mock-data-instead-of-real-edgar-data)
+5. [Debug Logging](#debug-logging)
+6. [Common Issues](#common-issues)
 
 ---
 
@@ -165,6 +166,95 @@ After the fix:
 ### Related Files
 
 - `scripts/ingest_edgar_data.py` - Fixed all MERGE queries with incorrect SET/ON CREATE SET ordering
+- `scripts/logs/errors_20251228.log` - Contains original error logs
+
+---
+
+## Date Parsing Error
+
+### Issue
+
+**Error Message:**
+```
+Text cannot be parsed to a Date
+""
+ ^
+error: data exception - invalid date, time, or datetime format
+```
+
+**Symptoms:**
+- Ingestion script fails when creating Filing or Period nodes
+- Error occurs in `create_filing_node()` or Period node creation
+- Error message shows empty string `""` being passed to `date()` function
+- Script fails immediately after successfully creating company node
+
+**Date Fixed:** 2025-12-28
+
+### Root Cause
+
+When EDGAR data is retrieved, some date fields (`filing_date`, `period_end_date`, `period_start`, `period_end`) may be empty strings `""` or `None` if the data source doesn't provide them. The code was attempting to pass these empty strings directly to Neo4j's `date()` function, which cannot parse empty strings and throws a syntax error.
+
+The issue occurred in:
+1. `create_filing_node()` - when setting `filing_date` and `period_end_date`
+2. Period node creation - when setting `period_start` and `period_end`
+
+### Solution
+
+**Fixed in:** `scripts/ingest_edgar_data.py`
+
+**Functions Fixed:**
+1. `create_filing_node()` - Line 69-146
+2. Period node creation in `create_filing_node()` - Line 126-154
+
+**Code Before:**
+```python
+filing_date = filing_props.get("filing_date") or ""
+period_end_date = filing_props.get("period_end_date") or ""
+
+query = """
+MERGE (f:Filing {accession_number: $accession_number})
+SET f.filing_date = date($filing_date),  # ❌ Fails if $filing_date is ""
+    f.period_end_date = date($period_end_date)  # ❌ Fails if empty
+"""
+```
+
+**Code After:**
+```python
+# Normalize empty strings to None
+filing_date = filing_props.get("filing_date")
+period_end_date = filing_props.get("period_end_date")
+filing_date = filing_date.strip() if filing_date and filing_date.strip() else None
+period_end_date = period_end_date.strip() if period_end_date and period_end_date.strip() else None
+
+query = """
+MERGE (f:Filing {accession_number: $accession_number})
+ON CREATE SET 
+    f.filing_date = CASE WHEN $filing_date IS NOT NULL AND $filing_date <> '' 
+                         THEN date($filing_date) ELSE null END,
+    f.period_end_date = CASE WHEN $period_end_date IS NOT NULL AND $period_end_date <> '' 
+                              THEN date($period_end_date) ELSE null END
+"""
+```
+
+**Key Changes:**
+- Added validation to normalize empty strings to `None`
+- Used `CASE WHEN` in Cypher to conditionally parse dates only when they're not empty
+- Set dates to `null` in Neo4j when values are empty (instead of trying to parse empty strings)
+- Applied same fix to Period node creation for `period_start` and `period_end`
+
+### Verification
+
+After the fix:
+- Ingestion script runs successfully even when date fields are empty
+- Filing and Period nodes are created with `null` dates when data is unavailable
+- No date parsing errors in logs
+- Data ingestion completes successfully
+
+### Related Files
+
+- `scripts/ingest_edgar_data.py` - Fixed date handling in `create_filing_node()` and Period node creation
+- `scripts/utils/edgar_client.py` - May return empty date strings from EDGAR data
+- `scripts/utils/data_transformer.py` - Transforms EDGAR data which may have empty dates
 - `scripts/logs/errors_20251228.log` - Contains original error logs
 
 ---

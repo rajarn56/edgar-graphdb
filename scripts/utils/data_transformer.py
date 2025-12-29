@@ -93,22 +93,46 @@ class DataTransformer:
     
     def _transform_company(self, company_data: Dict[str, Any]) -> Dict[str, Any]:
         """Transform company data to Company node"""
+        logger.debug("Transforming company data...")
+        logger.debug(f"Input company_data keys: {list(company_data.keys())}")
+        
         cik = company_data.get("cik", "")
         if not cik:
+            logger.error(f"Company CIK is missing. Available keys: {list(company_data.keys())}")
             raise ValueError("Company CIK is required")
         
         # Ensure CIK is zero-padded to 10 digits
+        original_cik = cik
         cik = str(cik).zfill(10)
+        if original_cik != cik:
+            logger.debug(f"CIK zero-padded: {original_cik} -> {cik}")
+        
+        # Log field mappings
+        ticker = company_data.get("tickers", [""])[0] if company_data.get("tickers") else ""
+        exchange = company_data.get("exchanges", [""])[0] if company_data.get("exchanges") else ""
+        
+        logger.debug(f"Company field mappings: cik={cik}, name={company_data.get('name', '')}, "
+                    f"ticker={ticker}, sic={company_data.get('sic', '')}, "
+                    f"exchange={exchange}")
+        
+        # Warn about missing optional fields
+        missing_fields = []
+        if not company_data.get("name"):
+            missing_fields.append("name")
+        if not ticker:
+            missing_fields.append("ticker")
+        if missing_fields:
+            logger.warning(f"Company missing optional fields: {missing_fields}")
         
         return {
             "node_type": "Company",
             "properties": {
                 "cik": cik,
                 "name": company_data.get("name", ""),
-                "ticker": company_data.get("tickers", [""])[0] if company_data.get("tickers") else "",
+                "ticker": ticker,
                 "sic": company_data.get("sic", ""),
                 "sic_description": company_data.get("sic_description", ""),
-                "exchange": company_data.get("exchanges", [""])[0] if company_data.get("exchanges") else "",
+                "exchange": exchange,
                 "incorporation_state": company_data.get("state_of_incorporation", ""),
                 "created_at": datetime.now(),
                 "updated_at": datetime.now(),
@@ -119,14 +143,28 @@ class DataTransformer:
         self, filing_data: Dict[str, Any], company_data: Dict[str, Any]
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         """Transform filing data to Filing and Period nodes"""
+        logger.debug("Transforming filing data...")
+        logger.debug(f"Input filing_data keys: {list(filing_data.keys())}")
+        
         accession_number = filing_data.get("accession_no", "")
         if not accession_number:
+            logger.error(f"Filing accession number is missing. Available keys: {list(filing_data.keys())}")
             raise ValueError("Filing accession number is required")
         
         form_type = filing_data.get("form", "")
         filing_date = filing_data.get("filing_date", "")
         period_end_date = filing_data.get("period_of_report", "")
         fiscal_year_end = filing_data.get("fiscal_year_end", "1231")
+        
+        logger.debug(f"Filing field mappings: accession_no={accession_number}, form={form_type}, "
+                    f"filing_date={filing_date}, period_of_report={period_end_date}, "
+                    f"fiscal_year_end={fiscal_year_end}")
+        
+        # Warn about missing date fields
+        if not filing_date:
+            logger.warning("Filing date is missing - will be set to null in database")
+        if not period_end_date:
+            logger.warning("Period end date is missing - will be set to null in database")
         
         # Parse fiscal year and quarter
         fiscal_year = None

@@ -279,6 +279,63 @@ Logs are written to the `logs/` directory:
 - `retrieve_YYYYMMDD.log`: Retrieval operations
 - `errors_YYYYMMDD.log`: Error-only log
 
+### Debug Logging for Data Mapping
+
+The ingest script includes comprehensive debug logging to help identify data mapping and type issues. To enable debug logging:
+
+```bash
+# Set LOG_LEVEL to DEBUG in .env file
+LOG_LEVEL=DEBUG
+
+# Or export before running
+export LOG_LEVEL=DEBUG
+python ingest_edgar_data.py --ticker AAPL
+```
+
+**Debug logs include:**
+
+1. **Data Field Mapping Verification:**
+   - Field names and values being written
+   - Data types for each field
+   - Field mapping from EDGAR data to Neo4j schema
+
+2. **Data Type Validation:**
+   - Type mismatches (e.g., expected int, got str)
+   - Missing required fields
+   - Empty string fields that may indicate missing data
+
+3. **Date Handling:**
+   - Original date values from EDGAR data
+   - Normalized date values after processing
+   - Date format validation
+   - Warnings for invalid date formats
+
+4. **Transformation Tracking:**
+   - Raw EDGAR data structure (keys, sample values)
+   - Transformed data structure (node properties)
+   - Field mappings during transformation
+
+5. **Database Write Parameters:**
+   - Final parameters being sent to Neo4j
+   - Parameter counts
+   - Values for critical fields
+
+**Example Debug Output:**
+```
+DEBUG | Creating Company Node - Data Mapping Verification
+DEBUG | CIK: 0000320193 (type: str)
+DEBUG | Name: Apple Inc. (type: str)
+DEBUG | Ticker: AAPL (type: str)
+DEBUG | Executing Company node write query with 8 parameters
+```
+
+**Use Cases:**
+- Debugging incorrect data field mappings
+- Identifying data type mismatches
+- Verifying date format handling
+- Tracking missing or empty fields
+- Understanding data transformation flow
+
 ## Troubleshooting
 
 ### Neo4j Connection Issues
