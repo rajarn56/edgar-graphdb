@@ -148,10 +148,18 @@ class EdgarClient:
                 # Get filings for the company
                 company = self._Company(ticker)
                 
+                # Normalize form type for edgartools (handle spaces and variations)
+                # edgartools may expect "DEF14A" instead of "DEF 14A"
+                normalized_form_type = form_type
+                if form_type.upper() == "DEF 14A" or form_type.upper() == "DEF14A":
+                    # Try both formats - edgartools may accept either
+                    normalized_form_type = "DEF 14A"  # Standard SEC format
+                    logger.debug(f"Normalized form type: {form_type} -> {normalized_form_type}")
+                
                 # Get the specific filing
                 if fiscal_year:
                     # Get filing for specific year
-                    filings = company.get_filings(form=form_type)
+                    filings = company.get_filings(form=normalized_form_type)
                     # Filter by fiscal year if possible
                     filing = None
                     for f in filings:
@@ -162,11 +170,23 @@ class EdgarClient:
                         filing = filings[0]  # Fallback to first filing
                 else:
                     # Get latest filing
-                    filings = company.get_filings(form=form_type)
+                    filings = company.get_filings(form=normalized_form_type)
                     filing = filings[0] if len(filings) > 0 else None
                 
+                # If no filing found with normalized form, try alternative formats
+                if not filing and normalized_form_type == "DEF 14A":
+                    logger.debug(f"Trying alternative form type format: DEF14A")
+                    try:
+                        filings = company.get_filings(form="DEF14A")
+                        filing = filings[0] if len(filings) > 0 else None
+                        if filing:
+                            normalized_form_type = "DEF14A"
+                            logger.info(f"Found filing using alternative form type: DEF14A")
+                    except Exception as e:
+                        logger.debug(f"Alternative form type failed: {e}")
+                
                 if not filing:
-                    logger.warning(f"No {form_type} filing found for {ticker}")
+                    logger.warning(f"No {form_type} filing found for {ticker} (tried: {normalized_form_type})")
                     return self._mock_filing_data(ticker, form_type, fiscal_year)
                 
                 # Extract filing data
