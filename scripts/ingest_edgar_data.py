@@ -548,11 +548,23 @@ def ingest_filing(
     logger.info("Retrieving EDGAR data...")
     edgar_data = edgar_client.get_filing(ticker, form_type, fiscal_year)
     if not edgar_data:
-        logger.error(f"Failed to retrieve EDGAR data for {ticker}")
+        logger.warning(f"[DATA_NOT_AVAILABLE] No {form_type} filing found for {ticker} - form may not exist for this company")
+        logger.info(f"[STATUS] Form {form_type} does not exist in edgar-tools for {ticker}")
+        logger.info(f"[ACTION] Skipping {form_type} ingestion for {ticker} - no action needed")
         return False
     
     # Transform data
     logger.info("Transforming data to graph format...")
+    
+    # Check if we have items to process
+    num_items = len(edgar_data.get('filing', {}).get('items', []))
+    if num_items == 0:
+        logger.error(f"[PROCESSING_FAILED] No items/sections found in filing data for {form_type}")
+        logger.error(f"[STATUS] Filing retrieved but contains no extractable content - data will be lost")
+        logger.error(f"[ACTION] Review extraction strategy - may need to update form mappings or add fallback extraction")
+        return False
+    
+    logger.info(f"[SUCCESS] Found {num_items} items/sections to process")
     
     # Log raw EDGAR data structure for debugging
     logger.debug("=" * 60)
@@ -564,11 +576,18 @@ def ingest_filing(
     logger.debug(f"Filing accession_no: {edgar_data.get('filing', {}).get('accession_no')}")
     logger.debug(f"Filing filing_date: {edgar_data.get('filing', {}).get('filing_date')}")
     logger.debug(f"Filing period_of_report: {edgar_data.get('filing', {}).get('period_of_report')}")
-    logger.debug(f"Number of items/sections: {len(edgar_data.get('filing', {}).get('items', []))}")
+    logger.debug(f"Number of items/sections: {num_items}")
     if edgar_data.get('filing', {}).get('items'):
         logger.debug(f"First item keys: {list(edgar_data['filing']['items'][0].keys())}")
     
-    transformed = transformer.transform_edgar_data(edgar_data)
+    try:
+        transformed = transformer.transform_edgar_data(edgar_data)
+    except Exception as e:
+        logger.error(f"[PROCESSING_FAILED] Error transforming data for {form_type}: {e}")
+        logger.error(f"[STATUS] Data extraction succeeded but transformation failed - data will be lost")
+        logger.error(f"[ACTION] Review transformation logic and data structure")
+        logger.debug(f"[DEBUG] Exception details: {e}", exc_info=True)
+        return False
     
     # Log transformed data structure for debugging
     logger.debug("=" * 60)
@@ -606,7 +625,21 @@ def ingest_filing(
     )
     
     # Create sections and chunks
-    logger.info(f"Creating {len(transformed['sections'])} sections...")
+    num_sections = len(transformed['sections'])
+    num_chunks = len(transformed['chunks'])
+    logger.info(f"Creating {num_sections} sections with {num_chunks} total chunks...")
+    
+    if num_sections == 0:
+        logger.error(f"[CHUNKING_FAILED] No sections created from {num_items} items")
+        logger.error(f"[STATUS] Data extraction succeeded but chunking failed - data will be lost")
+        logger.error(f"[ACTION] Review transformation and chunking logic")
+        return False
+    
+    if num_chunks == 0:
+        logger.warning(f"[CHUNKING_WARNING] No chunks created from {num_sections} sections")
+        logger.warning(f"[STATUS] Sections created but no chunks - content may be too short or chunking logic issue")
+        logger.warning(f"[ACTION] Review chunking parameters and content length")
+    
     for idx, section_node in enumerate(transformed["sections"]):
         section_id = section_node["properties"]["section_id"]
         
@@ -617,17 +650,28 @@ def ingest_filing(
         ]
         
         # Create section node
-        create_section_node(client, section_node, filing_accession, idx)
+        try:
+            create_section_node(client, section_node, filing_accession, idx)
+        except Exception as e:
+            logger.error(f"[CHUNKING_FAILED] Error creating section node {section_id}: {e}")
+            logger.error(f"[ACTION] Review section node creation logic")
+            continue
         
         # Create chunk nodes with embeddings
         if section_chunks:
-            create_chunk_nodes(
-                client,
-                section_chunks,
-                section_id,
-                company_cik,
-                embedding_generator
-            )
+            try:
+                create_chunk_nodes(
+                    client,
+                    section_chunks,
+                    section_id,
+                    company_cik,
+                    embedding_generator
+                )
+            except Exception as e:
+                logger.error(f"[CHUNKING_FAILED] Error creating chunks for section {section_id}: {e}")
+                logger.error(f"[STATUS] Section created but chunking failed - partial data loss")
+                logger.error(f"[ACTION] Review chunk creation and embedding generation")
+                logger.debug(f"[DEBUG] Exception details: {e}", exc_info=True)
     
     # Update filing status
     query = """

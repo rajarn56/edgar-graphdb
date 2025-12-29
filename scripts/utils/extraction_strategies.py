@@ -107,11 +107,83 @@ class StructuredObjectStrategy(ExtractionStrategy):
                 except Exception as e:
                     logger.debug(f"Failed to extract {attr_name}: {e}")
             
+            # If no items found with mappings, try to inspect object structure
+            # This handles cases where mappings don't match actual attributes
+            if not items:
+                logger.warning(f"[FALLBACK_INSPECTION] No items found using mappings for {obj_type}, inspecting object structure...")
+                logger.info(f"[EXPLANATION] Fallback inspection means the script doesn't know the exact structure of this form type's data")
+                logger.info(f"[EXPLANATION] It will automatically search through all object attributes to find content - data will NOT be lost")
+                items = self._inspect_object_attributes(structured_obj, form_type)
+                if items:
+                    logger.info(f"[SUCCESS] Fallback inspection found {len(items)} items - data preserved")
+                else:
+                    logger.warning(f"[WARNING] Fallback inspection found no items - may need manual investigation")
+            
             return items
             
         except Exception as e:
             logger.error(f"Error in StructuredObjectStrategy: {e}", exc_info=True)
             return items
+    
+    def _inspect_object_attributes(self, structured_obj: Any, form_type: str) -> List[Dict[str, Any]]:
+        """Inspect object attributes to find sections when mappings don't work"""
+        items = []
+        
+        try:
+            obj_type = type(structured_obj).__name__
+            obj_attrs = [attr for attr in dir(structured_obj) if not attr.startswith('_')]
+            logger.debug(f"Inspecting {len(obj_attrs)} attributes for {obj_type}")
+            
+            # Skip common non-content attributes
+            skip_attrs = {'obj', 'html', 'text', 'documents', 'url', 'accession_number', 
+                          'filing_date', 'period_end_date', 'form', 'company', 'items',
+                          'sections', '__class__', '__dict__', '__module__', '__weakref__'}
+            
+            # For 8-K forms, try items() method
+            if obj_type in ['EightK', 'CurrentReport'] and hasattr(structured_obj, 'items'):
+                try:
+                    items_dict = structured_obj.items()
+                    if isinstance(items_dict, dict):
+                        for item_key, item_content in items_dict.items():
+                            text = self._extract_text_from_content(item_content)
+                            if text and len(str(text).strip()) > 100:
+                                text_cleaned = self._clean_text_for_rag(str(text)[:50000])
+                                items.append({
+                                    "item": str(item_key),
+                                    "name": f"Item {item_key}",
+                                    "text": text_cleaned,
+                                    "html": f"<p>{text_cleaned}</p>",
+                                })
+                                logger.info(f"[FALLBACK_INSPECTION] Extracted Item {item_key} from {obj_type} using items() method")
+                except Exception as e:
+                    logger.debug(f"Failed to use items() method: {e}")
+            
+            # For other forms, inspect attributes for content
+            if not items:
+                for attr in obj_attrs:
+                    if attr in skip_attrs or callable(getattr(structured_obj, attr, None)):
+                        continue
+                    
+                    try:
+                        content = getattr(structured_obj, attr)
+                        if content and not callable(content):
+                            text = self._extract_text_from_content(content)
+                            if text and len(str(text).strip()) > 100:
+                                text_cleaned = self._clean_text_for_rag(str(text)[:50000])
+                                items.append({
+                                    "item": attr,
+                                    "name": attr.replace('_', ' ').title(),
+                                    "text": text_cleaned,
+                                    "html": f"<p>{text_cleaned}</p>",
+                                })
+                                logger.info(f"[FALLBACK_INSPECTION] Extracted {attr} from {obj_type} via attribute inspection")
+                    except Exception as e:
+                        logger.debug(f"Failed to extract from {attr}: {e}")
+            
+        except Exception as e:
+            logger.debug(f"Error inspecting object attributes: {e}")
+        
+        return items
     
     def _extract_text_from_content(self, content: Any) -> Optional[str]:
         """Extract text from content object"""
@@ -265,21 +337,46 @@ class HTMLPatternStrategy(ExtractionStrategy):
         items = []
         
         try:
-            # Get HTML content
+            # Get HTML content - try multiple methods
             html_content = None
-            if hasattr(filing, 'html'):
-                html_content = filing.html
-            elif hasattr(filing, 'documents'):
-                documents = filing.documents
-                if documents:
-                    doc_list = list(documents) if hasattr(documents, '__iter__') else [documents]
-                    for doc in doc_list:
-                        if hasattr(doc, 'html'):
-                            html_content = doc.html
-                            break
             
-            if not html_content:
-                logger.warning(f"No HTML content found for {form_type}")
+            # Method 1: Direct html attribute
+            if hasattr(filing, 'html'):
+                try:
+                    html_content = filing.html
+                    if html_content and len(str(html_content)) > 100:
+                        logger.debug(f"Found HTML content via html attribute ({len(str(html_content))} chars)")
+                except Exception as e:
+                    logger.debug(f"Failed to access html attribute: {e}")
+            
+            # Method 2: Try documents
+            if not html_content and hasattr(filing, 'documents'):
+                try:
+                    documents = filing.documents
+                    if documents:
+                        doc_list = list(documents) if hasattr(documents, '__iter__') else [documents]
+                        for doc in doc_list:
+                            if hasattr(doc, 'html'):
+                                html_content = doc.html
+                                if html_content and len(str(html_content)) > 100:
+                                    logger.debug(f"Found HTML content via documents ({len(str(html_content))} chars)")
+                                    break
+                except Exception as e:
+                    logger.debug(f"Failed to access documents: {e}")
+            
+            # Method 3: Try text content and convert
+            if not html_content and hasattr(filing, 'text'):
+                try:
+                    text_content = filing.text
+                    if text_content and len(str(text_content)) > 100:
+                        # Wrap text in basic HTML structure
+                        html_content = f"<div>{str(text_content)}</div>"
+                        logger.debug(f"Using text content as HTML ({len(str(text_content))} chars)")
+                except Exception as e:
+                    logger.debug(f"Failed to access text attribute: {e}")
+            
+            if not html_content or len(str(html_content)) < 100:
+                logger.warning(f"No HTML content found for {form_type} (tried html, documents, text)")
                 return items
             
             html_str = str(html_content)

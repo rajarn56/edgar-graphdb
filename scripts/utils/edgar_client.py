@@ -157,46 +157,45 @@ class EdgarClient:
                 # Get filings for the company
                 company = self._Company(ticker)
                 
-                # Normalize form type for edgartools (handle spaces and variations)
-                # edgartools may expect "DEF14A" instead of "DEF 14A"
+                # Normalize form type and try multiple formats
+                # edgartools may accept different formats (e.g., "DEF14A" vs "DEF 14A")
+                form_type_variants = self._get_form_type_variants(form_type)
+                
+                filing = None
                 normalized_form_type = form_type
-                if form_type.upper() == "DEF 14A" or form_type.upper() == "DEF14A":
-                    # Try both formats - edgartools may accept either
-                    normalized_form_type = "DEF 14A"  # Standard SEC format
-                    logger.debug(f"Normalized form type: {form_type} -> {normalized_form_type}")
                 
-                # Get the specific filing
-                if fiscal_year:
-                    # Get filing for specific year
-                    filings = company.get_filings(form=normalized_form_type)
-                    # Filter by fiscal year if possible
-                    filing = None
-                    for f in filings:
-                        if hasattr(f, 'filing_date') and str(fiscal_year) in str(f.filing_date):
-                            filing = f
-                            break
-                    if not filing and len(filings) > 0:
-                        filing = filings[0]  # Fallback to first filing
-                else:
-                    # Get latest filing
-                    filings = company.get_filings(form=normalized_form_type)
-                    filing = filings[0] if len(filings) > 0 else None
-                
-                # If no filing found with normalized form, try alternative formats
-                if not filing and normalized_form_type == "DEF 14A":
-                    logger.debug(f"Trying alternative form type format: DEF14A")
+                # Try each variant until we find a filing
+                for variant in form_type_variants:
                     try:
-                        filings = company.get_filings(form="DEF14A")
-                        filing = filings[0] if len(filings) > 0 else None
+                        logger.debug(f"Trying form type variant: {variant}")
+                        if fiscal_year:
+                            # Get filing for specific year
+                            filings = company.get_filings(form=variant)
+                            # Filter by fiscal year if possible
+                            for f in filings:
+                                if hasattr(f, 'filing_date') and str(fiscal_year) in str(f.filing_date):
+                                    filing = f
+                                    break
+                            if not filing and len(filings) > 0:
+                                filing = filings[0]  # Fallback to first filing
+                        else:
+                            # Get latest filing
+                            filings = company.get_filings(form=variant)
+                            filing = filings[0] if len(filings) > 0 else None
+                        
                         if filing:
-                            normalized_form_type = "DEF14A"
-                            logger.info(f"Found filing using alternative form type: DEF14A")
+                            normalized_form_type = variant
+                            logger.info(f"Found filing using form type: {variant}")
+                            break
                     except Exception as e:
-                        logger.debug(f"Alternative form type failed: {e}")
+                        logger.debug(f"Form type variant {variant} failed: {e}")
+                        continue
                 
                 if not filing:
-                    logger.warning(f"No {form_type} filing found for {ticker} (tried: {normalized_form_type})")
-                    return self._mock_filing_data(ticker, form_type, fiscal_year)
+                    logger.warning(f"[DATA_NOT_AVAILABLE] No {form_type} filing found for {ticker} (tried variants: {form_type_variants})")
+                    logger.info(f"[STATUS] Form {form_type} does not exist in edgar-tools for {ticker} - this is expected if the company hasn't filed this form type")
+                    logger.info(f"[ACTION] Skipping {form_type} ingestion for {ticker} - no action needed")
+                    return None
                 
                 # Extract filing data
                 filing_data = {
@@ -220,6 +219,7 @@ class EdgarClient:
                     logger.debug(f"Filing object attributes: {[attr for attr in dir(filing) if not attr.startswith('_')][:20]}")
                     
                     # Try using form registry and strategies first
+                    items = []
                     if FORM_REGISTRY_AVAILABLE:
                         try:
                             registry = get_registry()
@@ -230,33 +230,52 @@ class EdgarClient:
                                 items = strategy.extract_sections(filing, form_config, form_type)
                                 if items:
                                     logger.info(f"Extracted {len(items)} items using {strategy_name} strategy")
-                                    filing_data["filing"]["items"] = items
                                 else:
-                                    logger.debug(f"No items extracted with {strategy_name}, falling back to legacy method")
-                                    items = self._extract_filing_items(filing, form_type)
-                                    filing_data["filing"]["items"] = items
+                                    logger.debug(f"No items extracted with {strategy_name}, trying fallback strategies")
+                                    # Try fallback strategies in order
+                                    fallback_strategies = self._get_fallback_strategies(strategy_name, form_config)
+                                    for fallback_name in fallback_strategies:
+                                        try:
+                                            fallback_strategy = get_strategy(fallback_name)
+                                            fallback_items = fallback_strategy.extract_sections(filing, form_config, form_type)
+                                            if fallback_items:
+                                                logger.info(f"Extracted {len(fallback_items)} items using fallback {fallback_name} strategy")
+                                                items = fallback_items
+                                                break
+                                        except Exception as e:
+                                            logger.debug(f"Fallback strategy {fallback_name} failed: {e}")
+                                    
+                                    # If still no items, try legacy method
+                                    if not items:
+                                        logger.debug("All strategies failed, trying legacy extraction method")
+                                        items = self._extract_filing_items(filing, form_type)
                             else:
                                 logger.debug(f"No form config found for {form_type}, using legacy extraction")
                                 items = self._extract_filing_items(filing, form_type)
-                                filing_data["filing"]["items"] = items
                         except Exception as e:
                             logger.warning(f"Error using form registry: {e}, falling back to legacy method")
                             items = self._extract_filing_items(filing, form_type)
-                            filing_data["filing"]["items"] = items
                     else:
                         # Legacy extraction method
                         items = self._extract_filing_items(filing, form_type)
-                        filing_data["filing"]["items"] = items
+                    
+                    filing_data["filing"]["items"] = items
                     
                     if items:
-                        logger.info(f"Extracted {len(items)} items/sections from filing")
+                        logger.info(f"[SUCCESS] Extracted {len(items)} items/sections from filing {filing.accession_number if hasattr(filing, 'accession_number') else 'N/A'}")
                         for item in items[:3]:  # Log first 3 items
                             logger.debug(f"  - Item {item.get('item')}: {item.get('name')} ({len(item.get('text', ''))} chars)")
                     else:
-                        logger.warning(f"No items extracted from filing. Check debug logs for details.")
+                        logger.error(f"[PROCESSING_FAILED] No items extracted from filing {filing.accession_number if hasattr(filing, 'accession_number') else 'N/A'} for {form_type}")
+                        logger.error(f"[STATUS] Filing exists in edgar-tools but extraction failed - data may be lost")
+                        logger.error(f"[ACTION] Check extraction strategy and form structure - may need to update mappings or add fallback handling")
+                        logger.debug(f"[DEBUG] Filing object type: {type(filing).__name__}")
+                        logger.debug(f"[DEBUG] Available attributes: {[attr for attr in dir(filing) if not attr.startswith('_')][:20]}")
                 except Exception as e:
-                    logger.warning(f"Could not extract filing items: {e}")
-                    logger.debug(f"Exception details: {e}", exc_info=True)
+                    logger.error(f"[PROCESSING_FAILED] Exception during extraction for {form_type}: {e}")
+                    logger.error(f"[STATUS] Filing exists but extraction threw exception - data will be lost")
+                    logger.error(f"[ACTION] Review exception details and fix extraction logic")
+                    logger.debug(f"[DEBUG] Exception details: {e}", exc_info=True)
                     filing_data["filing"]["items"] = []
                 
             else:
@@ -269,8 +288,11 @@ class EdgarClient:
             return normalized
             
         except Exception as e:
-            logger.error(f"Error fetching filing data for {ticker} {form_type}: {e}", exc_info=True)
-            return self._mock_filing_data(ticker, form_type, fiscal_year)
+            logger.error(f"[PROCESSING_FAILED] Error fetching filing data for {ticker} {form_type}: {e}")
+            logger.error(f"[STATUS] Exception occurred during filing retrieval - may indicate edgar-tools issue or network problem")
+            logger.error(f"[ACTION] Check edgar-tools connectivity and form type validity")
+            logger.debug(f"[DEBUG] Exception details: {e}", exc_info=True)
+            return None  # Don't use mock data on errors
     
     def _normalize_company_data(self, data: Any) -> Dict[str, Any]:
         """
@@ -999,4 +1021,82 @@ class EdgarClient:
             "financials": {},
             "xbrl": {},
         }
-
+    
+    def _get_form_type_variants(self, form_type: str) -> List[str]:
+        """
+        Get all possible form type variants to try when querying edgartools.
+        
+        Args:
+            form_type: Original form type (e.g., "DEF 14A", "S-1")
+        
+        Returns:
+            List of form type variants to try in order
+        """
+        form_type_upper = form_type.strip().upper()
+        
+        # Map of form types to their possible variants
+        form_variants_map = {
+            "DEF 14A": ["DEF 14A", "DEF14A", "DEF-14A"],
+            "DEF14A": ["DEF 14A", "DEF14A", "DEF-14A"],
+            "DEF-14A": ["DEF 14A", "DEF14A", "DEF-14A"],
+            "DEF 14C": ["DEF 14C", "DEF14C", "DEF-14C"],
+            "DEF14C": ["DEF 14C", "DEF14C", "DEF-14C"],
+            "DEF-14C": ["DEF 14C", "DEF14C", "DEF-14C"],
+            "S-1": ["S-1", "S1"],
+            "S1": ["S-1", "S1"],
+            "S-3": ["S-3", "S3"],
+            "S3": ["S-3", "S3"],
+            "S-4": ["S-4", "S4"],
+            "S4": ["S-4", "S4"],
+            "10": ["10", "10-K"],  # Form 10 might be queried as 10-K in some cases
+            "13D": ["13D", "13-D", "SCHEDULE 13D"],
+            "13-D": ["13D", "13-D", "SCHEDULE 13D"],
+            "13G": ["13G", "13-G", "SCHEDULE 13G"],
+            "13-G": ["13G", "13-G", "SCHEDULE 13G"],
+            "13F": ["13F", "13-F"],
+            "13-F": ["13F", "13-F"],
+            "N-CSR": ["N-CSR", "NCSR", "NCSR"],
+            "NCSR": ["N-CSR", "NCSR"],
+            "11-K": ["11-K", "11K"],
+            "11K": ["11-K", "11K"],
+            "20-F": ["20-F", "20F"],
+            "20F": ["20-F", "20F"],
+            "40-F": ["40-F", "40F"],
+            "40F": ["40-F", "40F"],
+            "424B": ["424B", "424-B", "424B2", "424B2"],
+            "424-B": ["424B", "424-B", "424B2"],
+            "144": ["144", "FORM 144"],
+            "FORM 144": ["144", "FORM 144"],
+        }
+        
+        # Return variants if found, otherwise return original form type
+        variants = form_variants_map.get(form_type_upper, [form_type])
+        
+        # Always include original form type if not already in list
+        if form_type not in variants:
+            variants.insert(0, form_type)
+        
+        return variants
+    
+    def _get_fallback_strategies(self, primary_strategy: str, form_config: Dict[str, Any]) -> List[str]:
+        """
+        Get fallback strategies to try if primary strategy fails.
+        
+        Args:
+            primary_strategy: Primary extraction strategy name
+            form_config: Form configuration
+        
+        Returns:
+            List of fallback strategy names in order of preference
+        """
+        # Strategy fallback order
+        strategy_fallbacks = {
+            "structured_object": ["attribute_inspection", "html_pattern", "text_pattern", "generic"],
+            "attribute_inspection": ["html_pattern", "text_pattern", "generic"],
+            "html_pattern": ["text_pattern", "generic"],
+            "text_pattern": ["html_pattern", "generic"],
+            "generic": [],  # Generic is last resort, no fallback
+        }
+        
+        return strategy_fallbacks.get(primary_strategy, ["generic"])
+    
