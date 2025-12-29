@@ -1,34 +1,32 @@
-2025-12-28 21:22:10.416 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
-2025-12-28 21:22:10.416 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251228.log
-2025-12-28 21:22:10.416 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251228.log
-2025-12-28 21:22:10.416 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
-2025-12-28 21:22:10.416 | INFO     | __main__:main:377 | ============================================================
-2025-12-28 21:22:10.417 | INFO     | __main__:main:378 | EDGAR Data Ingestion
-2025-12-28 21:22:10.417 | INFO     | __main__:main:379 | ============================================================
-2025-12-28 21:22:10.417 | INFO     | __main__:main:380 | Ticker: AAPL
-2025-12-28 21:22:10.417 | INFO     | __main__:main:381 | Form Type: 10-K
-2025-12-28 21:22:10.417 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
-2025-12-28 21:22:13.757 | INFO     | utils.edgar_client:_initialize_client:47 | Set EDGAR identity: rajarn56@outlook.com
-2025-12-28 21:22:13.758 | INFO     | utils.edgar_client:_initialize_client:53 | Successfully imported edgartools library
-2025-12-28 21:22:13.808 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
-2025-12-28 21:22:13.809 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
-2025-12-28 21:22:13.824 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
-2025-12-28 21:22:13.831 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
-2025-12-28 21:22:13.831 | INFO     | __main__:ingest_filing:295 | Ingesting filing for AAPL (10-K)...
-2025-12-28 21:22:13.831 | INFO     | __main__:ingest_filing:298 | Retrieving EDGAR data...
-2025-12-28 21:22:16.249 | INFO     | utils.edgar_client:get_company_by_ticker:108 | Fetched company data for AAPL: Apple Inc.
-2025-12-28 21:22:16.552 | INFO     | utils.edgar_client:get_filing:206 | Fetched filing data for AAPL 10-K: 0000320193-25-000079
-2025-12-28 21:22:16.552 | INFO     | __main__:ingest_filing:305 | Transforming data to graph format...
-2025-12-28 21:22:16.580 | INFO     | __main__:ingest_filing:315 | Creating company node...
-2025-12-28 21:22:16.606 | INFO     | __main__:create_company_node:66 | Created/updated Company node: 0000320193 (Apple Inc.)
-2025-12-28 21:22:16.606 | INFO     | __main__:ingest_filing:321 | Creating filing node...
-2025-12-28 21:22:16.645 | ERROR    | utils.neo4j_client:execute_write:229 | Write query execution failed: {neo4j_code: Neo.ClientError.Statement.SyntaxError} {message: Text cannot be parsed to a Date
-""
- ^} {gql_status: 22007} {gql_status_description: error: data exception - invalid date, time, or datetime format}
-Query: 
-    MERGE (f:Filing {accession_number: $accession_number})
-    ON CREATE SET f.created_at = datetime(),
-        f.form_type = $form_type,
-        f.filing_date = date($filing_date),
-        f.period_...
-2025-12-28 21:22:16.647 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
+2025-12-28 21:30:52.051 | INFO     | utils.logger_config:setup_logger:92 | Logger configured: ingest
+2025-12-28 21:30:52.051 | INFO     | utils.logger_config:setup_logger:93 | Log file: logs/ingest_20251228.log
+2025-12-28 21:30:52.051 | INFO     | utils.logger_config:setup_logger:94 | Error log file: logs/errors_20251228.log
+2025-12-28 21:30:52.051 | INFO     | utils.logger_config:setup_logger:95 | Log level: INFO
+2025-12-28 21:30:52.051 | INFO     | __main__:main:652 | ============================================================
+2025-12-28 21:30:52.051 | INFO     | __main__:main:653 | EDGAR Data Ingestion
+2025-12-28 21:30:52.051 | INFO     | __main__:main:654 | ============================================================
+2025-12-28 21:30:52.051 | INFO     | __main__:main:655 | Ticker: AAPL
+2025-12-28 21:30:52.051 | INFO     | __main__:main:656 | Form Type: 10-K
+2025-12-28 21:30:52.051 | INFO     | utils.neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-28 21:30:52.190 | INFO     | utils.edgar_client:_initialize_client:47 | Set EDGAR identity: rajarn56@outlook.com
+2025-12-28 21:30:52.190 | INFO     | utils.edgar_client:_initialize_client:53 | Successfully imported edgartools library
+2025-12-28 21:30:52.240 | INFO     | utils.embedding_generator:__init__:60 | EmbeddingGenerator initialized: provider=lmstudio, model=text-embedding-nomic-embed-text-v1.5
+2025-12-28 21:30:52.240 | INFO     | utils.embedding_generator:__init__:62 | LMStudio API base: http://localhost:1234/v1
+2025-12-28 21:30:52.257 | INFO     | utils.neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-28 21:30:52.265 | INFO     | utils.neo4j_client:verify_connectivity:327 | Neo4j connectivity verified
+2025-12-28 21:30:52.265 | INFO     | __main__:ingest_filing:541 | Ingesting filing for AAPL (10-K)...
+2025-12-28 21:30:52.265 | INFO     | __main__:ingest_filing:544 | Retrieving EDGAR data...
+2025-12-28 21:30:53.584 | INFO     | utils.edgar_client:get_company_by_ticker:108 | Fetched company data for AAPL: Apple Inc.
+2025-12-28 21:30:54.443 | INFO     | utils.edgar_client:get_filing:206 | Fetched filing data for AAPL 10-K: 0000320193-25-000079
+2025-12-28 21:30:54.443 | INFO     | __main__:ingest_filing:551 | Transforming data to graph format...
+2025-12-28 21:30:54.443 | WARNING  | utils.data_transformer:_transform_filing:167 | Period end date is missing - will be set to null in database
+2025-12-28 21:30:54.465 | INFO     | __main__:ingest_filing:590 | Creating company node...
+2025-12-28 21:30:54.488 | INFO     | __main__:create_company_node:98 | Created/updated Company node: 0000320193 (Apple Inc.)
+2025-12-28 21:30:54.489 | INFO     | __main__:ingest_filing:596 | Creating filing node...
+2025-12-28 21:30:54.567 | INFO     | __main__:create_filing_node:213 | Created/updated Filing node: 0000320193-25-000079
+2025-12-28 21:30:54.567 | INFO     | __main__:ingest_filing:605 | Creating 0 sections...
+2025-12-28 21:30:54.581 | INFO     | __main__:ingest_filing:637 | Successfully ingested filing 0000320193-25-000079
+2025-12-28 21:30:54.581 | INFO     | __main__:main:686 | ============================================================
+2025-12-28 21:30:54.581 | INFO     | __main__:main:687 | Ingestion completed successfully!
+2025-12-28 21:30:54.581 | INFO     | __main__:main:688 | ============================================================
+2025-12-28 21:30:54.581 | INFO     | utils.neo4j_client:close:79 | Neo4j connection closed
