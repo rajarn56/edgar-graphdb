@@ -127,6 +127,66 @@ python retrieve_edgar_data.py --ticker AAPL --format json
 - Shows metrics and trends
 - Performs vector search (if query provided)
 
+### 4. `delete_schema.py`
+
+⚠️ **WARNING**: This script will DELETE ALL DATA in the Neo4j database!
+
+Completely removes all schema elements (nodes, relationships, constraints, indexes) from Neo4j database, making it clean again. This operation is irreversible.
+
+**Usage**:
+```bash
+python delete_schema.py
+python delete_schema.py --yes  # Skip confirmation prompt
+```
+
+**Parameters**:
+- `--yes`: Skip confirmation prompt (use with extreme caution)
+
+**What it does**:
+- Shows current database statistics (node count, relationship count, constraints, indexes)
+- Deletes all nodes and relationships
+- Drops all constraints
+- Drops all indexes (property, vector, full-text)
+- Verifies deletion was successful
+- Idempotent (safe to run multiple times)
+
+**Equivalent Cypher Queries**:
+
+The script performs the following operations, which can also be done manually:
+
+```cypher
+// Delete all nodes and relationships
+MATCH (n)
+DETACH DELETE n
+
+// List all constraints
+SHOW CONSTRAINTS
+
+// Drop a specific constraint (example)
+DROP CONSTRAINT company_cik_unique IF EXISTS
+
+// List all indexes
+SHOW INDEXES
+
+// Drop a specific index (example)
+DROP INDEX company_ticker IF EXISTS
+
+// Drop a vector index (example)
+DROP INDEX textChunkEmbeddings IF EXISTS
+```
+
+**When to use**:
+- Before setting up a fresh schema
+- To completely reset the database
+- For testing/development cleanup
+- When you need to start over with a clean database
+
+**Safety Features**:
+- Shows database statistics before deletion
+- Requires confirmation prompt (unless `--yes` flag is used)
+- Verifies deletion was successful
+- Logs all operations for audit trail
+
 ## Execution Sequence
 
 Follow this sequence for first-time setup:
@@ -145,6 +205,18 @@ Follow this sequence for first-time setup:
    ```bash
    python retrieve_edgar_data.py --ticker AAPL
    ```
+
+### Clean Database (Optional)
+
+To completely reset the database and start fresh:
+
+```bash
+# ⚠️ WARNING: This will delete all data!
+python delete_schema.py
+
+# Then run setup_schema.py again
+python setup_schema.py
+```
 
 ## Dependencies
 
@@ -172,11 +244,13 @@ Required environment variables (in `.env`):
 - `OPENAI_API_KEY`: OpenAI API key (optional, for fallback)
 - `LOG_LEVEL`: Logging level (default: INFO)
 - `LOG_DIR`: Log directory (default: logs)
+- `NEO4J_DEBUG_LOGGING`: Enable debug logging for Neo4j client (default: false). Set to `true`, `1`, or `yes` to enable. Debug logs written to `logs/debug.log`
 
 ## Logging
 
 Logs are written to the `logs/` directory:
 - `setup_schema_YYYYMMDD.log`: Schema setup operations
+- `delete_schema_YYYYMMDD.log`: Schema deletion operations
 - `ingest_YYYYMMDD.log`: Ingestion operations
 - `retrieve_YYYYMMDD.log`: Retrieval operations
 - `errors_YYYYMMDD.log`: Error-only log
@@ -279,5 +353,6 @@ EDGAR Tools → Data Transformer → Embedding Generator → Neo4j Database
 For issues or questions, refer to:
 - Schema design: `../docs/neo4j-edgar-schema-design-v2.md`
 - Schema diagram: `../docs/neo4j-edgar-schema-diagram-v2.md`
+- Troubleshooting guide: `../docs/TROUBLESHOOTING.md`
 - Logs in `logs/` directory
 

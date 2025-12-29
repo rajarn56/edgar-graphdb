@@ -43,6 +43,15 @@ class Neo4jClient:
         self.retry_delay = retry_delay
         self.driver: Optional[Driver] = None
         
+        # Debug logging enabled via environment variable
+        self.debug_logging = os.getenv("NEO4J_DEBUG_LOGGING", "false").lower() in ("true", "1", "yes")
+        if self.debug_logging:
+            # Determine log path relative to scripts directory
+            scripts_dir = Path(__file__).parent.parent
+            self.debug_log_dir = scripts_dir / "logs"
+            self.debug_log_dir.mkdir(parents=True, exist_ok=True)
+            self.debug_log_path = self.debug_log_dir / "debug.log"
+        
         logger.info(f"Initializing Neo4j client: {self.uri} (user: {self.user})")
     
     def connect(self) -> None:
@@ -161,32 +170,49 @@ class Neo4jClient:
         if parameters is None:
             parameters = {}
         
-        # Determine log path relative to scripts directory
-        scripts_dir = Path(__file__).parent.parent
-        log_dir = scripts_dir / "logs"
-        log_dir.mkdir(parents=True, exist_ok=True)
-        log_path = log_dir / "debug.log"
-        
         attempt = 0
         while attempt < self.max_retries:
             try:
                 with self.session() as session:
-                    # #region agent log
-                    try:
-                        with open(log_path, 'a') as f:
-                            f.write(json.dumps({"sessionId": "debug-session", "runId": "run1", "hypothesisId": "A", "location": "neo4j_client.py:165", "message": "Session object type check", "data": {"session_type": str(type(session)), "has_commit": hasattr(session, 'commit'), "session_methods": [m for m in dir(session) if not m.startswith('_')][:10]}, "timestamp": int(time.time() * 1000)}) + '\n')
-                    except Exception:
-                        pass
-                    # #endregion agent log
+                    # #region debug logging
+                    if self.debug_logging:
+                        try:
+                            with open(self.debug_log_path, 'a') as f:
+                                f.write(json.dumps({
+                                    "sessionId": "neo4j-client",
+                                    "runId": f"attempt-{attempt}",
+                                    "location": "neo4j_client.py:execute_write",
+                                    "message": "Session object type check",
+                                    "data": {
+                                        "session_type": str(type(session)),
+                                        "has_commit": hasattr(session, 'commit'),
+                                        "session_methods": [m for m in dir(session) if not m.startswith('_')][:10]
+                                    },
+                                    "timestamp": int(time.time() * 1000)
+                                }) + '\n')
+                        except Exception:
+                            pass
+                    # #endregion debug logging
                     result = session.run(query, parameters)
                     records = [dict(record) for record in result]
-                    # #region agent log
-                    try:
-                        with open(log_path, 'a') as f:
-                            f.write(json.dumps({"sessionId": "debug-session", "runId": "post-fix", "hypothesisId": "A", "location": "neo4j_client.py:178", "message": "After query execution - no commit needed", "data": {"records_count": len(records), "has_commit_method": hasattr(session, 'commit')}, "timestamp": int(time.time() * 1000)}) + '\n')
-                    except Exception:
-                        pass
-                    # #endregion agent log
+                    # #region debug logging
+                    if self.debug_logging:
+                        try:
+                            with open(self.debug_log_path, 'a') as f:
+                                f.write(json.dumps({
+                                    "sessionId": "neo4j-client",
+                                    "runId": f"attempt-{attempt}",
+                                    "location": "neo4j_client.py:execute_write",
+                                    "message": "After query execution",
+                                    "data": {
+                                        "records_count": len(records),
+                                        "has_commit_method": hasattr(session, 'commit')
+                                    },
+                                    "timestamp": int(time.time() * 1000)
+                                }) + '\n')
+                        except Exception:
+                            pass
+                    # #endregion debug logging
                     # Note: Neo4j Python driver auto-commits transactions when session context exits
                     # No explicit commit() call needed
                     return records
@@ -220,23 +246,29 @@ class Neo4jClient:
         Returns:
             List of result lists (one per query)
         """
-        # Determine log path relative to scripts directory
-        scripts_dir = Path(__file__).parent.parent
-        log_dir = scripts_dir / "logs"
-        log_dir.mkdir(parents=True, exist_ok=True)
-        log_path = log_dir / "debug.log"
-        
         attempt = 0
         while attempt < self.max_retries:
             try:
                 with self.session() as session:
-                    # #region agent log
-                    try:
-                        with open(log_path, 'a') as f:
-                            f.write(json.dumps({"sessionId": "debug-session", "runId": "run1", "hypothesisId": "B", "location": "neo4j_client.py:203", "message": "Transaction session type check", "data": {"session_type": str(type(session)), "has_commit": hasattr(session, 'commit'), "queries_count": len(queries)}, "timestamp": int(time.time() * 1000)}) + '\n')
-                    except Exception:
-                        pass
-                    # #endregion agent log
+                    # #region debug logging
+                    if self.debug_logging:
+                        try:
+                            with open(self.debug_log_path, 'a') as f:
+                                f.write(json.dumps({
+                                    "sessionId": "neo4j-client",
+                                    "runId": f"attempt-{attempt}",
+                                    "location": "neo4j_client.py:execute_transaction",
+                                    "message": "Transaction session type check",
+                                    "data": {
+                                        "session_type": str(type(session)),
+                                        "has_commit": hasattr(session, 'commit'),
+                                        "queries_count": len(queries)
+                                    },
+                                    "timestamp": int(time.time() * 1000)
+                                }) + '\n')
+                        except Exception:
+                            pass
+                    # #endregion debug logging
                     results = []
                     for query, parameters in queries:
                         if parameters is None:
@@ -244,13 +276,24 @@ class Neo4jClient:
                         result = session.run(query, parameters)
                         records = [dict(record) for record in result]
                         results.append(records)
-                    # #region agent log
-                    try:
-                        with open(log_path, 'a') as f:
-                            f.write(json.dumps({"sessionId": "debug-session", "runId": "post-fix", "hypothesisId": "B", "location": "neo4j_client.py:237", "message": "After transaction queries - no commit needed", "data": {"has_commit_method": hasattr(session, 'commit'), "results_count": len(results)}, "timestamp": int(time.time() * 1000)}) + '\n')
-                    except Exception:
-                        pass
-                    # #endregion agent log
+                    # #region debug logging
+                    if self.debug_logging:
+                        try:
+                            with open(self.debug_log_path, 'a') as f:
+                                f.write(json.dumps({
+                                    "sessionId": "neo4j-client",
+                                    "runId": f"attempt-{attempt}",
+                                    "location": "neo4j_client.py:execute_transaction",
+                                    "message": "After transaction queries",
+                                    "data": {
+                                        "has_commit_method": hasattr(session, 'commit'),
+                                        "results_count": len(results)
+                                    },
+                                    "timestamp": int(time.time() * 1000)
+                                }) + '\n')
+                        except Exception:
+                            pass
+                    # #endregion debug logging
                     # Note: Neo4j Python driver auto-commits transactions when session context exits
                     # No explicit commit() call needed
                     return results
