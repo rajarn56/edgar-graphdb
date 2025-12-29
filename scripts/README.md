@@ -80,20 +80,75 @@ Retrieves EDGAR data for a ticker, transforms to graph format, and writes to Neo
 
 **Usage**:
 ```bash
+# Ingest latest 10-K (default)
 python ingest_edgar_data.py --ticker AAPL
+
+# Ingest specific form type
+python ingest_edgar_data.py --ticker AAPL --form-type 10-K
+python ingest_edgar_data.py --ticker AAPL --form-type 10-Q
+python ingest_edgar_data.py --ticker AAPL --form-type 8-K
+python ingest_edgar_data.py --ticker AAPL --form-type DEF 14A
+
+# Ingest specific fiscal year
 python ingest_edgar_data.py --ticker AAPL --form-type 10-K --fiscal-year 2024
-python ingest_edgar_data.py --ticker AAPL --force  # Force re-ingestion
+
+# Force re-ingestion (overwrites existing data)
+python ingest_edgar_data.py --ticker AAPL --force
+```
+
+**Ingesting All Forms for a Ticker**:
+
+To ingest multiple form types for comprehensive coverage, run the script multiple times:
+
+```bash
+# Ingest all common form types
+python ingest_edgar_data.py --ticker AAPL --form-type 10-K
+python ingest_edgar_data.py --ticker AAPL --form-type 10-Q
+python ingest_edgar_data.py --ticker AAPL --form-type 8-K
+python ingest_edgar_data.py --ticker AAPL --form-type DEF 14A
+```
+
+**Batch Script Example**:
+
+Create a shell script `ingest_all_forms.sh` to automate ingestion of all forms:
+
+```bash
+#!/bin/bash
+TICKER=$1
+
+if [ -z "$TICKER" ]; then
+    echo "Usage: ./ingest_all_forms.sh <TICKER>"
+    exit 1
+fi
+
+echo "Ingesting all forms for $TICKER..."
+
+python ingest_edgar_data.py --ticker $TICKER --form-type 10-K
+python ingest_edgar_data.py --ticker $TICKER --form-type 10-Q
+python ingest_edgar_data.py --ticker $TICKER --form-type 8-K
+python ingest_edgar_data.py --ticker $TICKER --form-type DEF 14A
+
+echo "Done!"
+```
+
+Make it executable and run:
+```bash
+chmod +x ingest_all_forms.sh
+./ingest_all_forms.sh AAPL
 ```
 
 **Parameters**:
 - `--ticker`: Stock ticker symbol (required)
 - `--form-type`: Form type filter (optional, default: latest 10-K)
+  - Supported: `10-K`, `10-Q`, `8-K`, `DEF 14A`, and others
 - `--fiscal-year`: Specific fiscal year (optional)
 - `--force`: Force re-ingestion even if exists (optional)
 
 **What it does**:
 - Connects to Neo4j
-- Retrieves EDGAR data using edgar-tools library
+- Retrieves EDGAR data using edgartools library (with structured object support)
+- Extracts filing sections/items using edgartools structured objects (TenK, TenQ, EightK, etc.)
+- Cleans and normalizes content for RAG consumption
 - Checks for existing data (handles duplicates)
 - Transforms EDGAR structure to Neo4j format
 - Generates embeddings using LMStudio
@@ -214,7 +269,13 @@ Follow this sequence for first-time setup:
 
 2. **Ingest Test Data**:
    ```bash
+   # Ingest latest 10-K
    python ingest_edgar_data.py --ticker AAPL
+   
+   # Or ingest multiple form types for comprehensive coverage
+   python ingest_edgar_data.py --ticker AAPL --form-type 10-K
+   python ingest_edgar_data.py --ticker AAPL --form-type 10-Q
+   python ingest_edgar_data.py --ticker AAPL --form-type 8-K
    ```
 
 3. **Verify Data**:

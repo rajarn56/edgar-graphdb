@@ -8,8 +8,10 @@ This document collects troubleshooting information, fixes, and debugging techniq
 2. [Cypher MERGE Syntax Error](#cypher-merge-syntax-error)
 3. [Date Parsing Error](#date-parsing-error)
 4. [Mock Data Instead of Real EDGAR Data](#mock-data-instead-of-real-edgar-data)
-5. [Debug Logging](#debug-logging)
-6. [Common Issues](#common-issues)
+5. [Section Extraction Issues](#section-extraction-issues)
+6. [RAG Content Format Issues](#rag-content-format-issues)
+7. [Debug Logging](#debug-logging)
+8. [Common Issues](#common-issues)
 
 ---
 
@@ -367,6 +369,146 @@ The mock implementation generates realistic-looking data structures but with pla
 
 ---
 
+## Section Extraction Issues
+
+### Issue
+
+**Symptoms:**
+- Ingestion completes successfully but creates 0 sections
+- Log shows: `"Creating 0 sections..."`
+- Log shows: `"Extracted 0 items/sections from filing"`
+- Filing and company nodes are created, but no Section or Chunk nodes
+
+**Date Fixed:** 2025-12-28
+
+### Root Cause
+
+The code was incorrectly trying to access filing sections using `filing.items()`, which calls Python's built-in dictionary method instead of extracting filing sections. The edgartools library provides structured data objects (TenK, TenQ, EightK, etc.) via the `obj()` method, which should be used to access filing sections.
+
+### Solution
+
+**Fixed in:** `scripts/utils/edgar_client.py`
+
+**Changes Made:**
+1. Updated `_extract_filing_items()` to use `filing.obj()` to convert Filing objects to structured objects
+2. Added `_extract_from_structured_object()` method to extract sections from structured objects
+3. Added support for multiple form types (TenK, TenQ, EightK, Def14A)
+4. Added fallback methods (HTML parsing, text parsing, document extraction)
+5. Improved logging to show extraction progress
+
+**Code Before:**
+```python
+# Incorrect: This calls Python's dict.items() method
+if hasattr(filing, 'items'):
+    items = filing.items()  # ❌ Wrong!
+```
+
+**Code After:**
+```python
+# Correct: Use structured objects
+if hasattr(filing, 'obj'):
+    structured_obj = filing.obj()  # ✅ Converts to TenK, TenQ, etc.
+    items = self._extract_from_structured_object(structured_obj, form_type)
+```
+
+**Supported Form Types:**
+- **10-K**: Uses `TenK` structured object with explicit mappings (Item 1, 1A, 7, etc.)
+- **10-Q**: Uses `TenQ` structured object with explicit mappings
+- **8-K**: Uses `EightK` structured object with `items()` method inspection
+- **DEF 14A**: Uses `Def14A` structured object with attribute inspection
+- **Others**: Falls back to HTML/text parsing
+
+### Verification
+
+After the fix:
+- Logs show: `"Successfully converted to structured object: TenK"`
+- Logs show: `"Extracted X items using structured object method"` (where X > 0)
+- Sections are created in the database
+- Chunks are generated from section content
+
+### Related Files
+
+- `scripts/utils/edgar_client.py` - Fixed section extraction methods
+- `scripts/utils/data_transformer.py` - Transforms extracted sections to graph format
+- `scripts/logs/ingest_20251228.log` - Contains extraction logs
+
+---
+
+## RAG Content Format Issues
+
+### Issue
+
+**Symptoms:**
+- Content stored in database contains HTML tags
+- Excessive whitespace in content
+- Content not properly formatted for LLM consumption
+- Embeddings may not capture semantic meaning correctly
+
+**Date Fixed:** 2025-12-28
+
+### Root Cause
+
+Content extracted from EDGAR filings often contains HTML markup, excessive whitespace, and formatting artifacts that need to be cleaned before storage for RAG (Retrieval-Augmented Generation) use cases.
+
+### Solution
+
+**Fixed in:** `scripts/utils/data_transformer.py` and `scripts/utils/edgar_client.py`
+
+**Changes Made:**
+1. Added `clean_text_for_rag()` method to clean HTML and normalize text
+2. Added `normalize_whitespace()` method for consistent formatting
+3. Updated `_transform_section()` to clean content before storage
+4. Updated `_chunk_content()` to ensure chunks are normalized
+5. Updated `_create_chunk()` to clean context and add company metadata
+6. Added text cleaning in `edgar_client.py` for extracted content
+
+**Key Features:**
+- **HTML Removal**: Strips HTML tags and entities using BeautifulSoup
+- **Whitespace Normalization**: Normalizes spaces, line breaks, and tabs
+- **Content Cleaning**: Removes control characters and zero-width spaces
+- **Metadata Enrichment**: Adds company_name and company_ticker to chunks for better context
+
+**Code Example:**
+```python
+def clean_text_for_rag(self, text: str) -> str:
+    """Clean and normalize text content for RAG consumption"""
+    # Remove HTML tags
+    # Normalize whitespace
+    # Remove control characters
+    # Return clean text ready for LLM
+```
+
+### Content Format
+
+**Before (Raw HTML):**
+```html
+<p>Item 7. Management&apos;s Discussion and Analysis</p>
+<p>   Our revenue increased significantly...</p>
+```
+
+**After (RAG-Ready):**
+```
+Item 7. Management's Discussion and Analysis
+
+Our revenue increased significantly...
+```
+
+### Verification
+
+After the fix:
+- Section content is clean text (no HTML tags)
+- Chunk content is normalized and ready for RAG
+- Company metadata is included in chunks
+- Content length and word counts are accurate
+
+### Related Files
+
+- `scripts/utils/data_transformer.py` - Text cleaning methods
+- `scripts/utils/edgar_client.py` - Content extraction and cleaning
+- `scripts/ingest_edgar_data.py` - Uses cleaned content for ingestion
+
+---
+
 ## Debug Logging
 
 ### Overview
@@ -462,6 +604,71 @@ Debug logging has minimal performance impact when disabled (default). When enabl
 3. Verify credentials in `.env` file
 4. Test connection: `cypher-shell -u neo4j -p password`
 
+### LMStudio Embedding Issues
+
+**Symptoms:**
+- Embeddings are all zeros
+- Embedding generation fails
+- "Failed to generate embeddings" errors
+
+**Solutions:**
+1. Verify LMStudio server is running
+2. Check `LM_STUDIO_API_BASE` matches your LMStudio configuration (default: `http://localhost:1234/v1`)
+3. Verify embedding model is loaded in LMStudio
+4. Check `EMBEDDING_MODEL` matches your model name
+5. If embeddings are all zeros, check LMStudio logs
+6. Test LMStudio API: `curl http://localhost:1234/v1/models`
+
+### EDGAR Data Retrieval Issues
+
+**Symptoms:**
+- "Could not extract items from filing using any method"
+- "Extracted 0 items/sections from filing"
+- Sections are empty or missing
+- "Using mock data" warnings
+
+**Solutions:**
+1. Verify edgartools library is installed: `pip install edgartools`
+2. **Set EDGAR_IDENTITY environment variable** with your email address (required by SEC)
+3. Check network connectivity to SEC EDGAR
+4. Verify ticker symbol is valid (use uppercase)
+5. Check for rate limiting (SEC may throttle requests)
+6. Enable debug logging to see extraction details: `LOG_LEVEL=DEBUG`
+7. Check logs for structured object conversion: Should see "Successfully converted to structured object"
+8. If sections are still empty, check logs for which extraction method was used
+9. Verify BeautifulSoup4 is installed: `pip install beautifulsoup4`
+
+### Section Extraction Issues
+
+**Symptoms:**
+- Ingestion completes but creates 0 sections
+- Log shows "Extracted 0 items/sections from filing"
+- No Section or Chunk nodes created
+
+**Solutions:**
+1. Verify edgartools version supports structured objects: `pip install --upgrade edgartools`
+2. Check logs for structured object conversion messages
+3. Try different form types (10-K, 10-Q, 8-K) to see which work
+4. Enable debug logging: `LOG_LEVEL=DEBUG` to see detailed extraction attempts
+5. Check if filing has content: Some filings may not have extractable sections
+6. Verify EDGAR_IDENTITY is set correctly
+7. Check that `filing.obj()` method is available (should convert to TenK, TenQ, etc.)
+
+### RAG Content Format Issues
+
+**Symptoms:**
+- Content contains HTML tags
+- Excessive whitespace in stored content
+- Content not suitable for LLM consumption
+
+**Solutions:**
+1. Content cleaning is automatic - verify it's working by checking stored content
+2. Check logs for cleaning operations (should be silent if working correctly)
+3. Verify BeautifulSoup4 is installed: `pip install beautifulsoup4`
+4. Content should be clean text without HTML tags
+5. Whitespace should be normalized (single spaces, proper line breaks)
+6. Check chunk content in database to verify cleaning is applied
+
 ### Schema Creation Issues
 
 **Symptoms:**
@@ -485,6 +692,40 @@ Debug logging has minimal performance impact when disabled (default). When enabl
 2. Check Neo4j plugins are installed (if needed)
 3. Verify embedding dimensions match index configuration (default: 1536)
 4. Vector indexes may not be supported in older Neo4j versions (will log warning)
+
+### Data Ingestion Issues
+
+**Symptoms:**
+- Ingestion fails with errors
+- Sections not being extracted
+- Content not being stored
+- Python scoping errors (e.g., "cannot access local variable 're'")
+
+**Solutions:**
+1. Verify EDGAR tools library is installed and accessible: `pip install edgartools beautifulsoup4`
+2. Check ticker symbol is valid (use uppercase)
+3. Ensure sufficient disk space for embeddings
+4. Monitor embedding generation (may take time for large filings)
+5. Check for rate limiting from SEC EDGAR
+6. Verify sections are being extracted: Check logs for "Extracted X items/sections"
+7. If sections are empty, see "Section Extraction Issues" above
+8. Check for Python scoping errors (e.g., "cannot access local variable 're'") - ensure re module is imported at top level
+9. Use `--force` flag to re-ingest if needed: `python ingest_edgar_data.py --ticker AAPL --force`
+
+### Data Retrieval Issues
+
+**Symptoms:**
+- No data returned from queries
+- Sections not found
+- Incorrect results
+
+**Solutions:**
+1. Verify data was ingested successfully
+2. Check ticker symbol matches ingested data
+3. Use correct form type and fiscal year filters
+4. Check Neo4j query logs for performance issues
+5. Verify sections exist: `MATCH (s:Section) RETURN count(s)`
+6. Check chunks exist: `MATCH (ch:Chunk) RETURN count(ch)`
 
 ### Environment Variable Issues
 

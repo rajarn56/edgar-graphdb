@@ -421,7 +421,8 @@ class EdgarClient:
             obj_type = type(structured_obj).__name__
             logger.debug(f"Processing structured object type: {obj_type}")
             
-            # Common section mappings for 10-K and 10-Q
+            # Common section mappings for different form types
+            # edgartools provides structured objects: TenK, TenQ, EightK, etc.
             section_mappings = {
                 'TenK': {
                     '1': ('business', 'Business'),
@@ -438,6 +439,15 @@ class EdgarClient:
                     '2': ('risk_factors', 'Risk Factors'),
                     '3': ('legal_proceedings', 'Legal Proceedings'),
                     '4': ('controls_procedures', 'Controls and Procedures'),
+                },
+                'EightK': {
+                    # 8-K forms have items like 1.01, 2.02, 5.02, etc.
+                    # These are typically accessed as attributes or through items()
+                    # We'll use fallback inspection for 8-K
+                },
+                'Def14A': {
+                    # Proxy statements (DEF 14A) have different structure
+                    # We'll use fallback inspection for DEF 14A
                 }
             }
             
@@ -482,19 +492,70 @@ class EdgarClient:
                     logger.debug(f"Failed to extract {attr_name}: {e}")
             
             # If no items found with mappings, try to inspect the object structure
+            # This handles form types without explicit mappings (8-K, DEF 14A, etc.)
             if not items:
-                logger.debug(f"No items found using mappings. Inspecting object structure...")
+                logger.debug(f"No items found using mappings. Inspecting object structure for {obj_type}...")
                 # Try to find any attributes that might contain section content
                 obj_attrs = [attr for attr in dir(structured_obj) if not attr.startswith('_')]
                 logger.debug(f"Available attributes: {obj_attrs[:20]}")
                 
-                # Try common patterns
+                # For 8-K forms, try to access items() method if available
+                if obj_type == 'EightK' and hasattr(structured_obj, 'items'):
+                    try:
+                        eightk_items = structured_obj.items()
+                        if eightk_items:
+                            # items() might return a dict or list
+                            if isinstance(eightk_items, dict):
+                                for item_key, item_content in eightk_items.items():
+                                    text = str(item_content) if not hasattr(item_content, 'text') else item_content.text
+                                    if text and len(str(text).strip()) > 100:
+                                        items.append({
+                                            "item": str(item_key),
+                                            "name": f"Item {item_key}",
+                                            "text": str(text)[:50000],
+                                            "html": f"<p>{str(text)[:50000]}</p>",
+                                        })
+                                        logger.info(f"Extracted 8-K Item {item_key} ({len(str(text))} chars)")
+                            elif hasattr(eightk_items, '__iter__'):
+                                for idx, item_content in enumerate(eightk_items):
+                                    text = str(item_content) if not hasattr(item_content, 'text') else item_content.text
+                                    if text and len(str(text).strip()) > 100:
+                                        items.append({
+                                            "item": str(idx + 1),
+                                            "name": f"Item {idx + 1}",
+                                            "text": str(text)[:50000],
+                                            "html": f"<p>{str(text)[:50000]}</p>",
+                                        })
+                                        logger.info(f"Extracted 8-K Item {idx + 1} ({len(str(text))} chars)")
+                    except Exception as e:
+                        logger.debug(f"Failed to extract 8-K items: {e}")
+                
+                # Try common patterns for all form types
                 for attr in obj_attrs:
-                    if any(keyword in attr.lower() for keyword in ['business', 'risk', 'management', 'discussion', 'mda', 'item']):
+                    # Skip methods and common non-content attributes
+                    if attr in ['items', 'obj', 'html', 'text', 'documents', 'url', 'accession_number']:
+                        continue
+                    
+                    if any(keyword in attr.lower() for keyword in ['business', 'risk', 'management', 'discussion', 'mda', 'item', 'section', 'content', 'description']):
                         try:
                             content = getattr(structured_obj, attr)
-                            if content:
-                                text = str(content) if not hasattr(content, 'text') else content.text
+                            if content and not callable(content):
+                                # Convert to text
+                                text = None
+                                if hasattr(content, 'text'):
+                                    text = content.text
+                                elif hasattr(content, 'html'):
+                                    html = content.html
+                                    if html:
+                                        try:
+                                            from bs4 import BeautifulSoup
+                                            soup = BeautifulSoup(str(html), 'html.parser')
+                                            text = soup.get_text(separator='\n', strip=True)
+                                        except:
+                                            text = str(html)
+                                else:
+                                    text = str(content)
+                                
                                 if text and len(str(text).strip()) > 100:
                                     # Try to infer item number from attribute name
                                     item_num = '1'  # Default
@@ -504,6 +565,8 @@ class EdgarClient:
                                         item_num = '1'
                                     elif 'management' in attr.lower() or 'mda' in attr.lower():
                                         item_num = '7'
+                                    elif 'financial' in attr.lower():
+                                        item_num = '8'
                                     
                                     items.append({
                                         "item": item_num,
