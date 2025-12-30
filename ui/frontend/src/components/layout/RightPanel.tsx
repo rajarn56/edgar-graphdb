@@ -27,14 +27,18 @@ export default function RightPanel({
   children,
   title = 'Node Details',
 }: RightPanelProps) {
-  // Log panel state changes
+  // Log panel state changes (only when collapsed state actually changes, not on every render)
+  const prevCollapsedRef = React.useRef(collapsed);
   React.useEffect(() => {
-    logger.info('RightPanel state changed', {
-      collapsed,
-      hasChildren: !!children,
-      childrenType: children ? typeof children : 'null',
-      title,
-    }, 'RightPanel');
+    if (prevCollapsedRef.current !== collapsed) {
+      logger.debug('RightPanel state changed', {
+        collapsed,
+        hasChildren: !!children,
+        childrenType: children ? typeof children : 'null',
+        title,
+      }, 'RightPanel');
+      prevCollapsedRef.current = collapsed;
+    }
   }, [collapsed, children, title]);
 
   const handleToggle = () => {

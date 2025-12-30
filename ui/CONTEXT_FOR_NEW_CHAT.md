@@ -1,9 +1,16 @@
 # Context for New Chat - EDGAR Graph UI Debugging
 
+> **⚠️ IMPORTANT**: For detailed debugging context on the current right panel issue, see `DEBUGGING_CONTEXT.md`
+
 ## Project Overview
 Building a graph visualization UI for EDGAR financial data using React Flow. The graph shows Company → Filings → Sections → Chunks relationships.
 
 ## Current Issues
+
+### 🔴 **CRITICAL: Right Panel Not Showing** (Active Issue)
+- **Status**: API calls work, but panel doesn't appear
+- **Evidence**: Backend logs show successful API calls when nodes clicked
+- **See**: `DEBUGGING_CONTEXT.md` for full investigation details
 
 ### 1. **Edge Visibility Issue**
 - **Problem**: Edges/connectors don't show up until zooming in

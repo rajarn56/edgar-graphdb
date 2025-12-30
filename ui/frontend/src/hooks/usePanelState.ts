@@ -101,6 +101,15 @@ export function usePanelState(
 
   const expandRightPanel = useCallback(() => {
     setRightPanelStateInternal(prev => {
+      // Guard: Don't update state if already expanded
+      if (!prev.collapsed && prev.visible) {
+        logger.debug('Right panel already expanded, skipping update', {
+          collapsed: prev.collapsed,
+          visible: prev.visible,
+        }, 'usePanelState');
+        return prev;
+      }
+      
       const newState = {
         ...prev,
         collapsed: false,

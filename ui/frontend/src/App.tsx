@@ -197,15 +197,19 @@ function App() {
   }, []);
 
   // Update right panel visibility based on node selection
+  // NOTE: This effect is intentionally minimal - handleNodeClick already expands the panel
+  // This is a safety net for programmatic node selection, but we guard against duplicate calls
   useEffect(() => {
     if (nodeSelection.selectedNodeId) {
-      // Always expand panel when a node is selected, even if details are still loading
-      panelState.expandRightPanel();
-      logger.debug('Right panel expanded due to node selection', { 
-        nodeId: nodeSelection.selectedNodeId,
-        hasDetails: !!nodeSelection.nodeDetails,
-        loading: nodeSelection.loading 
-      }, 'App');
+      // Only expand if panel is currently collapsed (avoid duplicate calls)
+      if (panelState.panelStates.rightPanel.collapsed) {
+        panelState.expandRightPanel();
+        logger.debug('Right panel expanded due to node selection', { 
+          nodeId: nodeSelection.selectedNodeId,
+          hasDetails: !!nodeSelection.nodeDetails,
+          loading: nodeSelection.loading 
+        }, 'App');
+      }
     }
     // Don't auto-collapse when selection is cleared - let user control it via close button
   }, [nodeSelection.selectedNodeId, panelState]);
@@ -213,6 +217,7 @@ function App() {
   return (
     <div className="app">
       <AppLayout
+        panelState={panelState}
         header={
           <AppHeader
             ticker={graphData.ticker || ''}

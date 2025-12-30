@@ -4,7 +4,6 @@
  */
 
 import React, { createContext } from 'react';
-import { usePanelState } from '../../hooks/usePanelState';
 import type { UsePanelStateReturn } from '../../hooks/usePanelState';
 import { DEFAULT_LAYOUT_CONFIG } from '../../types/ui';
 import { logger } from '../../utils/logger';
@@ -27,6 +26,8 @@ export interface AppLayoutProps {
   footer?: React.ReactNode;
   /** Custom layout configuration */
   layoutConfig?: typeof DEFAULT_LAYOUT_CONFIG;
+  /** Panel state management (required to avoid duplicate instances) */
+  panelState: UsePanelStateReturn;
 }
 
 export default function AppLayout({
@@ -36,8 +37,8 @@ export default function AppLayout({
   rightPanelContent,
   footer,
   layoutConfig = DEFAULT_LAYOUT_CONFIG,
+  panelState,
 }: AppLayoutProps) {
-  const panelState = usePanelState(layoutConfig);
   const leftWidth = panelState.getLeftPanelWidth();
   const rightWidth = panelState.getRightPanelWidth();
   

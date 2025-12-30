@@ -94,17 +94,10 @@ function GraphCanvasInner({
       },
     }));
     
-    logger.info('React Flow edges created', {
+    // Only log when edges actually change (not on every render)
+    logger.debug('React Flow edges created', {
       edgeCount: edges.length,
       initialEdgeCount: initialEdges.length,
-      sampleEdge: edges[0] ? {
-        id: edges[0].id,
-        source: edges[0].source,
-        target: edges[0].target,
-        type: edges[0].type,
-        hasStyle: !!edges[0].style,
-        opacity: edges[0].style?.opacity,
-      } : null,
     }, 'GraphCanvas');
     
     return edges;
