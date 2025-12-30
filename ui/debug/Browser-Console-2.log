@@ -1,0 +1,78 @@
+[Debug] [vite] connecting... (client, line 495)
+[Debug] [vite] connected. (client, line 618)
+[Log] [2025-12-30T08:54:47.785Z] [INFO] Logger initialized – {logLevel: "info", logToFile: true, sessionId: "session_1767084887785_snrsp502t", …} (logger.ts, line 67)
+{logLevel: "info", logToFile: true, sessionId: "session_1767084887785_snrsp502t", fileSystemAccessAvailable: false}Object
+[Log] [2025-12-30T08:54:47.885Z] [INFO] [App] App initialized – {apiBaseUrl: "http://localhost:8000", environment: "development"} (logger.ts, line 67)
+[Log] [2025-12-30T08:54:47.885Z] [INFO] [App] App initialized – {apiBaseUrl: "http://localhost:8000", environment: "development"} (logger.ts, line 67)
+[Log] [2025-12-30T08:54:54.450Z] [INFO] [AppHeader] Ticker submitted – {ticker: "AAPL"} (logger.ts, line 67)
+[Log] [2025-12-30T08:54:54.451Z] [INFO] [App] Ticker submitted – {ticker: "AAPL"} (logger.ts, line 67)
+[Log] [2025-12-30T08:54:54.451Z] [INFO] [useGraphData] Loading graph – {ticker: "AAPL"} (logger.ts, line 67)
+[Log] [2025-12-30T08:54:54.598Z] [INFO] [useGraphData] Graph loaded – {nodeCount: 92, edgeCount: 91} (logger.ts, line 67)
+[Log] [2025-12-30T08:54:54.625Z] [INFO] [App] Stats loaded – {company: Object, filings_count: 12, sections_count: 23, …} (logger.ts, line 67)
+{company: Object, filings_count: 12, sections_count: 23, chunks_count: 56, financial_statements_count: 0}Object
+[Log] [2025-12-30T08:55:33.994Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0000320193-24-000102", isExpanded: true} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:33.994Z] [INFO] [useGraphData] Expanding node (UI) – {nodeId: "0000320193-24-000102"} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:36.295Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0000320193-24-000102", isExpanded: false} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:36.295Z] [INFO] [useGraphData] Collapsing node (UI) – {nodeId: "0000320193-24-000102"} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:36.655Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0000320193-24-000102", isExpanded: true} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:36.655Z] [INFO] [useGraphData] Expanding node (UI) – {nodeId: "0000320193-24-000102"} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:36.661Z] [INFO] [GraphCanvas] Node double-clicked (expand) – {nodeId: "0000320193-24-000102", expandType: "filing"} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:36.661Z] [INFO] [App] Node double-clicked (expand via API) – {nodeId: "0000320193-24-000102", nodeType: "filing"} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:43.965Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0000320193-25-000079", isExpanded: true} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:43.965Z] [INFO] [useGraphData] Expanding node (UI) – {nodeId: "0000320193-25-000079"} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:48.251Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0000320193-25-000079_Item7", labels: ["PeriodicReportSection", "Section"], nodeType: "Section", …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", labels: ["PeriodicReportSection", "Section"], nodeType: "Section", hasOnNodeClick: true, nodePosition: {x: -4000, y: 870}}Object
+[Log] [2025-12-30T08:55:48.252Z] [INFO] [App] Node clicked in App – {nodeId: "0000320193-25-000079_Item7", labels: ["PeriodicReportSection", "Section"]} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:48.252Z] [INFO] [usePanelState] Right panel expanded – {previousState: {collapsed: true, visible: true, expandedWidth: 400}, newState: {collapsed: false, visible: true, expandedWidth: 400}} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:48.253Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0000320193-25-000079_Item7", labels: ["PeriodicReportSection", "Section"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", labels: ["PeriodicReportSection", "Section"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T08:55:48.253Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0000320193-25-000079_Item7", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T08:55:48.285Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0000320193-25-000079_Item7", relationshipCount: 1, hasContent: true, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", relationshipCount: 1, hasContent: true, propertyCount: 10}Object
+[Log] [2025-12-30T08:55:48.285Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0000320193-25-000079_Item7", propertyCount: 10, relationshipCount: 1, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", propertyCount: 10, relationshipCount: 1, hasContent: true}Object
+[Log] [2025-12-30T08:55:48.285Z] [INFO] [App] Node selection completed – {nodeId: "0000320193-25-000079_Item7", hasDetails: false, loading: false, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", hasDetails: false, loading: false, error: null}Object
+[Log] [2025-12-30T08:55:50.684Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0000320193-25-000079_Item7", labels: ["PeriodicReportSection", "Section"], nodeType: "Section", …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", labels: ["PeriodicReportSection", "Section"], nodeType: "Section", hasOnNodeClick: true, nodePosition: {x: -4000, y: 870}}Object
+[Log] [2025-12-30T08:55:50.684Z] [INFO] [App] Node clicked in App – {nodeId: "0000320193-25-000079_Item7", labels: ["PeriodicReportSection", "Section"]} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:50.684Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0000320193-25-000079_Item7", labels: ["PeriodicReportSection", "Section"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", labels: ["PeriodicReportSection", "Section"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T08:55:50.684Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0000320193-25-000079_Item7", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T08:55:50.710Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0000320193-25-000079_Item7", relationshipCount: 1, hasContent: true, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", relationshipCount: 1, hasContent: true, propertyCount: 10}Object
+[Log] [2025-12-30T08:55:50.710Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0000320193-25-000079_Item7", propertyCount: 10, relationshipCount: 1, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", propertyCount: 10, relationshipCount: 1, hasContent: true}Object
+[Log] [2025-12-30T08:55:50.710Z] [INFO] [App] Node selection completed – {nodeId: "0000320193-25-000079_Item7", hasDetails: true, loading: false, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", hasDetails: true, loading: false, error: null}Object
+[Log] [2025-12-30T08:55:53.003Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0000320193-25-000079", isExpanded: false} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:53.003Z] [INFO] [useGraphData] Collapsing node (UI) – {nodeId: "0000320193-25-000079"} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:58.399Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0001308179-25-000008", isExpanded: true} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:58.399Z] [INFO] [useGraphData] Expanding node (UI) – {nodeId: "0001308179-25-000008"} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:59.974Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0000320193-25-000079", isExpanded: true} (logger.ts, line 67)
+[Log] [2025-12-30T08:55:59.975Z] [INFO] [useGraphData] Expanding node (UI) – {nodeId: "0000320193-25-000079"} (logger.ts, line 67)
+[Log] [2025-12-30T08:56:02.907Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0000912057-97-019277", labels: ["Filing"], nodeType: "Filing", …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", labels: ["Filing"], nodeType: "Filing", hasOnNodeClick: true, nodePosition: {x: -1750, y: 510}}Object
+[Log] [2025-12-30T08:56:02.908Z] [INFO] [App] Node clicked in App – {nodeId: "0000912057-97-019277", labels: ["Filing"]} (logger.ts, line 67)
+[Log] [2025-12-30T08:56:02.908Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0000912057-97-019277", labels: ["Filing"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", labels: ["Filing"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T08:56:02.908Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0000912057-97-019277", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T08:56:02.935Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0000912057-97-019277", relationshipCount: 2, hasContent: false, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", relationshipCount: 2, hasContent: false, propertyCount: 10}Object
+[Log] [2025-12-30T08:56:02.935Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0000912057-97-019277", propertyCount: 10, relationshipCount: 2, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", propertyCount: 10, relationshipCount: 2, hasContent: false}Object
+[Log] [2025-12-30T08:56:02.935Z] [INFO] [App] Node selection completed – {nodeId: "0000912057-97-019277", hasDetails: true, loading: false, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", hasDetails: true, loading: false, error: null}Object
+[Log] [2025-12-30T08:56:09.353Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0000320193-25-000079", isExpanded: false} (logger.ts, line 67)
+[Log] [2025-12-30T08:56:09.354Z] [INFO] [useGraphData] Collapsing node (UI) – {nodeId: "0000320193-25-000079"} (logger.ts, line 67)
+[Log] [2025-12-30T08:56:12.477Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0000320193-25-000079", isExpanded: true} (logger.ts, line 67)
+[Log] [2025-12-30T08:56:12.477Z] [INFO] [useGraphData] Expanding node (UI) – {nodeId: "0000320193-25-000079"} (logger.ts, line 67)
+[Log] [2025-12-30T08:56:13.582Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0000320193-25-000079", isExpanded: false} (logger.ts, line 67)
+[Log] [2025-12-30T08:56:13.583Z] [INFO] [useGraphData] Collapsing node (UI) – {nodeId: "0000320193-25-000079"} (logger.ts, line 67)
+[Log] [2025-12-30T08:56:18.606Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0000320193-25-000079", isExpanded: true} (logger.ts, line 67)
+[Log] [2025-12-30T08:56:18.606Z] [INFO] [useGraphData] Expanding node (UI) – {nodeId: "0000320193-25-000079"} (logger.ts, line 67)
+[Log] [2025-12-30T08:56:24.419Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0000320193-25-000079", isExpanded: false} (logger.ts, line 67)
+[Log] [2025-12-30T08:56:24.419Z] [INFO] [useGraphData] Collapsing node (UI) – {nodeId: "0000320193-25-000079"} (logger.ts, line 67)

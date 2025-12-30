@@ -1,38 +1,10 @@
-2025-12-30 00:39:21.158 | INFO     | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
-2025-12-30 00:39:21.286 | INFO     | Response: GET /api/graph/AAPL | Status: 200 | Time: 0.129s
-2025-12-30 00:39:21.296 | INFO     | Request: GET /api/ticker/AAPL/stats | Client: 127.0.0.1 | Query params: {}
-2025-12-30 00:39:21.308 | INFO     | Response: GET /api/ticker/AAPL/stats | Status: 200 | Time: 0.012s
-2025-12-30 00:39:48.249 | INFO     | Request: GET /api/graph/node/0000320193-25-000073_Itemfinancials | Client: 127.0.0.1 | Query params: {'labels': 'PeriodicReportSection,Section'}
-2025-12-30 00:39:48.290 | INFO     | Response: GET /api/graph/node/0000320193-25-000073_Itemfinancials | Status: 200 | Time: 0.040s
-2025-12-30 00:39:57.305 | INFO     | Request: GET /api/graph/node/0000320193-25-000073_Itemfinancials | Client: 127.0.0.1 | Query params: {'labels': 'PeriodicReportSection,Section'}
-2025-12-30 00:39:57.317 | INFO     | Response: GET /api/graph/node/0000320193-25-000073_Itemfinancials | Status: 200 | Time: 0.012s
-2025-12-30 00:39:59.008 | INFO     | Request: GET /api/graph/node/0000320193-25-000073_Itemdocument | Client: 127.0.0.1 | Query params: {'labels': 'PeriodicReportSection,Section'}
-2025-12-30 00:39:59.026 | INFO     | Response: GET /api/graph/node/0000320193-25-000073_Itemdocument | Status: 200 | Time: 0.018s
-2025-12-30 00:40:01.274 | INFO     | Request: GET /api/graph/node/0000320193-25-000073_Itemdoc | Client: 127.0.0.1 | Query params: {'labels': 'PeriodicReportSection,Section'}
-2025-12-30 00:40:01.296 | INFO     | Response: GET /api/graph/node/0000320193-25-000073_Itemdoc | Status: 200 | Time: 0.023s
-2025-12-30 00:40:16.704 | INFO     | Request: GET /api/graph/node/0001950047-25-008030_Item1 | Client: 127.0.0.1 | Query params: {'labels': 'Section'}
-2025-12-30 00:40:16.715 | INFO     | Response: GET /api/graph/node/0001950047-25-008030_Item1 | Status: 200 | Time: 0.011s
-2025-12-30 00:40:19.504 | INFO     | Request: GET /api/graph/node/0001950047-25-008030_Item1 | Client: 127.0.0.1 | Query params: {'labels': 'Section'}
-2025-12-30 00:40:19.515 | INFO     | Response: GET /api/graph/node/0001950047-25-008030_Item1 | Status: 200 | Time: 0.011s
-2025-12-30 00:40:28.967 | INFO     | Request: GET /api/graph/node/0001308179-25-000008_Item1 | Client: 127.0.0.1 | Query params: {'labels': 'ProxySection,Section'}
-2025-12-30 00:40:29.012 | INFO     | Response: GET /api/graph/node/0001308179-25-000008_Item1 | Status: 200 | Time: 0.044s
-2025-12-30 00:40:38.987 | INFO     | Request: GET /api/graph/node/0000912057-97-019277_Item1 | Client: 127.0.0.1 | Query params: {'labels': 'Section'}
-2025-12-30 00:40:38.996 | INFO     | Response: GET /api/graph/node/0000912057-97-019277_Item1 | Status: 200 | Time: 0.009s
-2025-12-30 00:40:44.707 | INFO     | Request: GET /api/graph/node/0000320193-25-000079_Item1A_chunk_12 | Client: 127.0.0.1 | Query params: {'labels': 'Chunk'}
-2025-12-30 00:40:44.721 | INFO     | Response: GET /api/graph/node/0000320193-25-000079_Item1A_chunk_12 | Status: 200 | Time: 0.014s
-2025-12-30 00:41:06.414 | INFO     | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
-2025-12-30 00:41:06.534 | INFO     | Response: GET /api/graph/AAPL | Status: 200 | Time: 0.120s
-2025-12-30 00:41:06.543 | INFO     | Request: GET /api/ticker/AAPL/stats | Client: 127.0.0.1 | Query params: {}
-2025-12-30 00:41:06.551 | INFO     | Response: GET /api/ticker/AAPL/stats | Status: 200 | Time: 0.008s
-2025-12-30 00:41:35.964 | INFO     | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
-2025-12-30 00:41:36.086 | INFO     | Response: GET /api/graph/AAPL | Status: 200 | Time: 0.121s
-2025-12-30 00:41:36.094 | INFO     | Request: GET /api/ticker/AAPL/stats | Client: 127.0.0.1 | Query params: {}
-2025-12-30 00:41:36.098 | INFO     | Response: GET /api/ticker/AAPL/stats | Status: 200 | Time: 0.004s
-2025-12-30 00:42:23.464 | INFO     | Request: GET /api/graph/node/0001462356-25-000012 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
-2025-12-30 00:42:23.477 | INFO     | Response: GET /api/graph/node/0001462356-25-000012 | Status: 200 | Time: 0.013s
-2025-12-30 00:42:24.502 | INFO     | Request: GET /api/graph/node/0001462356-25-000012 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
-2025-12-30 00:42:24.510 | INFO     | Response: GET /api/graph/node/0001462356-25-000012 | Status: 200 | Time: 0.008s
-2025-12-30 00:42:25.104 | INFO     | Request: GET /api/graph/node/0001462356-25-000012 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
-2025-12-30 00:42:25.116 | INFO     | Response: GET /api/graph/node/0001462356-25-000012 | Status: 200 | Time: 0.012s
-2025-12-30 00:42:25.836 | INFO     | Request: GET /api/graph/node/0001462356-25-000012 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
-2025-12-30 00:42:25.847 | INFO     | Response: GET /api/graph/node/0001462356-25-000012 | Status: 200 | Time: 0.011s
+2025-12-30 00:54:54.467 | INFO     | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
+2025-12-30 00:54:54.590 | INFO     | Response: GET /api/graph/AAPL | Status: 200 | Time: 0.123s
+2025-12-30 00:54:54.601 | INFO     | Request: GET /api/ticker/AAPL/stats | Client: 127.0.0.1 | Query params: {}
+2025-12-30 00:54:54.612 | INFO     | Response: GET /api/ticker/AAPL/stats | Status: 200 | Time: 0.012s
+2025-12-30 00:55:48.265 | INFO     | Request: GET /api/graph/node/0000320193-25-000079_Item7 | Client: 127.0.0.1 | Query params: {'labels': 'PeriodicReportSection,Section'}
+2025-12-30 00:55:48.283 | INFO     | Response: GET /api/graph/node/0000320193-25-000079_Item7 | Status: 200 | Time: 0.018s
+2025-12-30 00:55:50.693 | INFO     | Request: GET /api/graph/node/0000320193-25-000079_Item7 | Client: 127.0.0.1 | Query params: {'labels': 'PeriodicReportSection,Section'}
+2025-12-30 00:55:50.709 | INFO     | Response: GET /api/graph/node/0000320193-25-000079_Item7 | Status: 200 | Time: 0.016s
+2025-12-30 00:56:02.918 | INFO     | Request: GET /api/graph/node/0000912057-97-019277 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
+2025-12-30 00:56:02.933 | INFO     | Response: GET /api/graph/node/0000912057-97-019277 | Status: 200 | Time: 0.016s
