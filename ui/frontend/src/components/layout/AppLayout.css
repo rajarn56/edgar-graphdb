@@ -60,24 +60,30 @@
   top: var(--header-height, 60px);
   bottom: var(--footer-height, 0px);
   z-index: 10;
-  transition: width 0.3s ease, transform 0.3s ease;
+  transition: width 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
   overflow: hidden;
   background: white;
   border-left: 1px solid #e5e7eb;
   box-shadow: -2px 0 4px rgba(0, 0, 0, 0.05);
   transform: translateX(0);
   pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
 }
 
 .app-layout-right-panel.collapsed {
   transform: translateX(100%);
   pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
 }
 
-/* Ensure panel is visible when not collapsed, even if width is initially 0 */
+/* Ensure panel is visible when not collapsed */
 .app-layout-right-panel:not(.collapsed) {
   transform: translateX(0) !important;
   pointer-events: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .app-layout-footer {

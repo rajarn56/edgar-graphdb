@@ -153,19 +153,36 @@ function GraphCanvasInner({
   }, [rfNodes, rfEdges, setNodes, setEdges, fitView, fitViewOnChange]);
 
   const onNodeClickHandler = useCallback(
-    (_event: React.MouseEvent, node: Node) => {
+    (event: React.MouseEvent, node: Node) => {
+      // Prevent default to avoid any interference
+      event.preventDefault();
+      event.stopPropagation();
+      
       const graphNode = node.data.node as GraphNode;
+      const nodeType = getNodeType(graphNode);
+      
       logger.info('Node clicked in GraphCanvas', { 
         nodeId: graphNode.id, 
         labels: graphNode.labels,
-        nodeType: getNodeType(graphNode),
+        nodeType: nodeType,
         hasOnNodeClick: !!onNodeClick,
+        nodePosition: node.position,
       }, 'GraphCanvas');
+      
       if (onNodeClick) {
-        logger.debug('Calling onNodeClick callback', { nodeId: graphNode.id }, 'GraphCanvas');
-        onNodeClick(graphNode.id, graphNode.labels);
+        try {
+          logger.debug('Calling onNodeClick callback', { nodeId: graphNode.id, labels: graphNode.labels }, 'GraphCanvas');
+          onNodeClick(graphNode.id, graphNode.labels);
+          logger.debug('onNodeClick callback completed', { nodeId: graphNode.id }, 'GraphCanvas');
+        } catch (error: any) {
+          logger.error('Error in onNodeClick callback', { 
+            nodeId: graphNode.id, 
+            error: error.message,
+            stack: error.stack 
+          }, 'GraphCanvas', error);
+        }
       } else {
-        logger.warn('onNodeClick callback not provided', {}, 'GraphCanvas');
+        logger.warn('onNodeClick callback not provided', { nodeId: graphNode.id }, 'GraphCanvas');
       }
     },
     [onNodeClick]

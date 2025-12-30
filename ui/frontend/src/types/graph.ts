@@ -90,9 +90,23 @@ export function isNodeType(node: GraphNode, type: string): boolean {
 
 /**
  * Get primary node type (first label)
+ * Normalizes various section types to "Section"
  */
 export function getNodeType(node: GraphNode): NodeType {
-  return node.labels[0] || 'default';
+  const firstLabel = node.labels[0] || 'default';
+  
+  // Normalize section variants to "Section"
+  if (firstLabel.includes('Section') || firstLabel.includes('Item')) {
+    return 'Section';
+  }
+  
+  // Map other known types
+  if (firstLabel === 'Company' || firstLabel === 'Filing' || firstLabel === 'Chunk') {
+    return firstLabel;
+  }
+  
+  // Default fallback
+  return 'default';
 }
 
 /**

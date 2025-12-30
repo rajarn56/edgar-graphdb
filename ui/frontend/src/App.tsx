@@ -106,29 +106,62 @@ function App() {
       propertyCount: graphNode?.properties ? Object.keys(graphNode.properties).length : 0,
     }, 'App');
     
-    // Expand panel first to ensure it's visible
-    logger.debug('Expanding right panel', { nodeId }, 'App');
+    // Expand panel FIRST and wait a tick to ensure state updates
+    logger.debug('Expanding right panel', { 
+      nodeId,
+      currentCollapsed: panelState.panelStates.rightPanel.collapsed,
+      currentVisible: panelState.panelStates.rightPanel.visible,
+    }, 'App');
+    
     panelState.expandRightPanel();
     
+    // Use requestAnimationFrame to ensure DOM updates after state change
+    requestAnimationFrame(() => {
+      logger.debug('Panel expansion state after RAF', {
+        nodeId,
+        panelCollapsed: panelState.panelStates.rightPanel.collapsed,
+        panelVisible: panelState.panelStates.rightPanel.visible,
+        panelWidth: panelState.getRightPanelWidth(),
+      }, 'App');
+    });
+    
     // Then select the node (this will trigger API call)
-    logger.debug('Calling selectNode', { nodeId }, 'App');
+    logger.debug('Calling selectNode', { nodeId, labels }, 'App');
     try {
       await nodeSelection.selectNode(nodeId, labels, graphNode);
+      logger.info('Node selection completed', { 
+        nodeId,
+        hasDetails: !!nodeSelection.nodeDetails,
+        loading: nodeSelection.loading,
+        error: nodeSelection.error,
+      }, 'App');
     } catch (err: any) {
-      logger.error('Error in selectNode', { nodeId, error: err }, 'App');
+      logger.error('Error in selectNode', { 
+        nodeId, 
+        error: err?.message || err,
+        stack: err?.stack 
+      }, 'App', err);
       // Panel should still be expanded even if API call fails
     }
     
     // Verify panel state after a short delay to ensure state has updated
     setTimeout(() => {
+      const panelWidth = panelState.getRightPanelWidth();
       logger.debug('Node click handling completed', {
         nodeId,
         selectedNodeId: nodeSelection.selectedNodeId,
         panelCollapsed: panelState.panelStates.rightPanel.collapsed,
         panelVisible: panelState.panelStates.rightPanel.visible,
-        panelWidth: panelState.getRightPanelWidth(),
+        panelWidth: panelWidth,
+        hasNodeDetails: !!nodeSelection.nodeDetails,
       }, 'App');
-    }, 100);
+      
+      // If panel width is still 0, force expansion again
+      if (panelWidth === 0 && !panelState.panelStates.rightPanel.collapsed) {
+        logger.warn('Panel width is 0 but not collapsed, forcing expansion', { nodeId }, 'App');
+        panelState.expandRightPanel();
+      }
+    }, 200);
   }, [nodeSelection, panelState, graphData]);
 
   // Handle node double-click (expand)
