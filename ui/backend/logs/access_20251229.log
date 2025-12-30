@@ -1,4 +1,0 @@
-2025-12-29 23:53:20.239 | INFO     | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
-2025-12-29 23:53:20.365 | INFO     | Response: GET /api/graph/AAPL | Status: 200 | Time: 0.126s
-2025-12-29 23:53:20.377 | INFO     | Request: GET /api/ticker/AAPL/stats | Client: 127.0.0.1 | Query params: {}
-2025-12-29 23:53:20.386 | INFO     | Response: GET /api/ticker/AAPL/stats | Status: 200 | Time: 0.009s

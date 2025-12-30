@@ -1,0 +1,8 @@
+2025-12-30 00:04:04.919 | INFO     | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
+2025-12-30 00:04:05.048 | INFO     | Response: GET /api/graph/AAPL | Status: 200 | Time: 0.128s
+2025-12-30 00:04:05.058 | INFO     | Request: GET /api/ticker/AAPL/stats | Client: 127.0.0.1 | Query params: {}
+2025-12-30 00:04:05.066 | INFO     | Response: GET /api/ticker/AAPL/stats | Status: 200 | Time: 0.008s
+2025-12-30 00:07:45.097 | INFO     | Request: GET /api/graph/node/0000320193-24-000102 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
+2025-12-30 00:07:45.111 | INFO     | Response: GET /api/graph/node/0000320193-24-000102 | Status: 200 | Time: 0.015s
+2025-12-30 00:07:48.200 | INFO     | Request: GET /api/graph/node/0000320193-24-000102 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
+2025-12-30 00:07:48.213 | INFO     | Response: GET /api/graph/node/0000320193-24-000102 | Status: 200 | Time: 0.014s
