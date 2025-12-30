@@ -45,6 +45,10 @@ export interface GraphCanvasProps {
   onNodeClick?: (nodeId: string, labels: string[]) => void;
   /** Callback when node is double-clicked (expand) */
   onNodeDoubleClick?: (nodeId: string, nodeType: 'filing' | 'section') => void;
+  /** Callback when node expand/collapse button is clicked */
+  onNodeExpandCollapse?: (nodeId: string, isExpanded: boolean) => void;
+  /** Set of expanded node IDs */
+  expandedNodes?: Set<string>;
   /** Whether to fit view on data change */
   fitViewOnChange?: boolean;
 }
@@ -54,6 +58,8 @@ function GraphCanvasInner({
   edges: initialEdges,
   onNodeClick,
   onNodeDoubleClick,
+  onNodeExpandCollapse,
+  expandedNodes = new Set(),
   fitViewOnChange = true,
 }: GraphCanvasProps) {
   const { fitView } = useReactFlow();
@@ -62,18 +68,27 @@ function GraphCanvasInner({
 
   // Convert to React Flow format
   const rfNodes = useMemo(() => {
-    return initialNodes.map(node => ({
-      id: node.id,
-      type: getNodeType(node) || 'default',
-      position: node.position || { x: 0, y: 0 },
-      data: {
-        label: getNodeLabel(node),
-        node: node,
-        canExpand: canExpandNode(node),
-      },
-      selected: false,
-    }));
-  }, [initialNodes]);
+    return initialNodes.map(node => {
+      const nodeType = getNodeType(node);
+      const isExpanded = expandedNodes.has(node.id);
+      const hasChildren = initialEdges.some(edge => edge.source === node.id);
+      
+      return {
+        id: node.id,
+        type: nodeType || 'default',
+        position: node.position || { x: 0, y: 0 },
+        data: {
+          label: getNodeLabel(node),
+          node: node,
+          canExpand: canExpandNode(node),
+          isExpanded: isExpanded,
+          hasChildren: hasChildren,
+          onExpandCollapse: onNodeExpandCollapse,
+        },
+        selected: false,
+      };
+    });
+  }, [initialNodes, initialEdges, expandedNodes, onNodeExpandCollapse]);
 
   const rfEdges = useMemo(() => {
     const edges = initialEdges.map((edge, index) => ({
@@ -230,7 +245,7 @@ function GraphCanvasInner({
         edgeTypes={edgeTypes}
         minZoom={0.05}
         maxZoom={10}
-        defaultViewport={{ x: 0, y: 0, zoom: 5 }}
+        defaultViewport={{ x: 0, y: 0, zoom: 2.5 }}
         attributionPosition="bottom-left"
         edgesUpdatable={false}
         edgesFocusable={true}

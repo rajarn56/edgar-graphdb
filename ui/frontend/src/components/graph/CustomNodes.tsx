@@ -14,6 +14,9 @@ interface NodeData {
   label: string;
   node: GraphNode;
   canExpand?: boolean;
+  isExpanded?: boolean;
+  hasChildren?: boolean;
+  onExpandCollapse?: (nodeId: string, isExpanded: boolean) => void;
 }
 
 interface CustomNodeProps {
@@ -60,6 +63,15 @@ export default function CustomNode({ data, selected }: CustomNodeProps) {
   const isSection = nodeType === 'Section';
   const isChunk = nodeType === 'Chunk';
   const canExpand = data.canExpand ?? canExpandNode(data.node);
+  const isExpanded = data.isExpanded ?? false;
+  const hasChildren = data.hasChildren ?? false;
+  
+  const handleExpandCollapseClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent node click event
+    if (data.onExpandCollapse) {
+      data.onExpandCollapse(data.node.id, !isExpanded);
+    }
+  };
 
   const handleMouseEnter = () => {
     logger.debug('Node hover', { nodeId: data.node.id, nodeType }, 'CustomNode');
@@ -182,26 +194,43 @@ export default function CustomNode({ data, selected }: CustomNodeProps) {
         )}
       </div>
 
-      {canExpand && (
-        <div 
-          className="expand-indicator"
-          title="Double-click to expand"
+      {/* Expand/Collapse button - show if node has children or can be expanded */}
+      {(hasChildren || canExpand) && (
+        <button
+          onClick={handleExpandCollapseClick}
+          className="expand-collapse-button"
+          title={isExpanded ? 'Click to collapse' : 'Click to expand'}
           style={{
             position: 'absolute',
             bottom: '4px',
             right: '4px',
-            width: '16px',
-            height: '16px',
+            width: '20px',
+            height: '20px',
             borderRadius: '50%',
-            background: 'rgba(255, 255, 255, 0.3)',
+            background: isExpanded ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 255, 255, 0.3)',
+            border: '1px solid rgba(255, 255, 255, 0.5)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '10px',
+            fontSize: '12px',
+            fontWeight: 'bold',
+            color: 'white',
+            cursor: 'pointer',
+            padding: 0,
+            lineHeight: 1,
+            transition: 'all 0.2s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.7)';
+            e.currentTarget.style.transform = 'scale(1.1)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = isExpanded ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 255, 255, 0.3)';
+            e.currentTarget.style.transform = 'scale(1)';
           }}
         >
-          +
-        </div>
+          {isExpanded ? '−' : '+'}
+        </button>
       )}
 
       <Handle type="source" position={Position.Bottom} style={{ background: color }} />

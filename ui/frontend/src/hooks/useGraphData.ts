@@ -6,7 +6,7 @@ import { useState, useCallback, useRef } from 'react';
 import type { GraphData, GraphNode, GraphEdge } from '../types/graph';
 import { graphApi } from '../services/api';
 import { logger } from '../utils/logger';
-import { applyLayout } from '../utils/graphLayout';
+import { applyLayout, filterNodesByExpandedState } from '../utils/graphLayout';
 
 export interface UseGraphDataReturn {
   /** Current graph data */
@@ -23,6 +23,10 @@ export interface UseGraphDataReturn {
   loadGraph: (ticker: string) => Promise<void>;
   /** Expand a node */
   expandNode: (nodeId: string, nodeType: 'filing' | 'section', ticker: string) => Promise<void>;
+  /** Collapse a node (hide its children) */
+  collapseNode: (nodeId: string) => void;
+  /** Toggle node expansion state (UI only, for showing/hiding children) */
+  toggleNodeExpansion: (nodeId: string) => void;
   /** Add nodes and edges to graph */
   addToGraph: (newData: GraphData) => void;
   /** Reset graph data */
@@ -123,6 +127,36 @@ export function useGraphData(): UseGraphDataReturn {
     }
   }, [expandedNodes]);
 
+  const collapseNode = useCallback((nodeId: string) => {
+    if (!expandedNodes.has(nodeId)) {
+      logger.debug('Node not expanded, cannot collapse', { nodeId }, 'useGraphData');
+      return;
+    }
+
+    logger.info('Collapsing node', { nodeId }, 'useGraphData');
+    
+    // Remove from expanded nodes set
+    setExpandedNodes(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(nodeId);
+      return newSet;
+    });
+  }, [expandedNodes]);
+
+  const toggleNodeExpansion = useCallback((nodeId: string) => {
+    setExpandedNodes(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(nodeId)) {
+        logger.info('Collapsing node (UI)', { nodeId }, 'useGraphData');
+        newSet.delete(nodeId);
+      } else {
+        logger.info('Expanding node (UI)', { nodeId }, 'useGraphData');
+        newSet.add(nodeId);
+      }
+      return newSet;
+    });
+  }, []);
+
   const addToGraph = useCallback((newData: GraphData) => {
     logger.debug('Adding to graph', { 
       newNodeCount: newData.nodes.length, 
@@ -181,6 +215,8 @@ export function useGraphData(): UseGraphDataReturn {
     expandedNodes,
     loadGraph,
     expandNode,
+    collapseNode,
+    toggleNodeExpansion,
     addToGraph,
     resetGraph,
     updateNodePositions,

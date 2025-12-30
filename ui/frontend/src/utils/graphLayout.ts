@@ -110,6 +110,112 @@ export function calculateHierarchicalLayout(
 }
 
 /**
+ * Calculate node levels (distance from root)
+ * Returns a map of node ID to level
+ */
+export function calculateNodeLevels(
+  nodes: GraphNode[],
+  edges: GraphEdge[]
+): Map<string, number> {
+  const nodeLevel = new Map<string, number>();
+  
+  // Find root nodes (nodes with no incoming edges)
+  const incomingCount = new Map<string, number>();
+  nodes.forEach(node => incomingCount.set(node.id, 0));
+  edges.forEach(edge => {
+    const count = incomingCount.get(edge.target) || 0;
+    incomingCount.set(edge.target, count + 1);
+  });
+  
+  const rootNodes = nodes.filter(node => (incomingCount.get(node.id) || 0) === 0);
+  
+  // BFS to assign levels
+  const queue: Array<{ node: GraphNode; level: number }> = rootNodes.map(node => ({ node, level: 0 }));
+  const visited = new Set<string>();
+  
+  while (queue.length > 0) {
+    const { node, level } = queue.shift()!;
+    
+    if (visited.has(node.id)) continue;
+    visited.add(node.id);
+    
+    nodeLevel.set(node.id, level);
+    
+    // Add children to queue
+    edges
+      .filter(edge => edge.source === node.id)
+      .forEach(edge => {
+        const targetNode = nodes.find(n => n.id === edge.target);
+        if (targetNode && !visited.has(targetNode.id)) {
+          queue.push({ node: targetNode, level: level + 1 });
+        }
+      });
+  }
+  
+  // Handle nodes not reached by BFS (orphans) - assign level 999
+  nodes.forEach(node => {
+    if (!nodeLevel.has(node.id)) {
+      nodeLevel.set(node.id, 999);
+    }
+  });
+  
+  return nodeLevel;
+}
+
+/**
+ * Filter nodes based on expanded state
+ * Shows: root nodes (level 0), level 1 nodes, and children of expanded nodes
+ */
+export function filterNodesByExpandedState(
+  nodes: GraphNode[],
+  edges: GraphEdge[],
+  expandedNodes: Set<string>
+): { nodes: GraphNode[]; edges: GraphEdge[] } {
+  if (nodes.length === 0) {
+    return { nodes: [], edges: [] };
+  }
+  
+  const nodeLevels = calculateNodeLevels(nodes, edges);
+  const visibleNodeIds = new Set<string>();
+  
+  // Always show level 0 (root) and level 1 nodes
+  nodes.forEach(node => {
+    const level = nodeLevels.get(node.id) || 999;
+    if (level <= 1) {
+      visibleNodeIds.add(node.id);
+    }
+  });
+  
+  // Recursively add children of expanded nodes
+  const addChildrenRecursively = (parentId: string) => {
+    edges
+      .filter(edge => edge.source === parentId)
+      .forEach(edge => {
+        visibleNodeIds.add(edge.target);
+        // If the child is also expanded, recursively add its children
+        if (expandedNodes.has(edge.target)) {
+          addChildrenRecursively(edge.target);
+        }
+      });
+  };
+  
+  expandedNodes.forEach(expandedNodeId => {
+    addChildrenRecursively(expandedNodeId);
+  });
+  
+  // Filter nodes
+  const visibleNodes = nodes.filter(node => visibleNodeIds.has(node.id));
+  
+  // Filter edges to only include connections between visible nodes
+  const visibleNodeIdSet = new Set(visibleNodes.map(n => n.id));
+  const visibleEdges = edges.filter(edge => 
+    visibleNodeIdSet.has(edge.source) && visibleNodeIdSet.has(edge.target)
+  );
+  
+  return { nodes: visibleNodes, edges: visibleEdges };
+}
+
+/**
  * Apply layout to nodes
  */
 export function applyLayout(

@@ -16,7 +16,8 @@ import { usePanelState } from './hooks/usePanelState';
 import { tickerApi } from './services/api';
 import type { GraphStats } from './types/graph';
 import { logger } from './utils/logger';
-import { getNodeType, getExpandNodeType } from './types/graph';
+import { getNodeType, getExpandNodeType, canExpandNode } from './types/graph';
+import { filterNodesByExpandedState } from './utils/graphLayout';
 import './App.css';
 
 function App() {
@@ -56,10 +57,18 @@ function App() {
     return Array.from(years).sort((a, b) => b - a);
   }, [graphData.graphData.nodes]);
 
-  // Apply filters to graph data
+  // Apply filters and expanded state to graph data
   const filteredGraphData = useMemo(() => {
-    return filters.applyFilters(graphData.graphData.nodes, graphData.graphData.edges);
-  }, [graphData.graphData, filters]);
+    // First filter by expanded state (show only level 0-1 and children of expanded nodes)
+    const expandedFiltered = filterNodesByExpandedState(
+      graphData.graphData.nodes,
+      graphData.graphData.edges,
+      graphData.expandedNodes
+    );
+    
+    // Then apply user filters
+    return filters.applyFilters(expandedFiltered.nodes, expandedFiltered.edges);
+  }, [graphData.graphData, graphData.expandedNodes, filters]);
 
   // Handle ticker submission
   const handleTickerSubmit = useCallback(async (ticker: string) => {
@@ -164,15 +173,47 @@ function App() {
     }, 200);
   }, [nodeSelection, panelState, graphData]);
 
-  // Handle node double-click (expand)
+  // Handle node double-click (expand via API - loads more data)
   const handleNodeDoubleClick = useCallback(async (nodeId: string, nodeType: 'filing' | 'section') => {
     if (!graphData.ticker) {
       logger.warn('Cannot expand node: no ticker loaded', { nodeId }, 'App');
       return;
     }
 
-    logger.info('Node double-clicked (expand)', { nodeId, nodeType }, 'App');
+    logger.info('Node double-clicked (expand via API)', { nodeId, nodeType }, 'App');
     await graphData.expandNode(nodeId, nodeType, graphData.ticker);
+  }, [graphData]);
+
+  // Handle node expand/collapse (toggle visibility of children)
+  const handleNodeExpandCollapse = useCallback((nodeId: string, isExpanded: boolean) => {
+    logger.info('Node expand/collapse toggled', { nodeId, isExpanded }, 'App');
+    
+    if (isExpanded) {
+      // Expanding: Check if node needs API expansion first, or just show existing children
+      const node = graphData.graphData.nodes.find(n => n.id === nodeId);
+      const hasChildrenInGraph = graphData.graphData.edges.some(e => e.source === nodeId);
+      
+      if (!hasChildrenInGraph && node && canExpandNode(node) && graphData.ticker) {
+        // Node doesn't have children yet, need to load them via API first
+        const expandType = getExpandNodeType(node);
+        if (expandType) {
+          logger.debug('Expanding node via API first', { nodeId, expandType }, 'App');
+          graphData.expandNode(nodeId, expandType, graphData.ticker).then(() => {
+            // After API expansion succeeds, toggle UI expansion to show children
+            graphData.toggleNodeExpansion(nodeId);
+          }).catch(err => {
+            logger.warn('API expansion failed', { nodeId, error: err }, 'App');
+          });
+          return;
+        }
+      }
+      
+      // Node already has children in graph, just toggle UI expansion to show them
+      graphData.toggleNodeExpansion(nodeId);
+    } else {
+      // Collapse: hide children
+      graphData.toggleNodeExpansion(nodeId);
+    }
   }, [graphData]);
 
   // Handle filter change
@@ -247,6 +288,8 @@ function App() {
               edges={filteredGraphData.edges}
               onNodeClick={handleNodeClick}
               onNodeDoubleClick={handleNodeDoubleClick}
+              onNodeExpandCollapse={handleNodeExpandCollapse}
+              expandedNodes={graphData.expandedNodes}
               fitViewOnChange={true}
             />
           ) : (
