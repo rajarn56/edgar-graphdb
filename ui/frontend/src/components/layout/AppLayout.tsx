@@ -28,6 +28,8 @@ export interface AppLayoutProps {
   layoutConfig?: typeof DEFAULT_LAYOUT_CONFIG;
   /** Panel state management (required to avoid duplicate instances) */
   panelState: UsePanelStateReturn;
+  /** Callback when right panel close button is clicked */
+  onRightPanelClose?: () => void;
 }
 
 export default function AppLayout({
@@ -38,6 +40,7 @@ export default function AppLayout({
   footer,
   layoutConfig = DEFAULT_LAYOUT_CONFIG,
   panelState,
+  onRightPanelClose,
 }: AppLayoutProps) {
   const leftWidth = panelState.getLeftPanelWidth();
   const rightWidth = panelState.getRightPanelWidth();
@@ -103,7 +106,7 @@ export default function AppLayout({
           <RightPanel
             collapsed={panelState.panelStates.rightPanel.collapsed}
             onToggle={panelState.toggleRightPanel}
-            onClose={panelState.collapseRightPanel}
+            onClose={onRightPanelClose || panelState.collapseRightPanel}
           >
             {rightPanelContent}
           </RightPanel>

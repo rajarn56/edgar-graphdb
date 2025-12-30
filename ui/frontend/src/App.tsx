@@ -225,8 +225,10 @@ function App() {
   // Handle panel close
   const handlePanelClose = useCallback(() => {
     logger.debug('Panel closed', {}, 'App');
-    // Clear selection first, then collapse panel
-    // The useEffect will detect selection was cleared and won't re-expand
+    // Mark that user manually closed the panel before clearing selection
+    // This prevents the useEffect from re-expanding the panel
+    userClosedPanelRef.current = true;
+    // Clear selection and collapse panel
     nodeSelection.clearSelection();
     panelState.collapseRightPanel();
   }, [nodeSelection, panelState]);
@@ -244,14 +246,28 @@ function App() {
   // This is a safety net for programmatic node selection, but we guard against duplicate calls
   // IMPORTANT: Don't auto-expand if user manually closed the panel (selectedNodeId cleared)
   const prevSelectedNodeIdRef = useRef<string | null>(null);
+  const userClosedPanelRef = useRef(false);
+  
   useEffect(() => {
     const wasCleared = prevSelectedNodeIdRef.current !== null && nodeSelection.selectedNodeId === null;
     const isNewSelection = nodeSelection.selectedNodeId !== null && nodeSelection.selectedNodeId !== prevSelectedNodeIdRef.current;
     
+    // If selection was cleared, mark that user closed the panel
+    if (wasCleared) {
+      userClosedPanelRef.current = true;
+    }
+    
+    // Reset the flag when a new node is selected
+    if (isNewSelection) {
+      userClosedPanelRef.current = false;
+    }
+    
+    // Only expand if:
+    // 1. There's a selected node
+    // 2. It's a new selection OR panel is collapsed
+    // 3. User didn't manually close the panel
     if (nodeSelection.selectedNodeId && (isNewSelection || panelState.panelStates.rightPanel.collapsed)) {
-      // Only expand if it's a new selection or panel is collapsed
-      // Don't expand if user just cleared selection (closed panel)
-      if (!wasCleared) {
+      if (!userClosedPanelRef.current) {
         panelState.expandRightPanel();
         logger.debug('Right panel expanded due to node selection', { 
           nodeId: nodeSelection.selectedNodeId,
@@ -259,18 +275,24 @@ function App() {
           loading: nodeSelection.loading,
           wasCleared,
           isNewSelection,
+          userClosedPanel: userClosedPanelRef.current,
+        }, 'App');
+      } else {
+        logger.debug('Skipping panel expansion - user manually closed panel', {
+          nodeId: nodeSelection.selectedNodeId,
         }, 'App');
       }
     }
     
     prevSelectedNodeIdRef.current = nodeSelection.selectedNodeId;
     // Don't auto-collapse when selection is cleared - let user control it via close button
-  }, [nodeSelection.selectedNodeId, panelState]);
+  }, [nodeSelection.selectedNodeId, panelState.panelStates.rightPanel.collapsed, nodeSelection, panelState]);
 
   return (
     <div className="app">
       <AppLayout
         panelState={panelState}
+        onRightPanelClose={handlePanelClose}
         header={
           <AppHeader
             ticker={graphData.ticker || ''}

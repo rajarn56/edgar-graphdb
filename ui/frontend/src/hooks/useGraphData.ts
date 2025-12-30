@@ -107,7 +107,7 @@ export function useGraphData(): UseGraphDataReturn {
 
       // Position new child nodes near their parent instead of using full layout
       // This provides better UX - children appear close to parent when expanded
-      const parentNode = graphDataRef.current.nodes.find(n => n.id === nodeId);
+      const parentNode = updatedNodes.find(n => n.id === nodeId);
       if (parentNode && parentNode.position && newNodes.length > 0) {
         // Position children relative to parent
         const parentX = parentNode.position.x;
@@ -115,19 +115,34 @@ export function useGraphData(): UseGraphDataReturn {
         const childSpacing = 400; // Horizontal spacing between children
         const verticalOffset = 400; // Vertical offset below parent
         
-        newNodes.forEach((childNode, index) => {
-          // Check if this child is directly connected to the expanded parent
-          const isDirectChild = newEdges.some(e => e.source === nodeId && e.target === childNode.id);
-          if (isDirectChild && !childNode.position) {
+        // Find direct children of the expanded node
+        const directChildren = newNodes.filter(childNode => 
+          newEdges.some(e => e.source === nodeId && e.target === childNode.id)
+        );
+        
+        // Update positions on updatedNodes array (not newNodes) so they're preserved
+        directChildren.forEach((childNode, index) => {
+          const nodeIndex = updatedNodes.findIndex(n => n.id === childNode.id);
+          if (nodeIndex !== -1 && !updatedNodes[nodeIndex].position) {
             // Position relative to parent
-            const childX = parentX + (index - (newNodes.length - 1) / 2) * childSpacing;
+            const childX = parentX + (index - (directChildren.length - 1) / 2) * childSpacing;
             const childY = parentY + verticalOffset;
-            childNode.position = { x: childX, y: childY };
+            updatedNodes[nodeIndex] = {
+              ...updatedNodes[nodeIndex],
+              position: { x: childX, y: childY },
+            };
+            logger.debug('Positioned child node relative to parent', {
+              childId: childNode.id,
+              parentId: nodeId,
+              position: { x: childX, y: childY },
+              parentPosition: { x: parentX, y: parentY },
+            }, 'useGraphData');
           }
         });
       }
 
       // Apply layout to updated graph (will preserve manually positioned nodes)
+      // applyLayout checks node.position first, so our manually set positions will be preserved
       const nodesWithLayout = applyLayout(updatedNodes, updatedEdges);
       const mergedData = { nodes: nodesWithLayout, edges: updatedEdges };
 
