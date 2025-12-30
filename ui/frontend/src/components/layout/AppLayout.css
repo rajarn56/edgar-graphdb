@@ -1,0 +1,104 @@
+/**
+ * AppLayout component styles.
+ * Uses CSS Grid and Flexbox for proper space management.
+ */
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: #f9fafb;
+}
+
+.app-layout-header {
+  flex-shrink: 0;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.app-layout-body {
+  flex: 1;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.app-layout-left-panel {
+  position: fixed;
+  left: 0;
+  top: var(--header-height, 60px);
+  bottom: var(--footer-height, 0px);
+  z-index: 50;
+  transition: width 0.3s ease, transform 0.3s ease;
+  overflow: hidden;
+  background: white;
+  border-right: 1px solid #e5e7eb;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.app-layout-left-panel.collapsed {
+  transform: translateX(-100%);
+}
+
+.app-layout-center-panel {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  transition: margin-left 0.3s ease, margin-right 0.3s ease;
+  min-width: 0;
+}
+
+.app-layout-right-panel {
+  position: fixed;
+  right: 0;
+  top: var(--header-height, 60px);
+  bottom: var(--footer-height, 0px);
+  z-index: 50;
+  transition: width 0.3s ease, transform 0.3s ease;
+  overflow: hidden;
+  background: white;
+  border-left: 1px solid #e5e7eb;
+  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.app-layout-right-panel.collapsed {
+  transform: translateX(100%);
+}
+
+.app-layout-footer {
+  flex-shrink: 0;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  z-index: 100;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .app-layout-right-panel {
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-layout-left-panel {
+    max-width: 100%;
+    width: 100% !important;
+  }
+
+  .app-layout-right-panel {
+    max-width: 100%;
+    width: 100% !important;
+  }
+
+  .app-layout-center-panel {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+

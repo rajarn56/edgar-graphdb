@@ -1,0 +1,75 @@
+/**
+ * LeftPanel component styles.
+ */
+
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: white;
+  position: relative;
+}
+
+.left-panel-toggle {
+  position: absolute;
+  right: -12px;
+  top: 16px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.left-panel-toggle:hover {
+  background: #f9fafb;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transform: scale(1.05);
+}
+
+.left-panel-toggle svg {
+  transition: transform 0.3s ease;
+}
+
+.left-panel-toggle svg.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.left-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px;
+  height: 100%;
+}
+
+.left-panel.collapsed .left-panel-content {
+  display: none;
+}
+
+/* Scrollbar styling */
+.left-panel-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.left-panel-content::-webkit-scrollbar-track {
+  background: #f9fafb;
+}
+
+.left-panel-content::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.left-panel-content::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+

@@ -1,0 +1,190 @@
+/**
+ * AppHeader component styles.
+ */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  gap: 24px;
+  height: 100%;
+}
+
+.app-header-left {
+  flex-shrink: 0;
+}
+
+.app-header-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  white-space: nowrap;
+}
+
+.app-header-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 600px;
+}
+
+.app-header-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.app-header-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  min-width: 200px;
+}
+
+.app-header-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.app-header-input:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.app-header-submit {
+  padding: 8px 16px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.app-header-submit:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.app-header-submit:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.app-header-reset {
+  padding: 8px 12px;
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.app-header-reset:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #9ca3af;
+  color: #374151;
+}
+
+.app-header-reset:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.app-header-error {
+  padding: 8px 12px;
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.app-header-right {
+  flex-shrink: 0;
+}
+
+.app-header-stats {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.stat-item {
+  display: flex;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.stat-label {
+  color: #6b7280;
+}
+
+.stat-value {
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Spinner animation */
+.spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .app-header {
+    flex-wrap: wrap;
+  }
+
+  .app-header-center {
+    max-width: 100%;
+    order: 3;
+    width: 100%;
+  }
+
+  .app-header-right {
+    order: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header-title {
+    font-size: 16px;
+  }
+
+  .app-header-form {
+    flex-wrap: wrap;
+  }
+
+  .app-header-stats {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+

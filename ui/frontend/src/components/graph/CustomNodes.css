@@ -1,0 +1,22 @@
+/**
+ * CustomNodes component styles.
+ */
+
+.custom-node {
+  position: relative;
+}
+
+.custom-node:hover {
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+.custom-node.selected {
+  outline: 3px solid #ffffff;
+  outline-offset: 4px;
+}
+
+.expand-indicator {
+  pointer-events: none;
+}
+

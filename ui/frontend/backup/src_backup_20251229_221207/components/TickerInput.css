@@ -1,0 +1,74 @@
+.ticker-input-container {
+  padding: 16px;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.ticker-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ticker-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.ticker-input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.ticker-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.ticker-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.ticker-input:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.ticker-submit {
+  padding: 8px 16px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.ticker-submit:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.ticker-submit:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.ticker-error {
+  padding: 8px 12px;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 4px;
+  font-size: 13px;
+  margin-top: 4px;
+}
+

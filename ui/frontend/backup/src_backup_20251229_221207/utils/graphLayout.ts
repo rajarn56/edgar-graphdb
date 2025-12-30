@@ -6,16 +6,8 @@ import type { GraphNode, GraphEdge } from '../types/graph';
 
 const NODE_WIDTH = 200;
 const NODE_HEIGHT = 100;
-const HORIZONTAL_SPACING = 280;
-const VERTICAL_SPACING = 180;
-
-// Node type specific spacing
-const NODE_TYPE_SPACING: Record<string, { horizontal: number; vertical: number }> = {
-  Company: { horizontal: 300, vertical: 200 },
-  Filing: { horizontal: 250, vertical: 150 },
-  Section: { horizontal: 200, vertical: 120 },
-  Chunk: { horizontal: 150, vertical: 100 },
-};
+const HORIZONTAL_SPACING = 250;
+const VERTICAL_SPACING = 150;
 
 /**
  * Calculate hierarchical layout positions for nodes
@@ -68,33 +60,24 @@ export function calculateHierarchicalLayout(
       });
   }
   
-  // Position nodes by level with improved spacing
-  const maxLevel = Math.max(...Array.from(levels.keys()), 0);
+  // Position nodes by level
+  const maxLevel = Math.max(...Array.from(levels.keys()));
   const levelWidths = new Map<number, number>();
   
-  // Calculate width needed for each level (considering node types)
+  // Calculate width needed for each level
   levels.forEach((levelNodes, level) => {
-    let totalWidth = 0;
-    levelNodes.forEach(node => {
-      const nodeType = node.labels[0] || 'default';
-      const spacing = NODE_TYPE_SPACING[nodeType] || { horizontal: HORIZONTAL_SPACING, vertical: VERTICAL_SPACING };
-      totalWidth += spacing.horizontal;
-    });
-    levelWidths.set(level, totalWidth || HORIZONTAL_SPACING);
+    levelWidths.set(level, levelNodes.length);
   });
   
-  // Position nodes with type-aware spacing
+  // Position nodes
   levels.forEach((levelNodes, level) => {
-    const levelWidth = levelWidths.get(level) || HORIZONTAL_SPACING;
-    let currentX = -levelWidth / 2;
-    const y = level * VERTICAL_SPACING + 150;
+    const levelWidth = levelWidths.get(level) || 1;
+    const startX = -(levelWidth * HORIZONTAL_SPACING) / 2;
+    const y = level * VERTICAL_SPACING + 100;
     
-    levelNodes.forEach((node) => {
-      const nodeType = node.labels[0] || 'default';
-      const spacing = NODE_TYPE_SPACING[nodeType] || { horizontal: HORIZONTAL_SPACING, vertical: VERTICAL_SPACING };
-      const x = currentX + spacing.horizontal / 2;
+    levelNodes.forEach((node, index) => {
+      const x = startX + index * HORIZONTAL_SPACING;
       positions.set(node.id, { x, y });
-      currentX += spacing.horizontal;
     });
   });
   

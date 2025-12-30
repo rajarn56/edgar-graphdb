@@ -1,0 +1,77 @@
+/**
+ * RelationshipsView component styles.
+ */
+
+.relationships-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-top: 2px solid #e5e7eb;
+  padding-top: 16px;
+}
+
+.relationships-view-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.relationships-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.relationships-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  margin: 0;
+}
+
+.relationships-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.relationship-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.relationship-item:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+  transform: translateX(4px);
+}
+
+.relationship-type {
+  font-size: 12px;
+  font-weight: 600;
+  color: #3b82f6;
+  padding: 4px 8px;
+  background: #dbeafe;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.relationship-node-id {
+  font-size: 13px;
+  color: #6b7280;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+

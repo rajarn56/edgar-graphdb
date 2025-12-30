@@ -698,3 +698,4 @@ Full citation path preserved:
 **Status:** Production-Ready Design  
 **Based on:** neo4j-edgar-schema-design-v2.md
 
+

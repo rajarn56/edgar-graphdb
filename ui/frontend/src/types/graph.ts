@@ -65,3 +65,105 @@ export interface GraphStats {
 
 export type NodeType = 'Company' | 'Filing' | 'Section' | 'Chunk' | 'Period' | 'FinancialStatement' | 'LineItem' | 'Value' | 'Metric' | 'RiskFactor' | string;
 
+/**
+ * Node type helpers
+ */
+export const NODE_TYPES = {
+  COMPANY: 'Company',
+  FILING: 'Filing',
+  SECTION: 'Section',
+  CHUNK: 'Chunk',
+  PERIOD: 'Period',
+  FINANCIAL_STATEMENT: 'FinancialStatement',
+  LINE_ITEM: 'LineItem',
+  VALUE: 'Value',
+  METRIC: 'Metric',
+  RISK_FACTOR: 'RiskFactor',
+} as const;
+
+/**
+ * Check if a node is of a specific type
+ */
+export function isNodeType(node: GraphNode, type: string): boolean {
+  return node.labels.includes(type);
+}
+
+/**
+ * Get primary node type (first label)
+ */
+export function getNodeType(node: GraphNode): NodeType {
+  return node.labels[0] || 'default';
+}
+
+/**
+ * Check if a node can be expanded
+ */
+export function canExpandNode(node: GraphNode): boolean {
+  const nodeType = getNodeType(node);
+  return nodeType === NODE_TYPES.FILING || nodeType === NODE_TYPES.SECTION;
+}
+
+/**
+ * Get expand node type for API call
+ */
+export function getExpandNodeType(node: GraphNode): 'filing' | 'section' | null {
+  const nodeType = getNodeType(node);
+  if (nodeType === NODE_TYPES.FILING) return 'filing';
+  if (nodeType === NODE_TYPES.SECTION) return 'section';
+  return null;
+}
+
+/**
+ * Graph node with React Flow specific data
+ */
+export interface ReactFlowNode {
+  id: string;
+  type: string;
+  position: { x: number; y: number };
+  data: {
+    label: string;
+    node: GraphNode;
+  };
+  selected?: boolean;
+  dragging?: boolean;
+}
+
+/**
+ * Graph edge with React Flow specific data
+ */
+export interface ReactFlowEdge {
+  id: string;
+  source: string;
+  target: string;
+  type?: string;
+  label?: string;
+  animated?: boolean;
+  style?: Record<string, any>;
+  data?: {
+    edge: GraphEdge;
+  };
+}
+
+/**
+ * Graph viewport state
+ */
+export interface GraphViewport {
+  x: number;
+  y: number;
+  zoom: number;
+}
+
+/**
+ * Graph layout options
+ */
+export interface LayoutOptions {
+  /** Layout algorithm to use */
+  algorithm: 'hierarchical' | 'force-directed' | 'circular';
+  /** Horizontal spacing between nodes */
+  horizontalSpacing: number;
+  /** Vertical spacing between nodes */
+  verticalSpacing: number;
+  /** Direction of layout (for hierarchical) */
+  direction: 'TB' | 'BT' | 'LR' | 'RL';
+}
+

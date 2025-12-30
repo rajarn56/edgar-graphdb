@@ -4,7 +4,7 @@
 
 import axios from 'axios';
 import type { GraphData, NodeDetails, CompanyInfo, FilingInfo, GraphStats } from '../types/graph';
-import { apiLogger, logger } from '../utils/logger';
+import { apiLogger } from '../utils/logger';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 

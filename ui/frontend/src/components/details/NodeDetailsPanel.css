@@ -1,0 +1,70 @@
+/**
+ * NodeDetailsPanel component styles.
+ */
+
+.node-details-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px;
+  gap: 24px;
+}
+
+.node-details-loading,
+.node-details-error,
+.node-details-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.node-details-error {
+  color: #dc2626;
+}
+
+.error-message {
+  font-size: 13px;
+  margin-top: 8px;
+  color: #991b1b;
+}
+
+.node-details-header-badge {
+  margin-bottom: 8px;
+}
+
+.node-type-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  background: #3b82f6;
+  color: white;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Scrollbar styling */
+.node-details-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.node-details-panel::-webkit-scrollbar-track {
+  background: #f9fafb;
+}
+
+.node-details-panel::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.node-details-panel::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+

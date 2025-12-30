@@ -1,0 +1,95 @@
+/**
+ * RightPanel component styles.
+ */
+
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: white;
+  position: relative;
+}
+
+.right-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+  flex-shrink: 0;
+}
+
+.right-panel-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.right-panel-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.right-panel-toggle,
+.right-panel-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.right-panel-toggle:hover,
+.right-panel-close:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.right-panel-toggle svg {
+  transition: transform 0.3s ease;
+}
+
+.right-panel-toggle svg.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.right-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px;
+  min-height: 0;
+}
+
+.right-panel.collapsed .right-panel-content {
+  display: none;
+}
+
+/* Scrollbar styling */
+.right-panel-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.right-panel-content::-webkit-scrollbar-track {
+  background: #f9fafb;
+}
+
+.right-panel-content::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.right-panel-content::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+

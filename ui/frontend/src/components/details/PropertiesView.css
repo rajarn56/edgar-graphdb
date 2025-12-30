@@ -1,0 +1,130 @@
+/**
+ * PropertiesView component styles.
+ */
+
+.properties-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.properties-view-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.property-group {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+}
+
+.property-group-header {
+  width: 100%;
+  padding: 12px 16px;
+  background: #f9fafb;
+  border: none;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.property-group-header:hover {
+  background: #f3f4f6;
+}
+
+.property-group-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.property-group-count {
+  font-size: 13px;
+  color: #6b7280;
+  margin-left: 8px;
+}
+
+.property-group-icon {
+  color: #6b7280;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.property-group-icon.expanded {
+  transform: rotate(180deg);
+}
+
+.property-group-content {
+  padding: 8px;
+}
+
+.properties-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.property-row {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.property-row:last-child {
+  border-bottom: none;
+}
+
+.property-key {
+  padding: 10px 12px;
+  font-weight: 500;
+  color: #374151;
+  width: 40%;
+  vertical-align: top;
+  font-size: 13px;
+}
+
+.property-value {
+  padding: 10px 12px;
+  color: #6b7280;
+  word-break: break-word;
+  font-size: 13px;
+  position: relative;
+}
+
+.property-value span {
+  display: block;
+  padding-right: 24px;
+}
+
+.property-copy-button {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.property-row:hover .property-copy-button {
+  opacity: 1;
+}
+
+.property-copy-button:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+

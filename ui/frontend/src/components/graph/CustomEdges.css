@@ -1,0 +1,13 @@
+/**
+ * CustomEdges component styles.
+ */
+
+.edge-label-bg {
+  opacity: 0.9;
+}
+
+.edge-label-text {
+  pointer-events: none;
+  user-select: none;
+}
+
