@@ -245,21 +245,40 @@ export function filterNodesByExpandedState(
 
 /**
  * Apply layout to nodes
- * Preserves existing positions if they exist (for manually positioned nodes)
+ * Preserves existing positions if they exist (for manually positioned nodes or nodes positioned relative to parent)
+ * Only calculates positions for nodes that don't have positions set
  */
 export function applyLayout(
   nodes: GraphNode[],
   edges: GraphEdge[]
 ): GraphNode[] {
-  const positions = calculateHierarchicalLayout(nodes, edges);
+  // Separate nodes with and without positions
+  const nodesWithPositions = nodes.filter(node => node.position);
+  const nodesWithoutPositions = nodes.filter(node => !node.position);
+  
+  // Only calculate layout for nodes without positions
+  let calculatedPositions = new Map<string, { x: number; y: number }>();
+  if (nodesWithoutPositions.length > 0) {
+    // Calculate hierarchical layout for all nodes to get proper level-based positioning
+    // But we'll only use positions for nodes that don't have them
+    calculatedPositions = calculateHierarchicalLayout(nodes, edges);
+  }
   
   return nodes.map(node => {
     // Preserve existing position if it exists (e.g., manually positioned or positioned relative to parent)
     // Only use calculated position if node doesn't have a position yet
-    const pos = node.position || positions.get(node.id) || { x: 0, y: 0 };
+    if (node.position) {
+      return {
+        ...node,
+        position: node.position,
+      };
+    }
+    
+    // Use calculated position for nodes without positions
+    const calculatedPos = calculatedPositions.get(node.id) || { x: 0, y: 0 };
     return {
       ...node,
-      position: pos,
+      position: calculatedPos,
     };
   });
 }

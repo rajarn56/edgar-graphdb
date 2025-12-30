@@ -112,8 +112,8 @@ export function useGraphData(): UseGraphDataReturn {
         // Position children relative to parent
         const parentX = parentNode.position.x;
         const parentY = parentNode.position.y;
-        const childSpacing = 400; // Horizontal spacing between children
-        const verticalOffset = 400; // Vertical offset below parent
+        const childSpacing = 300; // Horizontal spacing between children (reduced for closer positioning)
+        const verticalOffset = 250; // Vertical offset below parent (reduced for closer positioning)
         
         // Find direct children of the expanded node
         const directChildren = newNodes.filter(childNode => 
@@ -124,9 +124,12 @@ export function useGraphData(): UseGraphDataReturn {
         directChildren.forEach((childNode, index) => {
           const nodeIndex = updatedNodes.findIndex(n => n.id === childNode.id);
           if (nodeIndex !== -1 && !updatedNodes[nodeIndex].position) {
-            // Position relative to parent
-            const childX = parentX + (index - (directChildren.length - 1) / 2) * childSpacing;
+            // Position relative to parent - center children horizontally around parent
+            const totalWidth = (directChildren.length - 1) * childSpacing;
+            const startX = parentX - totalWidth / 2;
+            const childX = startX + (index * childSpacing);
             const childY = parentY + verticalOffset;
+            
             updatedNodes[nodeIndex] = {
               ...updatedNodes[nodeIndex],
               position: { x: childX, y: childY },
@@ -136,13 +139,15 @@ export function useGraphData(): UseGraphDataReturn {
               parentId: nodeId,
               position: { x: childX, y: childY },
               parentPosition: { x: parentX, y: parentY },
+              childIndex: index,
+              totalChildren: directChildren.length,
             }, 'useGraphData');
           }
         });
       }
 
       // Apply layout to updated graph (will preserve manually positioned nodes)
-      // applyLayout checks node.position first, so our manually set positions will be preserved
+      // applyLayout now explicitly preserves nodes with positions and only calculates for nodes without positions
       const nodesWithLayout = applyLayout(updatedNodes, updatedEdges);
       const mergedData = { nodes: nodesWithLayout, edges: updatedEdges };
 
