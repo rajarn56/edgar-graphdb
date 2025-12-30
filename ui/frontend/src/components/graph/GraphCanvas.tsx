@@ -2,7 +2,7 @@
  * React Flow graph canvas component with node/edge handlers and proper configuration.
  */
 
-import React, { useCallback, useMemo, useEffect } from 'react';
+import React, { useCallback, useMemo, useEffect, useState, useRef } from 'react';
 import ReactFlow, {
   Node,
   Edge,
@@ -57,6 +57,8 @@ function GraphCanvasInner({
   fitViewOnChange = true,
 }: GraphCanvasProps) {
   const { fitView } = useReactFlow();
+  const [hasInitialFit, setHasInitialFit] = useState(false);
+  const previousNodeCountRef = useRef(0);
 
   // Convert to React Flow format
   const rfNodes = useMemo(() => {
@@ -108,10 +110,16 @@ function GraphCanvasInner({
 
   // Update nodes/edges when props change
   useEffect(() => {
+    const isInitialLoad = previousNodeCountRef.current === 0 && rfNodes.length > 0;
+    const nodeCountChanged = previousNodeCountRef.current !== rfNodes.length;
+    
     logger.debug('Updating React Flow nodes and edges', {
       nodeCount: rfNodes.length,
       edgeCount: rfEdges.length,
       fitViewOnChange,
+      isInitialLoad,
+      nodeCountChanged,
+      previousNodeCount: previousNodeCountRef.current,
     }, 'GraphCanvas');
     
     setNodes(rfNodes);
@@ -136,14 +144,26 @@ function GraphCanvasInner({
       }, 'GraphCanvas');
     }
     
-    if (fitViewOnChange && rfNodes.length > 0) {
+    // Only fit view on initial load or when new nodes are added (not on node clicks)
+    // This prevents zoom reset when clicking nodes
+    if (fitViewOnChange && rfNodes.length > 0 && (isInitialLoad || (nodeCountChanged && !hasInitialFit))) {
       // Small delay to ensure nodes are rendered
       setTimeout(() => {
-        logger.debug('Fitting view', { nodeCount: rfNodes.length, edgeCount: rfEdges.length }, 'GraphCanvas');
-        fitView({ padding: 0.2, duration: 400 });
+        logger.debug('Fitting view', { 
+          nodeCount: rfNodes.length, 
+          edgeCount: rfEdges.length,
+          isInitialLoad,
+          nodeCountChanged,
+        }, 'GraphCanvas');
+        // Increased padding to account for doubled spacing
+        fitView({ padding: 0.4, duration: 400 });
+        setHasInitialFit(true);
       }, 100);
     }
-  }, [rfNodes, rfEdges, setNodes, setEdges, fitView, fitViewOnChange]);
+    
+    // Update previous node count
+    previousNodeCountRef.current = rfNodes.length;
+  }, [rfNodes, rfEdges, setNodes, setEdges, fitView, fitViewOnChange, hasInitialFit]);
 
   const onNodeClickHandler = useCallback(
     (event: React.MouseEvent, node: Node) => {
@@ -208,10 +228,9 @@ function GraphCanvasInner({
         onNodeDoubleClick={onNodeDoubleClickHandler}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
-        fitView
         minZoom={0.05}
-        maxZoom={2}
-        defaultViewport={{ x: 0, y: 0, zoom: 1 }}
+        maxZoom={10}
+        defaultViewport={{ x: 0, y: 0, zoom: 5 }}
         attributionPosition="bottom-left"
         edgesUpdatable={false}
         edgesFocusable={true}

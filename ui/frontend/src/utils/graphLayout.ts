@@ -6,15 +6,16 @@ import type { GraphNode, GraphEdge } from '../types/graph';
 
 const NODE_WIDTH = 200;
 const NODE_HEIGHT = 100;
-const HORIZONTAL_SPACING = 280;
-const VERTICAL_SPACING = 180;
+// Doubled spacing for better visibility of connectors and relationships
+const HORIZONTAL_SPACING = 560; // Was 280
+const VERTICAL_SPACING = 360; // Was 180
 
-// Node type specific spacing
+// Node type specific spacing (doubled for better visibility)
 const NODE_TYPE_SPACING: Record<string, { horizontal: number; vertical: number }> = {
-  Company: { horizontal: 300, vertical: 200 },
-  Filing: { horizontal: 250, vertical: 150 },
-  Section: { horizontal: 200, vertical: 120 },
-  Chunk: { horizontal: 150, vertical: 100 },
+  Company: { horizontal: 600, vertical: 400 }, // Was 300, 200
+  Filing: { horizontal: 500, vertical: 300 }, // Was 250, 150
+  Section: { horizontal: 400, vertical: 240 }, // Was 200, 120
+  Chunk: { horizontal: 300, vertical: 200 }, // Was 150, 100
 };
 
 /**
