@@ -7,6 +7,7 @@ import React, { createContext } from 'react';
 import { usePanelState } from '../../hooks/usePanelState';
 import type { UsePanelStateReturn } from '../../hooks/usePanelState';
 import { DEFAULT_LAYOUT_CONFIG } from '../../types/ui';
+import { logger } from '../../utils/logger';
 import LeftPanel from './LeftPanel';
 import CenterPanel from './CenterPanel';
 import RightPanel from './RightPanel';
