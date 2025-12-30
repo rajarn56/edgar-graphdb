@@ -44,12 +44,62 @@ export function useFilters(): UseFiltersReturn {
 
       // Filter by form type
       if (filters.formType) {
+        // Build a reverse graph (child -> parent mapping) to traverse up the hierarchy
+        // Use original edges to ensure we can traverse the full graph
+        const parentMap = new Map<string, string>();
+        edges.forEach(edge => {
+          parentMap.set(edge.target, edge.source);
+        });
+
+        // Build a node lookup map for quick access
+        // Use original nodes to ensure we can find all nodes in the hierarchy
+        const nodeMap = new Map<string, GraphNode>();
+        nodes.forEach(node => {
+          nodeMap.set(node.id, node);
+        });
+
+        // Helper function to find ancestor Filing node
+        const findAncestorFiling = (nodeId: string): GraphNode | null => {
+          const visited = new Set<string>();
+          let currentId: string | undefined = nodeId;
+
+          while (currentId && !visited.has(currentId)) {
+            visited.add(currentId);
+            const currentNode = nodeMap.get(currentId);
+            
+            if (currentNode && currentNode.labels.includes('Filing')) {
+              return currentNode;
+            }
+
+            // Move to parent
+            currentId = parentMap.get(currentId);
+          }
+
+          return null;
+        };
+
         filteredNodes = filteredNodes.filter(node => {
+          // If it's a Filing node, check if form_type matches
           if (node.labels.includes('Filing')) {
             return node.properties.form_type === filters.formType;
           }
-          // Keep non-filing nodes
-          return true;
+
+          // If it's a Company node (root level), keep it
+          if (node.labels.includes('Company')) {
+            return true;
+          }
+
+          // For other nodes (Section, Chunk, etc.), find ancestor Filing node
+          const ancestorFiling = findAncestorFiling(node.id);
+          
+          // If no ancestor Filing found, keep the node (edge case - shouldn't happen in normal hierarchy)
+          if (!ancestorFiling) {
+            logger.warn('Node has no ancestor Filing node', { nodeId: node.id, labels: node.labels }, 'useFilters');
+            return true;
+          }
+
+          // Check if ancestor Filing matches the form type filter
+          return ancestorFiling.properties.form_type === filters.formType;
         });
       }
 
