@@ -51,6 +51,8 @@ export interface GraphCanvasProps {
   expandedNodes?: Set<string>;
   /** Whether to fit view on data change */
   fitViewOnChange?: boolean;
+  /** Callback when node positions change (e.g., after dragging) */
+  onNodePositionsChange?: (positions: Map<string, { x: number; y: number }>) => void;
 }
 
 function GraphCanvasInner({
@@ -61,6 +63,7 @@ function GraphCanvasInner({
   onNodeExpandCollapse,
   expandedNodes = new Set(),
   fitViewOnChange = true,
+  onNodePositionsChange,
 }: GraphCanvasProps) {
   const { fitView } = useReactFlow();
   const [hasInitialFit, setHasInitialFit] = useState(false);
@@ -122,6 +125,46 @@ function GraphCanvasInner({
 
   const [nodes, setNodes, onNodesChange] = useNodesState(rfNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(rfEdges);
+  
+  // Track when nodes are dragged to sync positions back to graph data
+  // Only sync when nodes are actually dragged, not when updated from props
+  const isUpdatingFromPropsRef = useRef(false);
+  const previousNodesRef = useRef(nodes);
+  
+  useEffect(() => {
+    // Skip syncing if we're updating from props (to avoid infinite loops)
+    if (isUpdatingFromPropsRef.current) {
+      isUpdatingFromPropsRef.current = false;
+      previousNodesRef.current = nodes;
+      return;
+    }
+    
+    // Check if any node positions changed (indicating a drag)
+    const positionsChanged = nodes.some(node => {
+      const prevNode = previousNodesRef.current.find(n => n.id === node.id);
+      if (!prevNode) return false;
+      // Only consider it a drag if position changed significantly (more than 1px)
+      const dx = Math.abs(prevNode.position.x - node.position.x);
+      const dy = Math.abs(prevNode.position.y - node.position.y);
+      return dx > 1 || dy > 1;
+    });
+    
+    if (positionsChanged && onNodePositionsChange) {
+      // Create a map of all node positions
+      const positionsMap = new Map<string, { x: number; y: number }>();
+      nodes.forEach(node => {
+        positionsMap.set(node.id, node.position);
+      });
+      
+      // Sync positions back to graph data
+      onNodePositionsChange(positionsMap);
+      logger.debug('Node positions synced to graph data', {
+        nodeCount: positionsMap.size,
+      }, 'GraphCanvas');
+    }
+    
+    previousNodesRef.current = nodes;
+  }, [nodes, onNodePositionsChange]);
 
   // Update nodes/edges when props change
   useEffect(() => {
@@ -149,6 +192,8 @@ function GraphCanvasInner({
       };
     });
     
+    // Mark that we're updating from props to avoid syncing positions back
+    isUpdatingFromPropsRef.current = true;
     setNodes(updatedNodes);
     setEdges(rfEdges);
     

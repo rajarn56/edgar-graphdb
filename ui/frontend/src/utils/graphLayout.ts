@@ -225,8 +225,14 @@ export function filterNodesByExpandedState(
     addChildrenRecursively(expandedNodeId);
   });
   
-  // Filter nodes
-  const visibleNodes = nodes.filter(node => visibleNodeIds.has(node.id));
+  // Filter nodes - preserve positions from original nodes
+  const visibleNodes = nodes
+    .filter(node => visibleNodeIds.has(node.id))
+    .map(node => {
+      // Preserve the node object with its position (if it exists)
+      // This ensures manually positioned nodes keep their positions when filtered
+      return node;
+    });
   
   // Filter edges to only include connections between visible nodes
   const visibleNodeIdSet = new Set(visibleNodes.map(n => n.id));

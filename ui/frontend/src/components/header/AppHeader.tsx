@@ -31,6 +31,11 @@ export default function AppHeader({
   stats,
 }: AppHeaderProps) {
   const [ticker, setTicker] = useState(initialTicker);
+  
+  // Sync ticker state when prop changes (e.g., after reset)
+  React.useEffect(() => {
+    setTicker(initialTicker);
+  }, [initialTicker]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

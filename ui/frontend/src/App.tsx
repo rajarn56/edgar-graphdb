@@ -72,8 +72,14 @@ function App() {
 
   // Handle ticker submission
   const handleTickerSubmit = useCallback(async (ticker: string) => {
+    // Handle reset (empty ticker)
     if (!ticker.trim()) {
-      logger.warn('Empty ticker submitted', {}, 'App');
+      logger.info('Resetting graph', {}, 'App');
+      graphData.resetGraph();
+      nodeSelection.clearSelection();
+      panelState.collapseRightPanel();
+      filters.clearFilters();
+      setStats(null);
       return;
     }
 
@@ -100,7 +106,7 @@ function App() {
     } catch (err: any) {
       logger.warn('Failed to load stats', { ticker, error: err }, 'App');
     }
-  }, [graphData, nodeSelection, panelState]);
+  }, [graphData, nodeSelection, panelState, filters]);
 
   // Handle node click
   const handleNodeClick = useCallback(async (nodeId: string, labels: string[]) => {
@@ -325,6 +331,7 @@ function App() {
               onNodeExpandCollapse={handleNodeExpandCollapse}
               expandedNodes={graphData.expandedNodes}
               fitViewOnChange={true}
+              onNodePositionsChange={graphData.updateNodePositions}
             />
           ) : (
             <div className="empty-state">
