@@ -48,7 +48,6 @@ export function useGraphData(): UseGraphDataReturn {
     setLoading(true);
     setError(null);
     setTicker(newTicker);
-    setExpandedNodes(new Set());
 
     try {
       const data = await graphApi.getGraph(newTicker);
@@ -61,14 +60,27 @@ export function useGraphData(): UseGraphDataReturn {
       const nodesWithLayout = applyLayout(data.nodes, data.edges);
       const layoutedData = { nodes: nodesWithLayout, edges: data.edges };
       
+      // Find all nodes that have children (outgoing edges) and expand them by default
+      const nodesWithChildren = new Set<string>();
+      data.edges.forEach(edge => {
+        nodesWithChildren.add(edge.source);
+      });
+      
+      logger.info('Expanding all nodes with children by default', { 
+        expandedNodeCount: nodesWithChildren.size,
+        totalNodes: data.nodes.length 
+      }, 'useGraphData');
+      
       setGraphData(layoutedData);
       graphDataRef.current = layoutedData;
+      setExpandedNodes(nodesWithChildren);
     } catch (err: any) {
       const errorMessage = err.response?.data?.detail || err.message || 'Failed to load graph';
       logger.error('Failed to load graph', { ticker: newTicker, error: errorMessage }, 'useGraphData', err);
       setError(errorMessage);
       setGraphData({ nodes: [], edges: [] });
       graphDataRef.current = { nodes: [], edges: [] };
+      setExpandedNodes(new Set());
     } finally {
       setLoading(false);
     }
