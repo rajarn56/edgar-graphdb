@@ -76,10 +76,21 @@ export const graphApi = {
    * Get node details
    */
   getNodeDetails: async (nodeId: string, labels: string[]): Promise<NodeDetails> => {
-    const response = await api.get<NodeDetails>(`/api/graph/node/${nodeId}`, {
-      params: { labels: labels.join(',') },
-    });
-    return response.data;
+    try {
+      const response = await api.get<NodeDetails>(`/api/graph/node/${nodeId}`, {
+        params: { labels: labels.join(',') },
+      });
+      return response.data;
+    } catch (error: any) {
+      logger.error('API error in getNodeDetails', {
+        nodeId,
+        labels,
+        error: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      }, 'graphApi');
+      throw error;
+    }
   },
 
   /**

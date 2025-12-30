@@ -4,21 +4,26 @@
 
 .custom-edge {
   transition: stroke-width 0.2s ease, opacity 0.2s ease;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .custom-edge:hover {
   stroke-width: 4;
-  opacity: 1;
+  opacity: 1 !important;
 }
 
 .edge-label-bg {
   opacity: 0.95;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  visibility: visible !important;
 }
 
 .edge-label-text {
   pointer-events: none;
   user-select: none;
   filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.8));
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 

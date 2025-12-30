@@ -94,7 +94,7 @@ function App() {
   }, [graphData, nodeSelection, panelState]);
 
   // Handle node click
-  const handleNodeClick = useCallback((nodeId: string, labels: string[]) => {
+  const handleNodeClick = useCallback(async (nodeId: string, labels: string[]) => {
     logger.info('Node clicked in App', { nodeId, labels }, 'App');
     
     // Find the graph node to use its properties as fallback
@@ -106,17 +106,29 @@ function App() {
       propertyCount: graphNode?.properties ? Object.keys(graphNode.properties).length : 0,
     }, 'App');
     
-    logger.debug('Calling selectNode and expandRightPanel', { nodeId }, 'App');
-    nodeSelection.selectNode(nodeId, labels, graphNode);
+    // Expand panel first to ensure it's visible
+    logger.debug('Expanding right panel', { nodeId }, 'App');
     panelState.expandRightPanel();
     
-    logger.debug('Node click handling completed', {
-      nodeId,
-      selectedNodeId: nodeSelection.selectedNodeId,
-      panelCollapsed: panelState.panelStates.rightPanel.collapsed,
-      panelVisible: panelState.panelStates.rightPanel.visible,
-      panelWidth: panelState.getRightPanelWidth(),
-    }, 'App');
+    // Then select the node (this will trigger API call)
+    logger.debug('Calling selectNode', { nodeId }, 'App');
+    try {
+      await nodeSelection.selectNode(nodeId, labels, graphNode);
+    } catch (err: any) {
+      logger.error('Error in selectNode', { nodeId, error: err }, 'App');
+      // Panel should still be expanded even if API call fails
+    }
+    
+    // Verify panel state after a short delay to ensure state has updated
+    setTimeout(() => {
+      logger.debug('Node click handling completed', {
+        nodeId,
+        selectedNodeId: nodeSelection.selectedNodeId,
+        panelCollapsed: panelState.panelStates.rightPanel.collapsed,
+        panelVisible: panelState.panelStates.rightPanel.visible,
+        panelWidth: panelState.getRightPanelWidth(),
+      }, 'App');
+    }, 100);
   }, [nodeSelection, panelState, graphData]);
 
   // Handle node double-click (expand)

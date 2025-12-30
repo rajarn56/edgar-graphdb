@@ -206,6 +206,9 @@ function GraphCanvasInner({
         edgesUpdatable={false}
         edgesFocusable={true}
         selectNodesOnDrag={false}
+        onlyRenderVisibleElements={false}
+        elevateEdgesOnSelect={false}
+        elevateNodesOnSelect={false}
       >
         <Background color="#e5e7eb" gap={20} size={1} />
         <Controls />

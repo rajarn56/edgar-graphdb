@@ -33,6 +33,14 @@
 
 .react-flow__edge {
   cursor: pointer;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.react-flow__edge-path {
+  stroke-width: 3 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .react-flow__edge.selected .react-flow__edge-path {
