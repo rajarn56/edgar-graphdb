@@ -95,13 +95,28 @@ function App() {
 
   // Handle node click
   const handleNodeClick = useCallback((nodeId: string, labels: string[]) => {
-    logger.info('Node clicked', { nodeId, labels }, 'App');
+    logger.info('Node clicked in App', { nodeId, labels }, 'App');
     
     // Find the graph node to use its properties as fallback
     const graphNode = graphData.graphData.nodes.find(n => n.id === nodeId);
+    logger.debug('Graph node found for click', {
+      nodeId,
+      found: !!graphNode,
+      hasProperties: !!graphNode?.properties,
+      propertyCount: graphNode?.properties ? Object.keys(graphNode.properties).length : 0,
+    }, 'App');
     
+    logger.debug('Calling selectNode and expandRightPanel', { nodeId }, 'App');
     nodeSelection.selectNode(nodeId, labels, graphNode);
     panelState.expandRightPanel();
+    
+    logger.debug('Node click handling completed', {
+      nodeId,
+      selectedNodeId: nodeSelection.selectedNodeId,
+      panelCollapsed: panelState.panelStates.rightPanel.collapsed,
+      panelVisible: panelState.panelStates.rightPanel.visible,
+      panelWidth: panelState.getRightPanelWidth(),
+    }, 'App');
   }, [nodeSelection, panelState, graphData]);
 
   // Handle node double-click (expand)

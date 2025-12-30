@@ -29,7 +29,12 @@ export function useNodeSelection(): UseNodeSelectionReturn {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
   const selectNode = useCallback(async (nodeId: string, labels: string[], graphNode?: GraphNode) => {
-    logger.info('Selecting node', { nodeId, labels, hasGraphNode: !!graphNode }, 'useNodeSelection');
+    logger.info('Selecting node', { 
+      nodeId, 
+      labels, 
+      hasGraphNode: !!graphNode,
+      graphNodeProperties: graphNode?.properties ? Object.keys(graphNode.properties).length : 0,
+    }, 'useNodeSelection');
     setLoading(true);
     setError(null);
     setSelectedNodeId(nodeId);
@@ -49,9 +54,13 @@ export function useNodeSelection(): UseNodeSelectionReturn {
         outgoing_edges: [],
       };
       setNodeDetails(initialDetails);
-      logger.debug('Using graph node properties as initial details', { 
-        propertyCount: Object.keys(graphNode.properties || {}).length 
+      logger.info('Using graph node properties as initial details', { 
+        nodeId,
+        propertyCount: Object.keys(graphNode.properties || {}).length,
+        propertyKeys: Object.keys(graphNode.properties || {}).slice(0, 10), // First 10 keys
       }, 'useNodeSelection');
+    } else {
+      logger.warn('No graph node provided for selection', { nodeId, labels }, 'useNodeSelection');
     }
 
     try {
@@ -81,23 +90,45 @@ export function useNodeSelection(): UseNodeSelectionReturn {
         details.relationships = [];
       }
       
+      logger.info('Node details API call successful', {
+        nodeId,
+        propertyCount: details.node?.properties ? Object.keys(details.node.properties).length : 0,
+        relationshipCount: details.relationships?.length || 0,
+        hasContent: !!details.node?.properties?.content,
+      }, 'useNodeSelection');
+      
       setNodeDetails(details);
       setError(null);
     } catch (err: any) {
       const errorMessage = err.response?.data?.detail || err.message || 'Failed to load node details';
-      logger.error('Failed to fetch node details', { nodeId, labels, error: errorMessage, fullError: err }, 'useNodeSelection', err);
+      logger.error('Failed to fetch node details', { 
+        nodeId, 
+        labels, 
+        error: errorMessage, 
+        hasGraphNode: !!graphNode,
+        hasInitialDetails: !!initialDetails,
+        fullError: err 
+      }, 'useNodeSelection', err);
       
       // If we have graph node data, use it even if API call failed
       if (graphNode && initialDetails) {
-        logger.info('Using graph node data as fallback after API error', { nodeId }, 'useNodeSelection');
+        logger.info('Using graph node data as fallback after API error', { 
+          nodeId,
+          propertyCount: Object.keys(initialDetails.node.properties || {}).length,
+        }, 'useNodeSelection');
         setNodeDetails(initialDetails);
         setError(null); // Don't show error if we have fallback data
       } else {
+        logger.error('No fallback data available, showing error', { nodeId }, 'useNodeSelection');
         setError(errorMessage);
         setNodeDetails(null);
       }
     } finally {
       setLoading(false);
+      logger.debug('Node selection process completed', {
+        nodeId,
+        loading: false,
+      }, 'useNodeSelection');
     }
   }, []);
 

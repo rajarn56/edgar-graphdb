@@ -74,7 +74,7 @@ function GraphCanvasInner({
   }, [initialNodes]);
 
   const rfEdges = useMemo(() => {
-    return initialEdges.map((edge, index) => ({
+    const edges = initialEdges.map((edge, index) => ({
       id: `${edge.source}-${edge.target}-${edge.type}-${index}`,
       source: edge.source,
       target: edge.target,
@@ -84,7 +84,30 @@ function GraphCanvasInner({
         edge: edge,
       },
       animated: false,
+      style: {
+        strokeWidth: 3,
+        opacity: 1, // Full opacity for better visibility
+      },
+      markerEnd: {
+        type: 'arrowclosed',
+        color: '#4b5563',
+      },
     }));
+    
+    logger.info('React Flow edges created', {
+      edgeCount: edges.length,
+      initialEdgeCount: initialEdges.length,
+      sampleEdge: edges[0] ? {
+        id: edges[0].id,
+        source: edges[0].source,
+        target: edges[0].target,
+        type: edges[0].type,
+        hasStyle: !!edges[0].style,
+        opacity: edges[0].style?.opacity,
+      } : null,
+    }, 'GraphCanvas');
+    
+    return edges;
   }, [initialEdges]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(rfNodes);
@@ -92,12 +115,38 @@ function GraphCanvasInner({
 
   // Update nodes/edges when props change
   useEffect(() => {
+    logger.debug('Updating React Flow nodes and edges', {
+      nodeCount: rfNodes.length,
+      edgeCount: rfEdges.length,
+      fitViewOnChange,
+    }, 'GraphCanvas');
+    
     setNodes(rfNodes);
     setEdges(rfEdges);
+    
+    // Log edge details after setting
+    if (rfEdges.length > 0) {
+      logger.debug('React Flow edges set', {
+        totalEdges: rfEdges.length,
+        firstEdge: {
+          id: rfEdges[0].id,
+          source: rfEdges[0].source,
+          target: rfEdges[0].target,
+          style: rfEdges[0].style,
+          markerEnd: rfEdges[0].markerEnd,
+        },
+        lastEdge: {
+          id: rfEdges[rfEdges.length - 1].id,
+          source: rfEdges[rfEdges.length - 1].source,
+          target: rfEdges[rfEdges.length - 1].target,
+        },
+      }, 'GraphCanvas');
+    }
     
     if (fitViewOnChange && rfNodes.length > 0) {
       // Small delay to ensure nodes are rendered
       setTimeout(() => {
+        logger.debug('Fitting view', { nodeCount: rfNodes.length, edgeCount: rfEdges.length }, 'GraphCanvas');
         fitView({ padding: 0.2, duration: 400 });
       }, 100);
     }
@@ -106,9 +155,17 @@ function GraphCanvasInner({
   const onNodeClickHandler = useCallback(
     (_event: React.MouseEvent, node: Node) => {
       const graphNode = node.data.node as GraphNode;
-      logger.debug('Node clicked', { nodeId: graphNode.id, labels: graphNode.labels }, 'GraphCanvas');
+      logger.info('Node clicked in GraphCanvas', { 
+        nodeId: graphNode.id, 
+        labels: graphNode.labels,
+        nodeType: getNodeType(graphNode),
+        hasOnNodeClick: !!onNodeClick,
+      }, 'GraphCanvas');
       if (onNodeClick) {
+        logger.debug('Calling onNodeClick callback', { nodeId: graphNode.id }, 'GraphCanvas');
         onNodeClick(graphNode.id, graphNode.labels);
+      } else {
+        logger.warn('onNodeClick callback not provided', {}, 'GraphCanvas');
       }
     },
     [onNodeClick]
@@ -142,10 +199,13 @@ function GraphCanvasInner({
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         fitView
-        minZoom={0.1}
+        minZoom={0.05}
         maxZoom={2}
         defaultViewport={{ x: 0, y: 0, zoom: 1 }}
         attributionPosition="bottom-left"
+        edgesUpdatable={false}
+        edgesFocusable={true}
+        selectNodesOnDrag={false}
       >
         <Background color="#e5e7eb" gap={20} size={1} />
         <Controls />

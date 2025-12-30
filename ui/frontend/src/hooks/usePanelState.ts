@@ -44,8 +44,8 @@ export function usePanelState(
   });
 
   const [rightPanelState, setRightPanelStateInternal] = useState<PanelState>({
-    visible: false,
-    collapsed: true,
+    visible: true, // Start as visible so content can render
+    collapsed: true, // But collapsed initially
     expandedWidth: config.rightPanel.defaultWidth,
   });
 
@@ -94,19 +94,32 @@ export function usePanelState(
     setRightPanelStateInternal(prev => ({
       ...prev,
       collapsed: true,
-      // Don't set visible to false - keep it visible so content can be rendered
-      // Only collapse it, don't hide it completely
+      visible: true, // Keep visible so content can be rendered
     }));
     logger.debug('Right panel collapsed', {}, 'usePanelState');
   }, []);
 
   const expandRightPanel = useCallback(() => {
-    setRightPanelStateInternal(prev => ({
-      ...prev,
-      collapsed: false,
-      visible: true,
-    }));
-    logger.debug('Right panel expanded', {}, 'usePanelState');
+    setRightPanelStateInternal(prev => {
+      const newState = {
+        ...prev,
+        collapsed: false,
+        visible: true,
+      };
+      logger.info('Right panel expanded', {
+        previousState: {
+          collapsed: prev.collapsed,
+          visible: prev.visible,
+          expandedWidth: prev.expandedWidth,
+        },
+        newState: {
+          collapsed: newState.collapsed,
+          visible: newState.visible,
+          expandedWidth: newState.expandedWidth,
+        },
+      }, 'usePanelState');
+      return newState;
+    });
   }, []);
 
   const setLeftPanelState = useCallback((state: Partial<PanelState>) => {
@@ -133,10 +146,25 @@ export function usePanelState(
   }, [leftPanelState]);
 
   const getRightPanelWidth = useCallback((): number => {
-    if (rightPanelState.collapsed || !rightPanelState.visible) {
+    // If collapsed, return 0 (panel is hidden)
+    if (rightPanelState.collapsed) {
+      logger.debug('Right panel width calculated', {
+        width: 0,
+        collapsed: rightPanelState.collapsed,
+        visible: rightPanelState.visible,
+        expandedWidth: rightPanelState.expandedWidth,
+      }, 'usePanelState');
       return 0;
     }
-    return rightPanelState.expandedWidth;
+    // If not collapsed, return the expanded width (even if visible is false initially)
+    const width = rightPanelState.expandedWidth;
+    logger.debug('Right panel width calculated', {
+      width,
+      collapsed: rightPanelState.collapsed,
+      visible: rightPanelState.visible,
+      expandedWidth: rightPanelState.expandedWidth,
+    }, 'usePanelState');
+    return width;
   }, [rightPanelState]);
 
   const resetPanels = useCallback(() => {
@@ -146,7 +174,7 @@ export function usePanelState(
       expandedWidth: config.leftPanel.defaultWidth,
     });
     setRightPanelStateInternal({
-      visible: false,
+      visible: true,
       collapsed: true,
       expandedWidth: config.rightPanel.defaultWidth,
     });

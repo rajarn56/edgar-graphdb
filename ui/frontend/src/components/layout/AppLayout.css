@@ -67,8 +67,15 @@
   box-shadow: -2px 0 4px rgba(0, 0, 0, 0.05);
 }
 
-.app-layout-right-panel.collapsed {
+.app-layout-right-panel.collapsed,
+.app-layout-right-panel[style*="width: 0px"] {
   transform: translateX(100%);
+  pointer-events: none;
+}
+
+.app-layout-right-panel:not(.collapsed) {
+  transform: translateX(0);
+  pointer-events: auto;
 }
 
 .app-layout-footer {

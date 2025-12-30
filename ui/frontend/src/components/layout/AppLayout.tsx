@@ -39,6 +39,18 @@ export default function AppLayout({
   const panelState = usePanelState(layoutConfig);
   const leftWidth = panelState.getLeftPanelWidth();
   const rightWidth = panelState.getRightPanelWidth();
+  
+  // Log layout state changes
+  React.useEffect(() => {
+    logger.debug('AppLayout state', {
+      leftWidth,
+      rightWidth,
+      leftPanelCollapsed: panelState.panelStates.leftPanel.collapsed,
+      rightPanelCollapsed: panelState.panelStates.rightPanel.collapsed,
+      rightPanelVisible: panelState.panelStates.rightPanel.visible,
+      hasRightPanelContent: !!rightPanelContent,
+    }, 'AppLayout');
+  }, [leftWidth, rightWidth, panelState.panelStates, rightPanelContent]);
 
   return (
     <div className="app-layout">

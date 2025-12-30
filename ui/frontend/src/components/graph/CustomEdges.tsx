@@ -6,6 +6,7 @@
 import React from 'react';
 import { BaseEdge, EdgeProps, getBezierPath } from 'reactflow';
 import type { GraphEdge } from '../../types/graph';
+import { logger } from '../../utils/logger';
 import './CustomEdges.css';
 
 export default function CustomEdge({
@@ -42,6 +43,22 @@ export default function CustomEdge({
   };
 
   const edgeColor = getEdgeColor(edgeType);
+  
+  // Log edge rendering details (only for first few edges to avoid spam)
+  if (id && (id.includes('-0') || id.includes('-1') || id.includes('-2'))) {
+    logger.debug('CustomEdge rendering', {
+      id,
+      edgeType,
+      edgeColor,
+      sourceX,
+      sourceY,
+      targetX,
+      targetY,
+      hasPath: !!edgePath,
+      styleOpacity: style?.opacity,
+      hasMarkerEnd: !!markerEnd,
+    }, 'CustomEdge');
+  }
 
   return (
     <>
@@ -53,7 +70,7 @@ export default function CustomEdge({
           ...style,
           stroke: edgeColor,
           strokeWidth: 3,
-          opacity: 0.8,
+          opacity: 1, // Increased opacity for better visibility
         }}
         className="custom-edge"
       />

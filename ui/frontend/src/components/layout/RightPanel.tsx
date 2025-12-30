@@ -27,13 +27,26 @@ export default function RightPanel({
   children,
   title = 'Node Details',
 }: RightPanelProps) {
+  // Log panel state changes
+  React.useEffect(() => {
+    logger.info('RightPanel state changed', {
+      collapsed,
+      hasChildren: !!children,
+      childrenType: children ? typeof children : 'null',
+      title,
+    }, 'RightPanel');
+  }, [collapsed, children, title]);
+
   const handleToggle = () => {
-    logger.debug('Right panel toggle clicked', { collapsed: !collapsed }, 'RightPanel');
+    logger.info('Right panel toggle clicked', { 
+      currentCollapsed: collapsed,
+      newCollapsed: !collapsed,
+    }, 'RightPanel');
     onToggle();
   };
 
   const handleClose = () => {
-    logger.debug('Right panel close clicked', {}, 'RightPanel');
+    logger.info('Right panel close clicked', { collapsed }, 'RightPanel');
     onClose();
   };
 
