@@ -1,3 +1,34 @@
-2025-12-29 00:42:58.281 | INFO     | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
-2025-12-29 00:42:58.308 | INFO     | Response: GET /api/graph/AAPL | Status: 500 | Time: 0.028s
-2025-12-29 00:53:14.233 | INFO     | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
+2025-12-29 22:27:30.129 | INFO     | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
+2025-12-29 22:27:30.155 | INFO     | Response: GET /api/graph/AAPL | Status: 200 | Time: 0.027s
+2025-12-29 22:27:30.158 | INFO     | Request: GET /api/ticker/AAPL/stats | Client: 127.0.0.1 | Query params: {}
+2025-12-29 22:27:30.168 | INFO     | Response: GET /api/ticker/AAPL/stats | Status: 200 | Time: 0.010s
+2025-12-29 22:27:33.439 | INFO     | Request: GET /api/graph/node/0000320193-25-000079 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
+2025-12-29 22:27:33.450 | INFO     | Response: GET /api/graph/node/0000320193-25-000079 | Status: 200 | Time: 0.011s
+2025-12-29 22:27:35.907 | INFO     | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
+2025-12-29 22:27:35.922 | INFO     | Response: GET /api/graph/AAPL | Status: 200 | Time: 0.015s
+2025-12-29 22:27:35.927 | INFO     | Request: GET /api/ticker/AAPL/stats | Client: 127.0.0.1 | Query params: {}
+2025-12-29 22:27:35.934 | INFO     | Response: GET /api/ticker/AAPL/stats | Status: 200 | Time: 0.007s
+2025-12-29 22:27:42.174 | INFO     | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
+2025-12-29 22:27:42.191 | INFO     | Response: GET /api/graph/AAPL | Status: 200 | Time: 0.017s
+2025-12-29 22:27:42.194 | INFO     | Request: GET /api/ticker/AAPL/stats | Client: 127.0.0.1 | Query params: {}
+2025-12-29 22:27:42.200 | INFO     | Response: GET /api/ticker/AAPL/stats | Status: 200 | Time: 0.007s
+2025-12-29 22:28:10.885 | INFO     | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
+2025-12-29 22:28:10.898 | INFO     | Response: GET /api/graph/AAPL | Status: 200 | Time: 0.013s
+2025-12-29 22:28:10.901 | INFO     | Request: GET /api/ticker/AAPL/stats | Client: 127.0.0.1 | Query params: {}
+2025-12-29 22:28:10.907 | INFO     | Response: GET /api/ticker/AAPL/stats | Status: 200 | Time: 0.007s
+2025-12-29 22:28:28.024 | INFO     | Request: GET /api/graph/node/0000320193 | Client: 127.0.0.1 | Query params: {'labels': 'Company'}
+2025-12-29 22:28:28.118 | INFO     | Response: GET /api/graph/node/0000320193 | Status: 200 | Time: 0.093s
+2025-12-29 22:28:29.506 | INFO     | Request: GET /api/graph/node/0001047469-98-000148 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
+2025-12-29 22:28:29.522 | INFO     | Response: GET /api/graph/node/0001047469-98-000148 | Status: 200 | Time: 0.016s
+2025-12-29 22:28:30.565 | INFO     | Request: GET /api/graph/node/0001047469-98-000148 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
+2025-12-29 22:28:30.579 | INFO     | Response: GET /api/graph/node/0001047469-98-000148 | Status: 200 | Time: 0.014s
+2025-12-29 22:30:33.229 | INFO     | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
+2025-12-29 22:30:33.245 | INFO     | Response: GET /api/graph/AAPL | Status: 200 | Time: 0.016s
+2025-12-29 22:30:33.248 | INFO     | Request: GET /api/ticker/AAPL/stats | Client: 127.0.0.1 | Query params: {}
+2025-12-29 22:30:33.253 | INFO     | Response: GET /api/ticker/AAPL/stats | Status: 200 | Time: 0.006s
+2025-12-29 22:31:18.615 | INFO     | Request: GET /api/graph/node/0000320193-25-000073 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
+2025-12-29 22:31:18.628 | INFO     | Response: GET /api/graph/node/0000320193-25-000073 | Status: 200 | Time: 0.013s
+2025-12-29 22:32:25.127 | INFO     | Request: GET /api/graph/SDFSDF | Client: 127.0.0.1 | Query params: {}
+2025-12-29 22:32:25.145 | INFO     | Response: GET /api/graph/SDFSDF | Status: 500 | Time: 0.018s
+2025-12-29 22:32:25.148 | INFO     | Request: GET /api/ticker/SDFSDF/stats | Client: 127.0.0.1 | Query params: {}
+2025-12-29 22:32:25.152 | INFO     | Response: GET /api/ticker/SDFSDF/stats | Status: 404 | Time: 0.004s
