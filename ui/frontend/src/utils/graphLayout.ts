@@ -178,13 +178,35 @@ export function filterNodesByExpandedState(
   const nodeLevels = calculateNodeLevels(nodes, edges);
   const visibleNodeIds = new Set<string>();
   
-  // Always show level 0 (root) and level 1 nodes
+  // Always show level 0 (root) nodes - these are nodes with no incoming edges
+  // Also show level 1 nodes (direct children of root)
   nodes.forEach(node => {
-    const level = nodeLevels.get(node.id) || 999;
-    if (level <= 1) {
+    const level = nodeLevels.get(node.id);
+    if (level !== undefined && level <= 1) {
       visibleNodeIds.add(node.id);
     }
   });
+  
+  // If no level 0 nodes found (edge case), show all nodes with level 0
+  // This handles cases where level calculation might have issues
+  if (visibleNodeIds.size === 0) {
+    // Fallback: show all nodes that are roots (no incoming edges)
+    const incomingCount = new Map<string, number>();
+    nodes.forEach(node => incomingCount.set(node.id, 0));
+    edges.forEach(edge => {
+      const count = incomingCount.get(edge.target) || 0;
+      incomingCount.set(edge.target, count + 1);
+    });
+    nodes.forEach(node => {
+      if ((incomingCount.get(node.id) || 0) === 0) {
+        visibleNodeIds.add(node.id);
+        // Also add their direct children
+        edges
+          .filter(edge => edge.source === node.id)
+          .forEach(edge => visibleNodeIds.add(edge.target));
+      }
+    });
+  }
   
   // Recursively add children of expanded nodes
   const addChildrenRecursively = (parentId: string) => {

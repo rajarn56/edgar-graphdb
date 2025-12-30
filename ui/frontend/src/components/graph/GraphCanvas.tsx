@@ -135,9 +135,21 @@ function GraphCanvasInner({
       isInitialLoad,
       nodeCountChanged,
       previousNodeCount: previousNodeCountRef.current,
+      existingNodeCount: nodes.length,
     }, 'GraphCanvas');
     
-    setNodes(rfNodes);
+    // Preserve positions from existing nodes when updating (prevents position reset on expand/collapse)
+    const existingPositions = new Map(nodes.map(n => [n.id, n.position]));
+    const updatedNodes = rfNodes.map(newNode => {
+      const existingPos = existingPositions.get(newNode.id);
+      // Use existing position if available, otherwise use the new position
+      return {
+        ...newNode,
+        position: existingPos || newNode.position,
+      };
+    });
+    
+    setNodes(updatedNodes);
     setEdges(rfEdges);
     
     // Log edge details after setting
@@ -159,8 +171,8 @@ function GraphCanvasInner({
       }, 'GraphCanvas');
     }
     
-    // Only fit view on initial load or when new nodes are added (not on node clicks)
-    // This prevents zoom reset when clicking nodes
+    // Only fit view on initial load or when new nodes are added (not on expand/collapse or node clicks)
+    // This prevents zoom reset when clicking nodes or expanding/collapsing
     if (fitViewOnChange && rfNodes.length > 0 && (isInitialLoad || (nodeCountChanged && !hasInitialFit))) {
       // Small delay to ensure nodes are rendered
       setTimeout(() => {
@@ -174,6 +186,12 @@ function GraphCanvasInner({
         fitView({ padding: 0.4, duration: 400 });
         setHasInitialFit(true);
       }, 100);
+    } else if (!isInitialLoad && !nodeCountChanged) {
+      // When just filtering (expand/collapse), don't fit view - preserve current zoom/position
+      logger.debug('Skipping fitView - filtering only, preserving viewport', {
+        nodeCount: rfNodes.length,
+        previousNodeCount: previousNodeCountRef.current,
+      }, 'GraphCanvas');
     }
     
     // Update previous node count
@@ -253,6 +271,9 @@ function GraphCanvasInner({
         onlyRenderVisibleElements={false}
         elevateEdgesOnSelect={false}
         elevateNodesOnSelect={false}
+        preventScrolling={false}
+        nodesDraggable={true}
+        nodesConnectable={false}
       >
         <Background color="#e5e7eb" gap={20} size={1} />
         <Controls />
