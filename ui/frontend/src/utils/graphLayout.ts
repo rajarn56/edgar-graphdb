@@ -239,6 +239,7 @@ export function filterNodesByExpandedState(
 
 /**
  * Apply layout to nodes
+ * Preserves existing positions if they exist (for manually positioned nodes)
  */
 export function applyLayout(
   nodes: GraphNode[],
@@ -247,7 +248,9 @@ export function applyLayout(
   const positions = calculateHierarchicalLayout(nodes, edges);
   
   return nodes.map(node => {
-    const pos = positions.get(node.id) || { x: 0, y: 0 };
+    // Preserve existing position if it exists (e.g., manually positioned or positioned relative to parent)
+    // Only use calculated position if node doesn't have a position yet
+    const pos = node.position || positions.get(node.id) || { x: 0, y: 0 };
     return {
       ...node,
       position: pos,

@@ -3,7 +3,7 @@
  * Integrates all components and handles all user interactions.
  */
 
-import React, { useCallback, useMemo, useEffect } from 'react';
+import React, { useCallback, useMemo, useEffect, useRef } from 'react';
 import AppLayout from './components/layout/AppLayout';
 import GraphCanvas from './components/graph/GraphCanvas';
 import NodeDetailsPanel from './components/details/NodeDetailsPanel';
@@ -225,6 +225,8 @@ function App() {
   // Handle panel close
   const handlePanelClose = useCallback(() => {
     logger.debug('Panel closed', {}, 'App');
+    // Clear selection first, then collapse panel
+    // The useEffect will detect selection was cleared and won't re-expand
     nodeSelection.clearSelection();
     panelState.collapseRightPanel();
   }, [nodeSelection, panelState]);
@@ -240,18 +242,28 @@ function App() {
   // Update right panel visibility based on node selection
   // NOTE: This effect is intentionally minimal - handleNodeClick already expands the panel
   // This is a safety net for programmatic node selection, but we guard against duplicate calls
+  // IMPORTANT: Don't auto-expand if user manually closed the panel (selectedNodeId cleared)
+  const prevSelectedNodeIdRef = useRef<string | null>(null);
   useEffect(() => {
-    if (nodeSelection.selectedNodeId) {
-      // Only expand if panel is currently collapsed (avoid duplicate calls)
-      if (panelState.panelStates.rightPanel.collapsed) {
+    const wasCleared = prevSelectedNodeIdRef.current !== null && nodeSelection.selectedNodeId === null;
+    const isNewSelection = nodeSelection.selectedNodeId !== null && nodeSelection.selectedNodeId !== prevSelectedNodeIdRef.current;
+    
+    if (nodeSelection.selectedNodeId && (isNewSelection || panelState.panelStates.rightPanel.collapsed)) {
+      // Only expand if it's a new selection or panel is collapsed
+      // Don't expand if user just cleared selection (closed panel)
+      if (!wasCleared) {
         panelState.expandRightPanel();
         logger.debug('Right panel expanded due to node selection', { 
           nodeId: nodeSelection.selectedNodeId,
           hasDetails: !!nodeSelection.nodeDetails,
-          loading: nodeSelection.loading 
+          loading: nodeSelection.loading,
+          wasCleared,
+          isNewSelection,
         }, 'App');
       }
     }
+    
+    prevSelectedNodeIdRef.current = nodeSelection.selectedNodeId;
     // Don't auto-collapse when selection is cleared - let user control it via close button
   }, [nodeSelection.selectedNodeId, panelState]);
 

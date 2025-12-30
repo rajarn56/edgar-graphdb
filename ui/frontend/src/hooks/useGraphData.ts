@@ -105,7 +105,29 @@ export function useGraphData(): UseGraphDataReturn {
       const updatedNodes = [...graphDataRef.current.nodes, ...newNodes];
       const updatedEdges = [...graphDataRef.current.edges, ...newEdges];
 
-      // Apply layout to updated graph
+      // Position new child nodes near their parent instead of using full layout
+      // This provides better UX - children appear close to parent when expanded
+      const parentNode = graphDataRef.current.nodes.find(n => n.id === nodeId);
+      if (parentNode && parentNode.position && newNodes.length > 0) {
+        // Position children relative to parent
+        const parentX = parentNode.position.x;
+        const parentY = parentNode.position.y;
+        const childSpacing = 400; // Horizontal spacing between children
+        const verticalOffset = 400; // Vertical offset below parent
+        
+        newNodes.forEach((childNode, index) => {
+          // Check if this child is directly connected to the expanded parent
+          const isDirectChild = newEdges.some(e => e.source === nodeId && e.target === childNode.id);
+          if (isDirectChild && !childNode.position) {
+            // Position relative to parent
+            const childX = parentX + (index - (newNodes.length - 1) / 2) * childSpacing;
+            const childY = parentY + verticalOffset;
+            childNode.position = { x: childX, y: childY };
+          }
+        });
+      }
+
+      // Apply layout to updated graph (will preserve manually positioned nodes)
       const nodesWithLayout = applyLayout(updatedNodes, updatedEdges);
       const mergedData = { nodes: nodesWithLayout, edges: updatedEdges };
 
