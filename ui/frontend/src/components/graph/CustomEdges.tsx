@@ -33,12 +33,12 @@ export default function CustomEdge({
   const edgeType = edge?.type || '';
   const edgeLabel = edgeType || '';
 
-  // Color based on relationship type
+  // Color based on relationship type - more vibrant colors for better visibility
   const getEdgeColor = (type: string): string => {
-    if (type.includes('FILED_BY')) return '#3b82f6'; // Blue
-    if (type.includes('CONTAINS')) return '#10b981'; // Green
-    if (type.includes('RELATES')) return '#f59e0b'; // Amber
-    return '#6b7280'; // Gray
+    if (type.includes('FILED_BY')) return '#2563eb'; // Brighter Blue
+    if (type.includes('CONTAINS')) return '#059669'; // Brighter Green
+    if (type.includes('RELATES')) return '#d97706'; // Brighter Amber
+    return '#4b5563'; // Darker Gray for better contrast
   };
 
   const edgeColor = getEdgeColor(edgeType);
@@ -52,8 +52,10 @@ export default function CustomEdge({
         style={{
           ...style,
           stroke: edgeColor,
-          strokeWidth: 2,
+          strokeWidth: 3,
+          opacity: 0.8,
         }}
+        className="custom-edge"
       />
       {edgeLabel && (
         <g transform={`translate(${labelX},${labelY})`}>
@@ -72,9 +74,9 @@ export default function CustomEdge({
             x={0}
             y={4}
             textAnchor="middle"
-            fontSize={11}
+            fontSize={12}
             fill={edgeColor}
-            fontWeight={500}
+            fontWeight={600}
             className="edge-label-text"
           >
             {edgeLabel}

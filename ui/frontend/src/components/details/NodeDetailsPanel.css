@@ -10,6 +10,8 @@
   overflow-x: hidden;
   padding: 16px;
   gap: 24px;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .node-details-loading,

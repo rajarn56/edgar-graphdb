@@ -37,11 +37,8 @@ export default function RightPanel({
     onClose();
   };
 
-  // Don't render if collapsed and no content
-  if (collapsed && !children) {
-    return null;
-  }
-
+  // Always render the panel structure - don't return null
+  // Content will be hidden via CSS when collapsed, but structure remains for proper state management
   return (
     <div className={`right-panel ${collapsed ? 'collapsed' : ''}`}>
       {/* Header with title and controls */}
@@ -96,12 +93,10 @@ export default function RightPanel({
         </div>
       </div>
 
-      {/* Panel content */}
-      {!collapsed && (
-        <div className="right-panel-content">
-          {children}
-        </div>
-      )}
+      {/* Panel content - always render but hide via CSS when collapsed */}
+      <div className={`right-panel-content ${collapsed ? 'collapsed' : ''}`}>
+        {children}
+      </div>
     </div>
   );
 }

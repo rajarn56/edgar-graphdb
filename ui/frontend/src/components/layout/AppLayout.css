@@ -33,7 +33,7 @@
   left: 0;
   top: var(--header-height, 60px);
   bottom: var(--footer-height, 0px);
-  z-index: 50;
+  z-index: 10;
   transition: width 0.3s ease, transform 0.3s ease;
   overflow: hidden;
   background: white;
@@ -51,6 +51,7 @@
   overflow: hidden;
   transition: margin-left 0.3s ease, margin-right 0.3s ease;
   min-width: 0;
+  z-index: 20;
 }
 
 .app-layout-right-panel {
@@ -58,7 +59,7 @@
   right: 0;
   top: var(--header-height, 60px);
   bottom: var(--footer-height, 0px);
-  z-index: 50;
+  z-index: 10;
   transition: width 0.3s ease, transform 0.3s ease;
   overflow: hidden;
   background: white;

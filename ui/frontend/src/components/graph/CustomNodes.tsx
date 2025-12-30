@@ -82,12 +82,13 @@ export default function CustomNode({ data, selected }: CustomNodeProps) {
         fontSize: isCompany ? '15px' : isFiling ? '13px' : '12px',
         fontWeight: isCompany ? 'bold' : 'normal',
         boxShadow: selected 
-          ? '0 4px 12px rgba(0,0,0,0.3)' 
-          : '0 2px 8px rgba(0,0,0,0.2)',
-        border: `3px solid ${selected ? '#ffffff' : 'rgba(255,255,255,0.3)'}`,
+          ? '0 4px 12px rgba(0,0,0,0.4)' 
+          : '0 2px 8px rgba(0,0,0,0.25)',
+        border: `3px solid ${selected ? '#ffffff' : 'rgba(255,255,255,0.4)'}`,
         transition: 'all 0.2s ease',
         cursor: 'pointer',
         position: 'relative',
+        opacity: 1,
       }}
       onMouseEnter={handleMouseEnter}
     >
@@ -99,34 +100,85 @@ export default function CustomNode({ data, selected }: CustomNodeProps) {
         width: '100%',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '4px',
       }}>
-        <div style={{ fontWeight: isCompany ? 'bold' : '600' }}>
+        {/* Main label */}
+        <div style={{ fontWeight: isCompany ? 'bold' : '600', fontSize: isCompany ? '15px' : isFiling ? '13px' : '12px' }}>
           {data.label}
         </div>
         
-        {isCompany && data.node.properties.ticker && (
-          <div style={{ fontSize: '11px', marginTop: '4px', opacity: 0.9 }}>
-            {data.node.properties.ticker}
-          </div>
+        {/* Company attributes */}
+        {isCompany && (
+          <>
+            {data.node.properties.ticker && (
+              <div style={{ fontSize: '11px', opacity: 0.9, fontWeight: '500' }}>
+                {data.node.properties.ticker}
+              </div>
+            )}
+            {data.node.properties.cik && (
+              <div style={{ fontSize: '10px', opacity: 0.8 }}>
+                CIK: {data.node.properties.cik}
+              </div>
+            )}
+          </>
         )}
         
-        {isFiling && data.node.properties.fiscal_quarter && (
-          <div style={{ fontSize: '11px', marginTop: '4px', opacity: 0.9 }}>
-            Q{data.node.properties.fiscal_quarter}
-          </div>
+        {/* Filing attributes */}
+        {isFiling && (
+          <>
+            {data.node.properties.form_type && (
+              <div style={{ fontSize: '11px', opacity: 0.9, fontWeight: '500' }}>
+                {data.node.properties.form_type}
+              </div>
+            )}
+            {data.node.properties.fiscal_year && (
+              <div style={{ fontSize: '10px', opacity: 0.8 }}>
+                FY {data.node.properties.fiscal_year}
+                {data.node.properties.fiscal_quarter && ` Q${data.node.properties.fiscal_quarter}`}
+              </div>
+            )}
+            {data.node.properties.filing_date && (
+              <div style={{ fontSize: '9px', opacity: 0.75 }}>
+                {new Date(data.node.properties.filing_date).getFullYear()}
+              </div>
+            )}
+          </>
         )}
         
-        {isSection && data.node.properties.item_title && (
-          <div style={{ fontSize: '10px', marginTop: '4px', opacity: 0.85 }}>
-            {data.node.properties.item_title.substring(0, 30)}
-            {data.node.properties.item_title.length > 30 ? '...' : ''}
-          </div>
+        {/* Section attributes */}
+        {isSection && (
+          <>
+            {data.node.properties.item_number && (
+              <div style={{ fontSize: '11px', opacity: 0.9, fontWeight: '500' }}>
+                {data.node.properties.item_number}
+              </div>
+            )}
+            {data.node.properties.item_title && (
+              <div style={{ fontSize: '10px', opacity: 0.8, lineHeight: '1.2' }}>
+                {data.node.properties.item_title.length > 25 
+                  ? data.node.properties.item_title.substring(0, 25) + '...'
+                  : data.node.properties.item_title}
+              </div>
+            )}
+          </>
         )}
         
-        {isChunk && data.node.properties.chunk_type && (
-          <div style={{ fontSize: '10px', marginTop: '4px', opacity: 0.85 }}>
-            {data.node.properties.chunk_type}
-          </div>
+        {/* Chunk attributes */}
+        {isChunk && (
+          <>
+            {data.node.properties.chunk_index !== undefined && (
+              <div style={{ fontSize: '11px', opacity: 0.9, fontWeight: '500' }}>
+                Chunk #{data.node.properties.chunk_index}
+              </div>
+            )}
+            {data.node.properties.chunk_type && (
+              <div style={{ fontSize: '10px', opacity: 0.8 }}>
+                {data.node.properties.chunk_type}
+              </div>
+            )}
+          </>
         )}
       </div>
 

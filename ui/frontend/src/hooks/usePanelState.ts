@@ -94,7 +94,8 @@ export function usePanelState(
     setRightPanelStateInternal(prev => ({
       ...prev,
       collapsed: true,
-      visible: false,
+      // Don't set visible to false - keep it visible so content can be rendered
+      // Only collapse it, don't hide it completely
     }));
     logger.debug('Right panel collapsed', {}, 'usePanelState');
   }, []);

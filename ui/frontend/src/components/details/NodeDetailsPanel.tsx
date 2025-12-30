@@ -27,7 +27,16 @@ export default function NodeDetailsPanel({
   error = null,
   onClose,
 }: NodeDetailsPanelProps) {
+  // Debug logging
+  logger.debug('NodeDetailsPanel render', { 
+    hasNodeDetails: !!nodeDetails,
+    loading,
+    error,
+    nodeId: nodeDetails?.node?.id,
+  }, 'NodeDetailsPanel');
+
   if (loading) {
+    logger.debug('NodeDetailsPanel showing loading state', {}, 'NodeDetailsPanel');
     return (
       <div className="node-details-panel">
         <div className="node-details-loading">
@@ -39,6 +48,7 @@ export default function NodeDetailsPanel({
   }
 
   if (error) {
+    logger.warn('NodeDetailsPanel showing error state', { error }, 'NodeDetailsPanel');
     return (
       <div className="node-details-panel">
         <div className="node-details-error">
@@ -50,6 +60,7 @@ export default function NodeDetailsPanel({
   }
 
   if (!nodeDetails) {
+    logger.debug('NodeDetailsPanel showing empty state', {}, 'NodeDetailsPanel');
     return (
       <div className="node-details-panel">
         <div className="node-details-empty">
@@ -62,11 +73,14 @@ export default function NodeDetailsPanel({
   const { node } = nodeDetails;
   const isChunk = node.labels.includes('Chunk');
   const hasContent = isChunk && node.properties.content;
+  const hasRelationships = nodeDetails.relationships && nodeDetails.relationships.length > 0;
 
-  logger.debug('Rendering node details', { 
+  logger.debug('Rendering node details content', { 
     nodeId: node.id, 
     labels: node.labels,
-    hasContent 
+    hasContent,
+    hasRelationships,
+    propertyCount: Object.keys(node.properties).length,
   }, 'NodeDetailsPanel');
 
   return (

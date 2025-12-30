@@ -69,6 +69,11 @@
   overflow-x: hidden;
   padding: 16px;
   min-height: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.right-panel-content.collapsed {
+  display: none;
 }
 
 .right-panel.collapsed .right-panel-content {

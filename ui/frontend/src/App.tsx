@@ -134,12 +134,17 @@ function App() {
 
   // Update right panel visibility based on node selection
   useEffect(() => {
-    if (nodeSelection.selectedNodeId && nodeSelection.nodeDetails) {
+    if (nodeSelection.selectedNodeId) {
+      // Always expand panel when a node is selected, even if details are still loading
       panelState.expandRightPanel();
-    } else if (!nodeSelection.selectedNodeId) {
-      // Don't auto-collapse, let user control it
+      logger.debug('Right panel expanded due to node selection', { 
+        nodeId: nodeSelection.selectedNodeId,
+        hasDetails: !!nodeSelection.nodeDetails,
+        loading: nodeSelection.loading 
+      }, 'App');
     }
-  }, [nodeSelection.selectedNodeId, nodeSelection.nodeDetails, panelState]);
+    // Don't auto-collapse when selection is cleared - let user control it via close button
+  }, [nodeSelection.selectedNodeId, panelState]);
 
   return (
     <div className="app">
