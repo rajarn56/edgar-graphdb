@@ -114,9 +114,12 @@ export function useGraphData(): UseGraphDataReturn {
         totalEdges: updatedEdges.length 
       }, 'useGraphData');
     } catch (err: any) {
-      const errorMessage = err.response?.data?.detail || 'Failed to expand node';
-      logger.error('Failed to expand node', { nodeId, nodeType, error: errorMessage }, 'useGraphData', err);
-      setError(errorMessage);
+      const errorMessage = err.response?.data?.detail || err.message || 'Failed to expand node';
+      logger.error('Failed to expand node', { nodeId, nodeType, error: errorMessage, fullError: err }, 'useGraphData', err);
+      
+      // Don't set global error for expansion failures - just log it
+      // Expansion failures are not critical and shouldn't break the UI
+      logger.warn('Node expansion failed, but continuing', { nodeId, nodeType, error: errorMessage }, 'useGraphData');
     }
   }, [expandedNodes]);
 

@@ -134,27 +134,31 @@ class Neo4jGraphService:
         # Determine node ID based on labels
         node_id = None
         if "Company" in labels:
-            node_id = properties.get("cik")
+            node_id = properties.get("cik") or properties.get("id")
         elif "Filing" in labels:
-            node_id = properties.get("accession_number")
+            node_id = properties.get("accession_number") or properties.get("id")
         elif "Section" in labels:
-            node_id = properties.get("section_id")
+            node_id = properties.get("section_id") or properties.get("id")
         elif "Chunk" in labels:
-            node_id = properties.get("chunk_id")
+            node_id = properties.get("chunk_id") or properties.get("id")
         elif "Period" in labels:
-            node_id = properties.get("period_id")
+            node_id = properties.get("period_id") or properties.get("id")
         elif "FinancialStatement" in labels:
-            node_id = properties.get("statement_id")
+            node_id = properties.get("statement_id") or properties.get("id")
         elif "LineItem" in labels:
-            node_id = properties.get("line_item_id")
+            node_id = properties.get("line_item_id") or properties.get("id")
         elif "Value" in labels:
-            node_id = properties.get("value_id")
+            node_id = properties.get("value_id") or properties.get("id")
         elif "Metric" in labels:
-            node_id = properties.get("metric_id")
+            node_id = properties.get("metric_id") or properties.get("id")
         elif "RiskFactor" in labels:
-            node_id = properties.get("risk_id")
+            node_id = properties.get("risk_id") or properties.get("id")
+        else:
+            # Fallback: try common ID property names
+            node_id = properties.get("id") or properties.get("node_id") or properties.get("_id")
         
         if not node_id:
+            logger.warning(f"Could not determine node ID for labels: {labels}, properties: {list(properties.keys())}")
             return None
         
         return {
@@ -307,8 +311,14 @@ class Neo4jGraphService:
         start_time = time.time()
         logger.debug(f"Executing expand_section query for section_id: {section_id}")
         
+        # Try multiple property names to find the section node
+        # First try section_id, then try if the ID matches any property
         query = """
-        MATCH (s:Section {section_id: $section_id})-[:CONTAINS]->(ch:Chunk)
+        MATCH (s:Section)
+        WHERE s.section_id = $section_id 
+           OR s.id = $section_id
+        WITH s
+        MATCH (s)-[:CONTAINS]->(ch:Chunk)
         RETURN s, ch
         ORDER BY ch.chunk_index
         """
@@ -365,20 +375,30 @@ class Neo4jGraphService:
         start_time = time.time()
         logger.debug(f"Executing get_node_details query for node_id: {node_id}, labels: {node_labels}")
         
-        # Build query based on node type
+        # Build query based on node type with fallback options
         label_str = ":".join(node_labels)
         
         if "Company" in node_labels:
-            query = f"MATCH (n:{label_str} {{cik: $node_id}}) RETURN n LIMIT 1"
+            query = f"""MATCH (n:{label_str})
+                       WHERE n.cik = $node_id OR n.id = $node_id
+                       RETURN n LIMIT 1"""
         elif "Filing" in node_labels:
-            query = f"MATCH (n:{label_str} {{accession_number: $node_id}}) RETURN n LIMIT 1"
+            query = f"""MATCH (n:{label_str})
+                       WHERE n.accession_number = $node_id OR n.id = $node_id
+                       RETURN n LIMIT 1"""
         elif "Section" in node_labels:
-            query = f"MATCH (n:{label_str} {{section_id: $node_id}}) RETURN n LIMIT 1"
+            query = f"""MATCH (n:{label_str})
+                       WHERE n.section_id = $node_id OR n.id = $node_id
+                       RETURN n LIMIT 1"""
         elif "Chunk" in node_labels:
-            query = f"MATCH (n:{label_str} {{chunk_id: $node_id}}) RETURN n LIMIT 1"
+            query = f"""MATCH (n:{label_str})
+                       WHERE n.chunk_id = $node_id OR n.id = $node_id
+                       RETURN n LIMIT 1"""
         else:
-            # Generic query
-            query = f"MATCH (n:{label_str}) WHERE id(n) = $node_id OR n.id = $node_id RETURN n LIMIT 1"
+            # Generic query - try multiple approaches
+            query = f"""MATCH (n:{label_str})
+                       WHERE n.id = $node_id
+                       RETURN n LIMIT 1"""
         
         logger.debug(f"Query: {query.strip()}")
         logger.debug(f"Parameters: node_id={node_id}")
@@ -410,20 +430,21 @@ class Neo4jGraphService:
         
         label_str = ":".join(node_labels)
         
-        # Determine ID property based on labels
+        # Build WHERE clause with multiple fallback options
         if "Company" in node_labels:
-            id_prop = "cik"
+            where_clause = "n.cik = $node_id OR n.id = $node_id"
         elif "Filing" in node_labels:
-            id_prop = "accession_number"
+            where_clause = "n.accession_number = $node_id OR n.id = $node_id"
         elif "Section" in node_labels:
-            id_prop = "section_id"
+            where_clause = "n.section_id = $node_id OR n.id = $node_id"
         elif "Chunk" in node_labels:
-            id_prop = "chunk_id"
+            where_clause = "n.chunk_id = $node_id OR n.id = $node_id"
         else:
-            id_prop = "id"
+            where_clause = "n.id = $node_id"
         
         query = f"""
-        MATCH (n:{label_str} {{{id_prop}: $node_id}})
+        MATCH (n:{label_str})
+        WHERE {where_clause}
         OPTIONAL MATCH (n)-[r_out]->(target)
         OPTIONAL MATCH (source)-[r_in]->(n)
         RETURN 
@@ -432,7 +453,7 @@ class Neo4jGraphService:
         """
         
         logger.debug(f"Query: {query.strip()}")
-        logger.debug(f"Parameters: node_id={node_id}, id_prop={id_prop}")
+        logger.debug(f"Parameters: node_id={node_id}")
         
         results = self.client.execute_query(query, {"node_id": node_id})
         

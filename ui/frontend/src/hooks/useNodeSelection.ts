@@ -38,13 +38,26 @@ export function useNodeSelection(): UseNodeSelectionReturn {
       const details = await graphApi.getNodeDetails(nodeId, labels);
       logger.info('Node details received', { 
         nodeId, 
-        relationshipCount: details.relationships.length,
-        hasContent: !!details.node.properties.content
+        relationshipCount: details.relationships?.length || 0,
+        hasContent: !!details.node?.properties?.content,
+        propertyCount: details.node?.properties ? Object.keys(details.node.properties).length : 0
       }, 'useNodeSelection');
+      
+      // Ensure node has properties object
+      if (!details.node.properties) {
+        details.node.properties = {};
+      }
+      
+      // Ensure relationships array exists
+      if (!details.relationships) {
+        details.relationships = [];
+      }
+      
       setNodeDetails(details);
+      setError(null);
     } catch (err: any) {
-      const errorMessage = err.response?.data?.detail || 'Failed to load node details';
-      logger.error('Failed to fetch node details', { nodeId, labels, error: errorMessage }, 'useNodeSelection', err);
+      const errorMessage = err.response?.data?.detail || err.message || 'Failed to load node details';
+      logger.error('Failed to fetch node details', { nodeId, labels, error: errorMessage, fullError: err }, 'useNodeSelection', err);
       setError(errorMessage);
       setNodeDetails(null);
     } finally {

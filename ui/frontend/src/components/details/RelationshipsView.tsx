@@ -26,7 +26,14 @@ export default function RelationshipsView({
   };
 
   if (relationships.length === 0) {
-    return null;
+    return (
+      <div className="relationships-view">
+        <h3 className="relationships-view-title">Relationships</h3>
+        <div className="relationships-empty">
+          <p>No relationships found for this node.</p>
+        </div>
+      </div>
+    );
   }
 
   // Group by direction
