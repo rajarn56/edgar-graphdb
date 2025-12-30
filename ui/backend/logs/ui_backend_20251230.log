@@ -1,32 +1,133 @@
-2025-12-30 01:21:41.957 | INFO     | utils.logger_config:setup_logger:111 | Logger configured: ui_backend
-2025-12-30 01:21:41.957 | INFO     | utils.logger_config:setup_logger:112 | Log file: /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/ui/backend/logs/ui_backend_20251230.log
-2025-12-30 01:21:41.957 | INFO     | utils.logger_config:setup_logger:113 | Error log file: /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/ui/backend/logs/errors_20251230.log
-2025-12-30 01:21:41.957 | INFO     | utils.logger_config:setup_logger:114 | Access log file: /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/ui/backend/logs/access_20251230.log
-2025-12-30 01:21:41.958 | INFO     | utils.logger_config:setup_logger:115 | Log level: INFO
-2025-12-30 01:21:42.171 | INFO     | app:startup_event:87 | ============================================================
-2025-12-30 01:21:42.171 | INFO     | app:startup_event:88 | Neo4j EDGAR Graph API - Starting
-2025-12-30 01:21:42.171 | INFO     | app:startup_event:89 | ============================================================
-2025-12-30 01:21:42.171 | INFO     | app:startup_event:90 | Environment: development
-2025-12-30 01:21:42.171 | INFO     | app:startup_event:91 | Neo4j URI: bolt://localhost:7687
-2025-12-30 01:22:08.244 | INFO     | app:dispatch:39 | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
-2025-12-30 01:22:08.245 | INFO     | services.neo4j_service:__init__:104 | Initializing Neo4jGraphService
-2025-12-30 01:22:08.245 | INFO     | neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
-2025-12-30 01:22:08.261 | INFO     | neo4j_client:connect:70 | Successfully connected to Neo4j
-2025-12-30 01:22:08.261 | INFO     | services.neo4j_service:__init__:108 | Neo4jGraphService initialized successfully
-2025-12-30 01:22:08.356 | INFO     | services.neo4j_service:get_complete_graph:343 | get_complete_graph completed for AAPL: 92 nodes, 91 edges in 0.094s
-2025-12-30 01:22:08.370 | INFO     | app:dispatch:50 | Response: GET /api/graph/AAPL | Status: 200 | Time: 0.126s
-2025-12-30 01:22:08.380 | INFO     | app:dispatch:39 | Request: GET /api/ticker/AAPL/stats | Client: 127.0.0.1 | Query params: {}
-2025-12-30 01:22:08.381 | INFO     | api.ticker:get_ticker_stats:116 | Getting stats for ticker: AAPL
-2025-12-30 01:22:08.381 | INFO     | services.neo4j_service:__init__:104 | Initializing Neo4jGraphService
-2025-12-30 01:22:08.381 | INFO     | neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
-2025-12-30 01:22:08.387 | INFO     | neo4j_client:connect:70 | Successfully connected to Neo4j
-2025-12-30 01:22:08.387 | INFO     | services.neo4j_service:__init__:108 | Neo4jGraphService initialized successfully
-2025-12-30 01:22:08.391 | INFO     | api.ticker:get_ticker_stats:127 | Stats retrieved for AAPL: 12 filings, 23 sections, 56 chunks in 0.010s
-2025-12-30 01:22:08.391 | INFO     | app:dispatch:50 | Response: GET /api/ticker/AAPL/stats | Status: 200 | Time: 0.011s
-2025-12-30 01:23:09.077 | INFO     | app:dispatch:39 | Request: GET /api/graph/node/0001047469-98-000148_Item1 | Client: 127.0.0.1 | Query params: {'labels': 'Section'}
-2025-12-30 01:23:09.079 | INFO     | api.graph:get_node_details:134 | Getting details for node 0001047469-98-000148_Item1 with labels: ['Section']
-2025-12-30 01:23:09.090 | INFO     | services.neo4j_service:get_node_relationships:605 | get_node_relationships completed for 0001047469-98-000148_Item1: 1 incoming, 0 outgoing in 0.006s
-2025-12-30 01:23:09.091 | INFO     | api.graph:get_node_details:171 | Node details retrieved for 0001047469-98-000148_Item1: 1 incoming, 0 outgoing relationships in 0.012s
-2025-12-30 01:23:09.091 | INFO     | app:dispatch:50 | Response: GET /api/graph/node/0001047469-98-000148_Item1 | Status: 200 | Time: 0.014s
-2025-12-30 01:25:08.763 | INFO     | app:shutdown_event:97 | ============================================================
-2025-12-30 01:25:08.763 | INFO     | app:shutdown_event:98 | Neo4j EDGAR Graph API - Shutting down
+2025-12-30 01:34:40.765 | INFO     | utils.logger_config:setup_logger:111 | Logger configured: ui_backend
+2025-12-30 01:34:40.766 | INFO     | utils.logger_config:setup_logger:112 | Log file: /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/ui/backend/logs/ui_backend_20251230.log
+2025-12-30 01:34:40.766 | INFO     | utils.logger_config:setup_logger:113 | Error log file: /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/ui/backend/logs/errors_20251230.log
+2025-12-30 01:34:40.766 | INFO     | utils.logger_config:setup_logger:114 | Access log file: /Users/rajarn/Learn-Agentic/edgar-poc/edgar-graphdb/ui/backend/logs/access_20251230.log
+2025-12-30 01:34:40.766 | INFO     | utils.logger_config:setup_logger:115 | Log level: INFO
+2025-12-30 01:34:40.978 | INFO     | app:startup_event:87 | ============================================================
+2025-12-30 01:34:40.979 | INFO     | app:startup_event:88 | Neo4j EDGAR Graph API - Starting
+2025-12-30 01:34:40.979 | INFO     | app:startup_event:89 | ============================================================
+2025-12-30 01:34:40.979 | INFO     | app:startup_event:90 | Environment: development
+2025-12-30 01:34:40.979 | INFO     | app:startup_event:91 | Neo4j URI: bolt://localhost:7687
+2025-12-30 01:35:05.032 | INFO     | app:dispatch:39 | Request: GET /api/graph/AAPL | Client: 127.0.0.1 | Query params: {}
+2025-12-30 01:35:05.033 | INFO     | services.neo4j_service:__init__:104 | Initializing Neo4jGraphService
+2025-12-30 01:35:05.034 | INFO     | neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-30 01:35:05.045 | INFO     | neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-30 01:35:05.045 | INFO     | services.neo4j_service:__init__:108 | Neo4jGraphService initialized successfully
+2025-12-30 01:35:05.142 | INFO     | services.neo4j_service:get_complete_graph:343 | get_complete_graph completed for AAPL: 92 nodes, 91 edges in 0.097s
+2025-12-30 01:35:05.155 | INFO     | app:dispatch:50 | Response: GET /api/graph/AAPL | Status: 200 | Time: 0.124s
+2025-12-30 01:35:05.166 | INFO     | app:dispatch:39 | Request: GET /api/ticker/AAPL/stats | Client: 127.0.0.1 | Query params: {}
+2025-12-30 01:35:05.167 | INFO     | api.ticker:get_ticker_stats:116 | Getting stats for ticker: AAPL
+2025-12-30 01:35:05.167 | INFO     | services.neo4j_service:__init__:104 | Initializing Neo4jGraphService
+2025-12-30 01:35:05.167 | INFO     | neo4j_client:__init__:55 | Initializing Neo4j client: bolt://localhost:7687 (user: neo4j)
+2025-12-30 01:35:05.173 | INFO     | neo4j_client:connect:70 | Successfully connected to Neo4j
+2025-12-30 01:35:05.173 | INFO     | services.neo4j_service:__init__:108 | Neo4jGraphService initialized successfully
+2025-12-30 01:35:05.177 | INFO     | api.ticker:get_ticker_stats:127 | Stats retrieved for AAPL: 12 filings, 23 sections, 56 chunks in 0.010s
+2025-12-30 01:35:05.178 | INFO     | app:dispatch:50 | Response: GET /api/ticker/AAPL/stats | Status: 200 | Time: 0.011s
+2025-12-30 01:35:33.595 | INFO     | app:dispatch:39 | Request: GET /api/graph/node/0001047469-98-000148 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
+2025-12-30 01:35:33.596 | INFO     | api.graph:get_node_details:134 | Getting details for node 0001047469-98-000148 with labels: ['Filing']
+2025-12-30 01:35:33.606 | INFO     | services.neo4j_service:get_node_relationships:605 | get_node_relationships completed for 0001047469-98-000148: 0 incoming, 2 outgoing in 0.005s
+2025-12-30 01:35:33.606 | INFO     | api.graph:get_node_details:171 | Node details retrieved for 0001047469-98-000148: 0 incoming, 2 outgoing relationships in 0.010s
+2025-12-30 01:35:33.607 | INFO     | app:dispatch:50 | Response: GET /api/graph/node/0001047469-98-000148 | Status: 200 | Time: 0.012s
+2025-12-30 01:35:35.446 | INFO     | app:dispatch:39 | Request: GET /api/graph/node/0001047469-98-000148 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
+2025-12-30 01:35:35.447 | INFO     | api.graph:get_node_details:134 | Getting details for node 0001047469-98-000148 with labels: ['Filing']
+2025-12-30 01:35:35.456 | INFO     | services.neo4j_service:get_node_relationships:605 | get_node_relationships completed for 0001047469-98-000148: 0 incoming, 2 outgoing in 0.004s
+2025-12-30 01:35:35.456 | INFO     | api.graph:get_node_details:171 | Node details retrieved for 0001047469-98-000148: 0 incoming, 2 outgoing relationships in 0.009s
+2025-12-30 01:35:35.457 | INFO     | app:dispatch:50 | Response: GET /api/graph/node/0001047469-98-000148 | Status: 200 | Time: 0.011s
+2025-12-30 01:35:36.203 | INFO     | app:dispatch:39 | Request: GET /api/graph/node/0001047469-98-000148_Item1 | Client: 127.0.0.1 | Query params: {'labels': 'Section'}
+2025-12-30 01:35:36.204 | INFO     | api.graph:get_node_details:134 | Getting details for node 0001047469-98-000148_Item1 with labels: ['Section']
+2025-12-30 01:35:36.214 | INFO     | services.neo4j_service:get_node_relationships:605 | get_node_relationships completed for 0001047469-98-000148_Item1: 1 incoming, 0 outgoing in 0.005s
+2025-12-30 01:35:36.214 | INFO     | api.graph:get_node_details:171 | Node details retrieved for 0001047469-98-000148_Item1: 1 incoming, 0 outgoing relationships in 0.010s
+2025-12-30 01:35:36.214 | INFO     | app:dispatch:50 | Response: GET /api/graph/node/0001047469-98-000148_Item1 | Status: 200 | Time: 0.011s
+2025-12-30 01:35:39.181 | INFO     | app:dispatch:39 | Request: GET /api/graph/node/0001047469-98-000148_Item1 | Client: 127.0.0.1 | Query params: {'labels': 'Section'}
+2025-12-30 01:35:39.182 | INFO     | api.graph:get_node_details:134 | Getting details for node 0001047469-98-000148_Item1 with labels: ['Section']
+2025-12-30 01:35:39.191 | INFO     | services.neo4j_service:get_node_relationships:605 | get_node_relationships completed for 0001047469-98-000148_Item1: 1 incoming, 0 outgoing in 0.004s
+2025-12-30 01:35:39.191 | INFO     | api.graph:get_node_details:171 | Node details retrieved for 0001047469-98-000148_Item1: 1 incoming, 0 outgoing relationships in 0.009s
+2025-12-30 01:35:39.192 | INFO     | app:dispatch:50 | Response: GET /api/graph/node/0001047469-98-000148_Item1 | Status: 200 | Time: 0.011s
+2025-12-30 01:35:39.368 | INFO     | app:dispatch:39 | Request: GET /api/graph/node/0001047469-98-000148_Item1 | Client: 127.0.0.1 | Query params: {'labels': 'Section'}
+2025-12-30 01:35:39.369 | INFO     | api.graph:get_node_details:134 | Getting details for node 0001047469-98-000148_Item1 with labels: ['Section']
+2025-12-30 01:35:39.379 | INFO     | services.neo4j_service:get_node_relationships:605 | get_node_relationships completed for 0001047469-98-000148_Item1: 1 incoming, 0 outgoing in 0.005s
+2025-12-30 01:35:39.379 | INFO     | api.graph:get_node_details:171 | Node details retrieved for 0001047469-98-000148_Item1: 1 incoming, 0 outgoing relationships in 0.010s
+2025-12-30 01:35:39.380 | INFO     | app:dispatch:50 | Response: GET /api/graph/node/0001047469-98-000148_Item1 | Status: 200 | Time: 0.012s
+2025-12-30 01:35:39.381 | INFO     | app:dispatch:39 | Request: GET /api/graph/AAPL/expand/0001047469-98-000148_Item1 | Client: 127.0.0.1 | Query params: {'node_type': 'section'}
+2025-12-30 01:35:39.382 | INFO     | api.graph:expand_node:78 | Expanding node 0001047469-98-000148_Item1 (type: section) for ticker: AAPL
+2025-12-30 01:35:39.385 | INFO     | services.neo4j_service:expand_section:465 | expand_section completed for 0001047469-98-000148_Item1: 0 nodes, 0 edges in 0.003s
+2025-12-30 01:35:39.385 | WARNING  | api.graph:expand_node:92 | No data found for node: 0001047469-98-000148_Item1
+2025-12-30 01:35:39.386 | INFO     | app:dispatch:50 | Response: GET /api/graph/AAPL/expand/0001047469-98-000148_Item1 | Status: 404 | Time: 0.005s
+2025-12-30 01:35:40.205 | INFO     | app:dispatch:39 | Request: GET /api/graph/AAPL/expand/0001047469-98-000148_Item1 | Client: 127.0.0.1 | Query params: {'node_type': 'section'}
+2025-12-30 01:35:40.206 | INFO     | api.graph:expand_node:78 | Expanding node 0001047469-98-000148_Item1 (type: section) for ticker: AAPL
+2025-12-30 01:35:40.210 | INFO     | services.neo4j_service:expand_section:465 | expand_section completed for 0001047469-98-000148_Item1: 0 nodes, 0 edges in 0.004s
+2025-12-30 01:35:40.211 | WARNING  | api.graph:expand_node:92 | No data found for node: 0001047469-98-000148_Item1
+2025-12-30 01:35:40.212 | INFO     | app:dispatch:50 | Response: GET /api/graph/AAPL/expand/0001047469-98-000148_Item1 | Status: 404 | Time: 0.007s
+2025-12-30 01:35:41.660 | INFO     | app:dispatch:39 | Request: GET /api/graph/node/0000912057-97-019277 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
+2025-12-30 01:35:41.661 | INFO     | api.graph:get_node_details:134 | Getting details for node 0000912057-97-019277 with labels: ['Filing']
+2025-12-30 01:35:41.670 | INFO     | services.neo4j_service:get_node_relationships:605 | get_node_relationships completed for 0000912057-97-019277: 0 incoming, 2 outgoing in 0.004s
+2025-12-30 01:35:41.671 | INFO     | api.graph:get_node_details:171 | Node details retrieved for 0000912057-97-019277: 0 incoming, 2 outgoing relationships in 0.010s
+2025-12-30 01:35:41.671 | INFO     | app:dispatch:50 | Response: GET /api/graph/node/0000912057-97-019277 | Status: 200 | Time: 0.011s
+2025-12-30 01:35:41.857 | INFO     | app:dispatch:39 | Request: GET /api/graph/node/0000912057-97-019277 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
+2025-12-30 01:35:41.857 | INFO     | api.graph:get_node_details:134 | Getting details for node 0000912057-97-019277 with labels: ['Filing']
+2025-12-30 01:35:41.868 | INFO     | services.neo4j_service:get_node_relationships:605 | get_node_relationships completed for 0000912057-97-019277: 0 incoming, 2 outgoing in 0.005s
+2025-12-30 01:35:41.868 | INFO     | api.graph:get_node_details:171 | Node details retrieved for 0000912057-97-019277: 0 incoming, 2 outgoing relationships in 0.011s
+2025-12-30 01:35:41.869 | INFO     | app:dispatch:39 | Request: GET /api/graph/AAPL/expand/0000912057-97-019277 | Client: 127.0.0.1 | Query params: {'node_type': 'filing'}
+2025-12-30 01:35:41.869 | INFO     | api.graph:expand_node:78 | Expanding node 0000912057-97-019277 (type: filing) for ticker: AAPL
+2025-12-30 01:35:41.875 | INFO     | services.neo4j_service:expand_filing:401 | expand_filing completed for 0000912057-97-019277: 2 nodes, 1 edges in 0.005s
+2025-12-30 01:35:41.875 | INFO     | api.graph:expand_node:100 | Node 0000912057-97-019277 expanded: 2 nodes, 1 edges in 0.005s
+2025-12-30 01:35:41.875 | INFO     | app:dispatch:50 | Response: GET /api/graph/node/0000912057-97-019277 | Status: 200 | Time: 0.019s
+2025-12-30 01:35:41.875 | INFO     | app:dispatch:50 | Response: GET /api/graph/AAPL/expand/0000912057-97-019277 | Status: 200 | Time: 0.007s
+2025-12-30 01:35:43.291 | INFO     | app:dispatch:39 | Request: GET /api/graph/node/0000912057-97-019277_Item1 | Client: 127.0.0.1 | Query params: {'labels': 'Section'}
+2025-12-30 01:35:43.292 | INFO     | api.graph:get_node_details:134 | Getting details for node 0000912057-97-019277_Item1 with labels: ['Section']
+2025-12-30 01:35:43.302 | INFO     | services.neo4j_service:get_node_relationships:605 | get_node_relationships completed for 0000912057-97-019277_Item1: 1 incoming, 0 outgoing in 0.005s
+2025-12-30 01:35:43.302 | INFO     | api.graph:get_node_details:171 | Node details retrieved for 0000912057-97-019277_Item1: 1 incoming, 0 outgoing relationships in 0.010s
+2025-12-30 01:35:43.303 | INFO     | app:dispatch:50 | Response: GET /api/graph/node/0000912057-97-019277_Item1 | Status: 200 | Time: 0.012s
+2025-12-30 01:35:43.464 | INFO     | app:dispatch:39 | Request: GET /api/graph/node/0000912057-97-019277_Item1 | Client: 127.0.0.1 | Query params: {'labels': 'Section'}
+2025-12-30 01:35:43.465 | INFO     | api.graph:get_node_details:134 | Getting details for node 0000912057-97-019277_Item1 with labels: ['Section']
+2025-12-30 01:35:43.474 | INFO     | services.neo4j_service:get_node_relationships:605 | get_node_relationships completed for 0000912057-97-019277_Item1: 1 incoming, 0 outgoing in 0.004s
+2025-12-30 01:35:43.474 | INFO     | api.graph:get_node_details:171 | Node details retrieved for 0000912057-97-019277_Item1: 1 incoming, 0 outgoing relationships in 0.009s
+2025-12-30 01:35:43.474 | INFO     | app:dispatch:39 | Request: GET /api/graph/AAPL/expand/0000912057-97-019277_Item1 | Client: 127.0.0.1 | Query params: {'node_type': 'section'}
+2025-12-30 01:35:43.475 | INFO     | api.graph:expand_node:78 | Expanding node 0000912057-97-019277_Item1 (type: section) for ticker: AAPL
+2025-12-30 01:35:43.479 | INFO     | services.neo4j_service:expand_section:465 | expand_section completed for 0000912057-97-019277_Item1: 0 nodes, 0 edges in 0.004s
+2025-12-30 01:35:43.480 | WARNING  | api.graph:expand_node:92 | No data found for node: 0000912057-97-019277_Item1
+2025-12-30 01:35:43.480 | INFO     | app:dispatch:50 | Response: GET /api/graph/node/0000912057-97-019277_Item1 | Status: 200 | Time: 0.016s
+2025-12-30 01:35:43.481 | INFO     | app:dispatch:50 | Response: GET /api/graph/AAPL/expand/0000912057-97-019277_Item1 | Status: 404 | Time: 0.007s
+2025-12-30 01:35:45.812 | INFO     | app:dispatch:39 | Request: GET /api/graph/node/0000320193-25-000079 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
+2025-12-30 01:35:45.813 | INFO     | api.graph:get_node_details:134 | Getting details for node 0000320193-25-000079 with labels: ['Filing']
+2025-12-30 01:35:45.824 | INFO     | services.neo4j_service:get_node_relationships:605 | get_node_relationships completed for 0000320193-25-000079: 0 incoming, 5 outgoing in 0.007s
+2025-12-30 01:35:45.825 | INFO     | api.graph:get_node_details:171 | Node details retrieved for 0000320193-25-000079: 0 incoming, 5 outgoing relationships in 0.012s
+2025-12-30 01:35:45.825 | INFO     | app:dispatch:50 | Response: GET /api/graph/node/0000320193-25-000079 | Status: 200 | Time: 0.013s
+2025-12-30 01:35:45.991 | INFO     | app:dispatch:39 | Request: GET /api/graph/node/0000320193-25-000079 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
+2025-12-30 01:35:45.991 | INFO     | api.graph:get_node_details:134 | Getting details for node 0000320193-25-000079 with labels: ['Filing']
+2025-12-30 01:35:46.001 | INFO     | services.neo4j_service:get_node_relationships:605 | get_node_relationships completed for 0000320193-25-000079: 0 incoming, 5 outgoing in 0.005s
+2025-12-30 01:35:46.002 | INFO     | api.graph:get_node_details:171 | Node details retrieved for 0000320193-25-000079: 0 incoming, 5 outgoing relationships in 0.010s
+2025-12-30 01:35:46.002 | INFO     | app:dispatch:39 | Request: GET /api/graph/AAPL/expand/0000320193-25-000079 | Client: 127.0.0.1 | Query params: {'node_type': 'filing'}
+2025-12-30 01:35:46.003 | INFO     | api.graph:expand_node:78 | Expanding node 0000320193-25-000079 (type: filing) for ticker: AAPL
+2025-12-30 01:35:46.010 | INFO     | services.neo4j_service:expand_filing:401 | expand_filing completed for 0000320193-25-000079: 4 nodes, 3 edges in 0.006s
+2025-12-30 01:35:46.010 | INFO     | api.graph:expand_node:100 | Node 0000320193-25-000079 expanded: 4 nodes, 3 edges in 0.006s
+2025-12-30 01:35:46.010 | INFO     | app:dispatch:50 | Response: GET /api/graph/node/0000320193-25-000079 | Status: 200 | Time: 0.020s
+2025-12-30 01:35:46.011 | INFO     | app:dispatch:50 | Response: GET /api/graph/AAPL/expand/0000320193-25-000079 | Status: 200 | Time: 0.009s
+2025-12-30 01:35:47.797 | INFO     | app:dispatch:39 | Request: GET /api/graph/node/0000320193-25-000079_Item7 | Client: 127.0.0.1 | Query params: {'labels': 'Section,PeriodicReportSection'}
+2025-12-30 01:35:47.798 | INFO     | api.graph:get_node_details:134 | Getting details for node 0000320193-25-000079_Item7 with labels: ['Section', 'PeriodicReportSection']
+2025-12-30 01:35:47.815 | INFO     | services.neo4j_service:get_node_relationships:605 | get_node_relationships completed for 0000320193-25-000079_Item7: 1 incoming, 0 outgoing in 0.013s
+2025-12-30 01:35:47.816 | INFO     | api.graph:get_node_details:171 | Node details retrieved for 0000320193-25-000079_Item7: 1 incoming, 0 outgoing relationships in 0.018s
+2025-12-30 01:35:47.816 | INFO     | app:dispatch:50 | Response: GET /api/graph/node/0000320193-25-000079_Item7 | Status: 200 | Time: 0.019s
+2025-12-30 01:35:47.970 | INFO     | app:dispatch:39 | Request: GET /api/graph/node/0000320193-25-000079_Item7 | Client: 127.0.0.1 | Query params: {'labels': 'Section,PeriodicReportSection'}
+2025-12-30 01:35:47.971 | INFO     | api.graph:get_node_details:134 | Getting details for node 0000320193-25-000079_Item7 with labels: ['Section', 'PeriodicReportSection']
+2025-12-30 01:35:47.986 | INFO     | services.neo4j_service:get_node_relationships:605 | get_node_relationships completed for 0000320193-25-000079_Item7: 1 incoming, 0 outgoing in 0.011s
+2025-12-30 01:35:47.986 | INFO     | api.graph:get_node_details:171 | Node details retrieved for 0000320193-25-000079_Item7: 1 incoming, 0 outgoing relationships in 0.015s
+2025-12-30 01:35:47.986 | INFO     | app:dispatch:39 | Request: GET /api/graph/AAPL/expand/0000320193-25-000079_Item7 | Client: 127.0.0.1 | Query params: {'node_type': 'section'}
+2025-12-30 01:35:47.987 | INFO     | api.graph:expand_node:78 | Expanding node 0000320193-25-000079_Item7 (type: section) for ticker: AAPL
+2025-12-30 01:35:47.996 | INFO     | services.neo4j_service:expand_section:465 | expand_section completed for 0000320193-25-000079_Item7: 8 nodes, 7 edges in 0.010s
+2025-12-30 01:35:47.997 | INFO     | api.graph:expand_node:100 | Node 0000320193-25-000079_Item7 expanded: 8 nodes, 7 edges in 0.010s
+2025-12-30 01:35:47.999 | INFO     | app:dispatch:50 | Response: GET /api/graph/node/0000320193-25-000079_Item7 | Status: 200 | Time: 0.029s
+2025-12-30 01:35:47.999 | INFO     | app:dispatch:50 | Response: GET /api/graph/AAPL/expand/0000320193-25-000079_Item7 | Status: 200 | Time: 0.013s
+2025-12-30 01:35:50.241 | INFO     | app:dispatch:39 | Request: GET /api/graph/node/0000320193-25-000079_Item7_chunk_0 | Client: 127.0.0.1 | Query params: {'labels': 'Chunk'}
+2025-12-30 01:35:50.242 | INFO     | api.graph:get_node_details:134 | Getting details for node 0000320193-25-000079_Item7_chunk_0 with labels: ['Chunk']
+2025-12-30 01:35:50.254 | INFO     | services.neo4j_service:get_node_relationships:605 | get_node_relationships completed for 0000320193-25-000079_Item7_chunk_0: 0 incoming, 0 outgoing in 0.003s
+2025-12-30 01:35:50.254 | INFO     | api.graph:get_node_details:171 | Node details retrieved for 0000320193-25-000079_Item7_chunk_0: 0 incoming, 0 outgoing relationships in 0.012s
+2025-12-30 01:35:50.255 | INFO     | app:dispatch:50 | Response: GET /api/graph/node/0000320193-25-000079_Item7_chunk_0 | Status: 200 | Time: 0.013s
+2025-12-30 01:36:24.926 | INFO     | app:dispatch:39 | Request: GET /api/graph/node/0000320193-25-000066 | Client: 127.0.0.1 | Query params: {'labels': 'Filing'}
+2025-12-30 01:36:24.927 | INFO     | api.graph:get_node_details:134 | Getting details for node 0000320193-25-000066 with labels: ['Filing']
+2025-12-30 01:36:24.936 | INFO     | services.neo4j_service:get_node_relationships:605 | get_node_relationships completed for 0000320193-25-000066: 0 incoming, 2 outgoing in 0.004s
+2025-12-30 01:36:24.937 | INFO     | api.graph:get_node_details:171 | Node details retrieved for 0000320193-25-000066: 0 incoming, 2 outgoing relationships in 0.010s
+2025-12-30 01:36:24.937 | INFO     | app:dispatch:50 | Response: GET /api/graph/node/0000320193-25-000066 | Status: 200 | Time: 0.011s
+2025-12-30 01:37:31.030 | INFO     | app:shutdown_event:97 | ============================================================
+2025-12-30 01:37:31.030 | INFO     | app:shutdown_event:98 | Neo4j EDGAR Graph API - Shutting down
+2025-12-30 01:37:31.030 | INFO     | app:shutdown_event:99 | ============================================================

@@ -1,0 +1,289 @@
+[Debug] [vite] connecting... (client, line 495)
+[Debug] [vite] connected. (client, line 618)
+[Log] [2025-12-30T09:34:57.227Z] [INFO] Logger initialized – {logLevel: "info", logToFile: true, sessionId: "session_1767087297227_8saqp5dzf", …} (logger.ts, line 67)
+{logLevel: "info", logToFile: true, sessionId: "session_1767087297227_8saqp5dzf", fileSystemAccessAvailable: false}Object
+[Log] [2025-12-30T09:34:57.342Z] [INFO] [App] App initialized – {apiBaseUrl: "http://localhost:8000", environment: "development"} (logger.ts, line 67)
+[Log] [2025-12-30T09:34:57.342Z] [INFO] [App] App initialized – {apiBaseUrl: "http://localhost:8000", environment: "development"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:05.015Z] [INFO] [AppHeader] Ticker submitted – {ticker: "AAPL"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:05.015Z] [INFO] [App] Ticker submitted – {ticker: "AAPL"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:05.016Z] [INFO] [useGraphData] Loading graph – {ticker: "AAPL"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:05.163Z] [INFO] [useGraphData] Graph loaded – {nodeCount: 92, edgeCount: 91} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:05.192Z] [INFO] [App] Stats loaded – {company: Object, filings_count: 12, sections_count: 23, …} (logger.ts, line 67)
+{company: Object, filings_count: 12, sections_count: 23, chunks_count: 56, financial_statements_count: 0}Object
+[Log] [2025-12-30T09:35:15.970Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0001047469-98-000148", isExpanded: true} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:15.970Z] [INFO] [useGraphData] Expanding node (UI) – {nodeId: "0001047469-98-000148"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:24.488Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0001047469-98-000148", isExpanded: false} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:24.489Z] [INFO] [useGraphData] Collapsing node (UI) – {nodeId: "0001047469-98-000148"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:25.043Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0001047469-98-000148", isExpanded: true} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:25.044Z] [INFO] [useGraphData] Expanding node (UI) – {nodeId: "0001047469-98-000148"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:26.257Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0001047469-98-000148", isExpanded: false} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:26.257Z] [INFO] [useGraphData] Collapsing node (UI) – {nodeId: "0001047469-98-000148"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:27.009Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0001047469-98-000148", isExpanded: true} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:27.009Z] [INFO] [useGraphData] Expanding node (UI) – {nodeId: "0001047469-98-000148"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:30.265Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0001047469-98-000148", isExpanded: false} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:30.265Z] [INFO] [useGraphData] Collapsing node (UI) – {nodeId: "0001047469-98-000148"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:30.817Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0001047469-98-000148", isExpanded: true} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:30.817Z] [INFO] [useGraphData] Expanding node (UI) – {nodeId: "0001047469-98-000148"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:33.585Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0001047469-98-000148", labels: ["Filing"], nodeType: "Filing", …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148", labels: ["Filing"], nodeType: "Filing", hasOnNodeClick: true, nodePosition: {x: -1250, y: 510}}Object
+[Log] [2025-12-30T09:35:33.585Z] [INFO] [App] Node clicked in App – {nodeId: "0001047469-98-000148", labels: ["Filing"]} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:33.585Z] [INFO] [usePanelState] Right panel expanded – {previousState: {collapsed: true, visible: true, expandedWidth: 400}, newState: {collapsed: false, visible: true, expandedWidth: 400}} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:33.586Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0001047469-98-000148", labels: ["Filing"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148", labels: ["Filing"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T09:35:33.586Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0001047469-98-000148", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T09:35:33.608Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0001047469-98-000148", relationshipCount: 2, hasContent: false, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148", relationshipCount: 2, hasContent: false, propertyCount: 10}Object
+[Log] [2025-12-30T09:35:33.608Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0001047469-98-000148", propertyCount: 10, relationshipCount: 2, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148", propertyCount: 10, relationshipCount: 2, hasContent: false}Object
+[Log] [2025-12-30T09:35:33.609Z] [INFO] [App] Node selection completed – {nodeId: "0001047469-98-000148", hasDetails: false, loading: false, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148", hasDetails: false, loading: false, error: null}Object
+[Log] [2025-12-30T09:35:35.437Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0001047469-98-000148", labels: ["Filing"], nodeType: "Filing", …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148", labels: ["Filing"], nodeType: "Filing", hasOnNodeClick: true, nodePosition: {x: -1250, y: 510}}Object
+[Log] [2025-12-30T09:35:35.437Z] [INFO] [App] Node clicked in App – {nodeId: "0001047469-98-000148", labels: ["Filing"]} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:35.437Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0001047469-98-000148", labels: ["Filing"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148", labels: ["Filing"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T09:35:35.438Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0001047469-98-000148", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T09:35:35.459Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0001047469-98-000148", relationshipCount: 2, hasContent: false, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148", relationshipCount: 2, hasContent: false, propertyCount: 10}Object
+[Log] [2025-12-30T09:35:35.459Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0001047469-98-000148", propertyCount: 10, relationshipCount: 2, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148", propertyCount: 10, relationshipCount: 2, hasContent: false}Object
+[Log] [2025-12-30T09:35:35.459Z] [INFO] [App] Node selection completed – {nodeId: "0001047469-98-000148", hasDetails: true, loading: false, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148", hasDetails: true, loading: false, error: null}Object
+[Log] [2025-12-30T09:35:36.195Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0001047469-98-000148_Item1", labels: ["Section"], nodeType: "Section", …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", labels: ["Section"], nodeType: "Section", hasOnNodeClick: true, nodePosition: {x: -1315.5410025003903, y: 880.9357209831893}}Object
+[Log] [2025-12-30T09:35:36.195Z] [INFO] [App] Node clicked in App – {nodeId: "0001047469-98-000148_Item1", labels: ["Section"]} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:36.195Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0001047469-98-000148_Item1", labels: ["Section"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", labels: ["Section"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T09:35:36.195Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0001047469-98-000148_Item1", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T09:35:36.216Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0001047469-98-000148_Item1", relationshipCount: 1, hasContent: false, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", relationshipCount: 1, hasContent: false, propertyCount: 10}Object
+[Log] [2025-12-30T09:35:36.216Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0001047469-98-000148_Item1", propertyCount: 10, relationshipCount: 1, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", propertyCount: 10, relationshipCount: 1, hasContent: false}Object
+[Log] [2025-12-30T09:35:36.216Z] [INFO] [App] Node selection completed – {nodeId: "0001047469-98-000148_Item1", hasDetails: true, loading: false, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", hasDetails: true, loading: false, error: null}Object
+[Log] [2025-12-30T09:35:39.172Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0001047469-98-000148_Item1", labels: ["Section"], nodeType: "Section", …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", labels: ["Section"], nodeType: "Section", hasOnNodeClick: true, nodePosition: {x: -1315.5410025003903, y: 880.9357209831893}}Object
+[Log] [2025-12-30T09:35:39.173Z] [INFO] [App] Node clicked in App – {nodeId: "0001047469-98-000148_Item1", labels: ["Section"]} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:39.173Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0001047469-98-000148_Item1", labels: ["Section"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", labels: ["Section"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T09:35:39.173Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0001047469-98-000148_Item1", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T09:35:39.193Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0001047469-98-000148_Item1", relationshipCount: 1, hasContent: false, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", relationshipCount: 1, hasContent: false, propertyCount: 10}Object
+[Log] [2025-12-30T09:35:39.194Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0001047469-98-000148_Item1", propertyCount: 10, relationshipCount: 1, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", propertyCount: 10, relationshipCount: 1, hasContent: false}Object
+[Log] [2025-12-30T09:35:39.194Z] [INFO] [App] Node selection completed – {nodeId: "0001047469-98-000148_Item1", hasDetails: true, loading: false, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", hasDetails: true, loading: false, error: null}Object
+[Log] [2025-12-30T09:35:39.360Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0001047469-98-000148_Item1", labels: ["Section"], nodeType: "Section", …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", labels: ["Section"], nodeType: "Section", hasOnNodeClick: true, nodePosition: {x: -1315.5410025003903, y: 880.9357209831893}}Object
+[Log] [2025-12-30T09:35:39.360Z] [INFO] [App] Node clicked in App – {nodeId: "0001047469-98-000148_Item1", labels: ["Section"]} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:39.360Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0001047469-98-000148_Item1", labels: ["Section"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", labels: ["Section"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T09:35:39.360Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0001047469-98-000148_Item1", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T09:35:39.367Z] [INFO] [GraphCanvas] Node double-clicked (expand) – {nodeId: "0001047469-98-000148_Item1", expandType: "section"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:39.367Z] [INFO] [App] Node double-clicked (expand via API) – {nodeId: "0001047469-98-000148_Item1", nodeType: "section"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:39.367Z] [INFO] [useGraphData] Expanding node – {nodeId: "0001047469-98-000148_Item1", nodeType: "section", ticker: "AAPL"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:39.387Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0001047469-98-000148_Item1", relationshipCount: 1, hasContent: false, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", relationshipCount: 1, hasContent: false, propertyCount: 10}Object
+[Log] [2025-12-30T09:35:39.387Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0001047469-98-000148_Item1", propertyCount: 10, relationshipCount: 1, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", propertyCount: 10, relationshipCount: 1, hasContent: false}Object
+[Log] [2025-12-30T09:35:39.387Z] [INFO] [App] Node selection completed – {nodeId: "0001047469-98-000148_Item1", hasDetails: true, loading: false, …} (logger.ts, line 67)
+{nodeId: "0001047469-98-000148_Item1", hasDetails: true, loading: false, error: null}Object
+[Error] Failed to load resource: the server responded with a status of 404 (Not Found) (0001047469-98-000148_Item1, line 0)
+[Error] [2025-12-30T09:35:39.388Z] [ERROR] [API] API Error: GET /api/graph/AAPL/expand/0001047469-98-000148_Item1 – {status: 404, data: {detail: "No data found for node: 0001047469-98-000148_Item1"}}
+	addLog (logger.ts:67)
+	error (logger.ts:190)
+	logResponse (logger.ts:206)
+	(anonymous function) (api.ts:32)
+[Error] [2025-12-30T09:35:39.388Z] [ERROR] [useGraphData] Failed to expand node (2)
+{nodeId: "0001047469-98-000148_Item1", nodeType: "section", error: "No data found for node: 0001047469-98-000148_Item1", fullError: AxiosError}
+AxiosError {stack: "settle@http://localhost:5173/node_modules/.vite/de…ost:5173/node_modules/.vite/deps/axios.js:2223:58", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: Object, …}
+	addLog (logger.ts:65)
+	error (logger.ts:190)
+	(anonymous function) (useGraphData.ts:100)
+[Warning] [2025-12-30T09:35:39.388Z] [WARN] [useGraphData] Node expansion failed, but continuing – {nodeId: "0001047469-98-000148_Item1", nodeType: "section", error: "No data found for node: 0001047469-98-000148_Item1"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:40.202Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0001047469-98-000148_Item1", isExpanded: true} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:40.202Z] [INFO] [useGraphData] Expanding node – {nodeId: "0001047469-98-000148_Item1", nodeType: "section", ticker: "AAPL"} (logger.ts, line 67)
+[Error] Failed to load resource: the server responded with a status of 404 (Not Found) (0001047469-98-000148_Item1, line 0)
+[Error] [2025-12-30T09:35:40.214Z] [ERROR] [API] API Error: GET /api/graph/AAPL/expand/0001047469-98-000148_Item1 – {status: 404, data: {detail: "No data found for node: 0001047469-98-000148_Item1"}}
+	addLog (logger.ts:67)
+	error (logger.ts:190)
+	logResponse (logger.ts:206)
+	(anonymous function) (api.ts:32)
+[Error] [2025-12-30T09:35:40.214Z] [ERROR] [useGraphData] Failed to expand node (2)
+{nodeId: "0001047469-98-000148_Item1", nodeType: "section", error: "No data found for node: 0001047469-98-000148_Item1", fullError: AxiosError}
+AxiosError {stack: "settle@http://localhost:5173/node_modules/.vite/de…ost:5173/node_modules/.vite/deps/axios.js:2223:58", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: Object, …}
+	addLog (logger.ts:65)
+	error (logger.ts:190)
+	(anonymous function) (useGraphData.ts:100)
+[Warning] [2025-12-30T09:35:40.214Z] [WARN] [useGraphData] Node expansion failed, but continuing – {nodeId: "0001047469-98-000148_Item1", nodeType: "section", error: "No data found for node: 0001047469-98-000148_Item1"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:40.214Z] [INFO] [useGraphData] Expanding node (UI) – {nodeId: "0001047469-98-000148_Item1"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:41.653Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0000912057-97-019277", labels: ["Filing"], nodeType: "Filing", …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", labels: ["Filing"], nodeType: "Filing", hasOnNodeClick: true, nodePosition: {x: -1750, y: 510}}Object
+[Log] [2025-12-30T09:35:41.654Z] [INFO] [App] Node clicked in App – {nodeId: "0000912057-97-019277", labels: ["Filing"]} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:41.654Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0000912057-97-019277", labels: ["Filing"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", labels: ["Filing"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T09:35:41.654Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0000912057-97-019277", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T09:35:41.673Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0000912057-97-019277", relationshipCount: 2, hasContent: false, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", relationshipCount: 2, hasContent: false, propertyCount: 10}Object
+[Log] [2025-12-30T09:35:41.673Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0000912057-97-019277", propertyCount: 10, relationshipCount: 2, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", propertyCount: 10, relationshipCount: 2, hasContent: false}Object
+[Log] [2025-12-30T09:35:41.673Z] [INFO] [App] Node selection completed – {nodeId: "0000912057-97-019277", hasDetails: true, loading: false, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", hasDetails: true, loading: false, error: null}Object
+[Log] [2025-12-30T09:35:41.848Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0000912057-97-019277", labels: ["Filing"], nodeType: "Filing", …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", labels: ["Filing"], nodeType: "Filing", hasOnNodeClick: true, nodePosition: {x: -1750, y: 510}}Object
+[Log] [2025-12-30T09:35:41.849Z] [INFO] [App] Node clicked in App – {nodeId: "0000912057-97-019277", labels: ["Filing"]} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:41.849Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0000912057-97-019277", labels: ["Filing"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", labels: ["Filing"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T09:35:41.849Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0000912057-97-019277", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T09:35:41.856Z] [INFO] [GraphCanvas] Node double-clicked (expand) – {nodeId: "0000912057-97-019277", expandType: "filing"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:41.856Z] [INFO] [App] Node double-clicked (expand via API) – {nodeId: "0000912057-97-019277", nodeType: "filing"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:41.856Z] [INFO] [useGraphData] Expanding node – {nodeId: "0000912057-97-019277", nodeType: "filing", ticker: "AAPL"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:41.876Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0000912057-97-019277", relationshipCount: 2, hasContent: false, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", relationshipCount: 2, hasContent: false, propertyCount: 10}Object
+[Log] [2025-12-30T09:35:41.876Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0000912057-97-019277", propertyCount: 10, relationshipCount: 2, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", propertyCount: 10, relationshipCount: 2, hasContent: false}Object
+[Log] [2025-12-30T09:35:41.876Z] [INFO] [App] Node selection completed – {nodeId: "0000912057-97-019277", hasDetails: true, loading: false, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277", hasDetails: true, loading: false, error: null}Object
+[Log] [2025-12-30T09:35:41.877Z] [INFO] [useGraphData] Node expanded – {nodeId: "0000912057-97-019277", newNodeCount: 2, newEdgeCount: 1} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:43.279Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0000912057-97-019277_Item1", labels: ["Section"], nodeType: "Section", …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277_Item1", labels: ["Section"], nodeType: "Section", hasOnNodeClick: true, nodePosition: {x: -2800, y: 870}}Object
+[Log] [2025-12-30T09:35:43.280Z] [INFO] [App] Node clicked in App – {nodeId: "0000912057-97-019277_Item1", labels: ["Section"]} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:43.280Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0000912057-97-019277_Item1", labels: ["Section"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277_Item1", labels: ["Section"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T09:35:43.281Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0000912057-97-019277_Item1", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277_Item1", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T09:35:43.304Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0000912057-97-019277_Item1", relationshipCount: 1, hasContent: false, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277_Item1", relationshipCount: 1, hasContent: false, propertyCount: 10}Object
+[Log] [2025-12-30T09:35:43.304Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0000912057-97-019277_Item1", propertyCount: 10, relationshipCount: 1, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277_Item1", propertyCount: 10, relationshipCount: 1, hasContent: false}Object
+[Log] [2025-12-30T09:35:43.304Z] [INFO] [App] Node selection completed – {nodeId: "0000912057-97-019277_Item1", hasDetails: true, loading: false, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277_Item1", hasDetails: true, loading: false, error: null}Object
+[Log] [2025-12-30T09:35:43.455Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0000912057-97-019277_Item1", labels: ["Section"], nodeType: "Section", …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277_Item1", labels: ["Section"], nodeType: "Section", hasOnNodeClick: true, nodePosition: {x: -2800, y: 870}}Object
+[Log] [2025-12-30T09:35:43.455Z] [INFO] [App] Node clicked in App – {nodeId: "0000912057-97-019277_Item1", labels: ["Section"]} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:43.456Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0000912057-97-019277_Item1", labels: ["Section"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277_Item1", labels: ["Section"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T09:35:43.456Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0000912057-97-019277_Item1", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277_Item1", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T09:35:43.463Z] [INFO] [GraphCanvas] Node double-clicked (expand) – {nodeId: "0000912057-97-019277_Item1", expandType: "section"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:43.463Z] [INFO] [App] Node double-clicked (expand via API) – {nodeId: "0000912057-97-019277_Item1", nodeType: "section"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:43.463Z] [INFO] [useGraphData] Expanding node – {nodeId: "0000912057-97-019277_Item1", nodeType: "section", ticker: "AAPL"} (logger.ts, line 67)
+[Error] Failed to load resource: the server responded with a status of 404 (Not Found) (0000912057-97-019277_Item1, line 0)
+[Log] [2025-12-30T09:35:43.487Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0000912057-97-019277_Item1", relationshipCount: 1, hasContent: false, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277_Item1", relationshipCount: 1, hasContent: false, propertyCount: 10}Object
+[Log] [2025-12-30T09:35:43.487Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0000912057-97-019277_Item1", propertyCount: 10, relationshipCount: 1, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277_Item1", propertyCount: 10, relationshipCount: 1, hasContent: false}Object
+[Log] [2025-12-30T09:35:43.487Z] [INFO] [App] Node selection completed – {nodeId: "0000912057-97-019277_Item1", hasDetails: true, loading: false, …} (logger.ts, line 67)
+{nodeId: "0000912057-97-019277_Item1", hasDetails: true, loading: false, error: null}Object
+[Error] [2025-12-30T09:35:43.487Z] [ERROR] [API] API Error: GET /api/graph/AAPL/expand/0000912057-97-019277_Item1 – {status: 404, data: {detail: "No data found for node: 0000912057-97-019277_Item1"}}
+	addLog (logger.ts:67)
+	error (logger.ts:190)
+	logResponse (logger.ts:206)
+	(anonymous function) (api.ts:32)
+[Error] [2025-12-30T09:35:43.487Z] [ERROR] [useGraphData] Failed to expand node (2)
+{nodeId: "0000912057-97-019277_Item1", nodeType: "section", error: "No data found for node: 0000912057-97-019277_Item1", fullError: AxiosError}
+AxiosError {stack: "settle@http://localhost:5173/node_modules/.vite/de…ost:5173/node_modules/.vite/deps/axios.js:2223:58", message: "Request failed with status code 404", name: "AxiosError", code: "ERR_BAD_REQUEST", config: Object, …}
+	addLog (logger.ts:65)
+	error (logger.ts:190)
+	(anonymous function) (useGraphData.ts:100)
+[Warning] [2025-12-30T09:35:43.487Z] [WARN] [useGraphData] Node expansion failed, but continuing – {nodeId: "0000912057-97-019277_Item1", nodeType: "section", error: "No data found for node: 0000912057-97-019277_Item1"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:45.803Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0000320193-25-000079", labels: ["Filing"], nodeType: "Filing", …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079", labels: ["Filing"], nodeType: "Filing", hasOnNodeClick: true, nodePosition: {x: -2750, y: 510}}Object
+[Log] [2025-12-30T09:35:45.804Z] [INFO] [App] Node clicked in App – {nodeId: "0000320193-25-000079", labels: ["Filing"]} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:45.804Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0000320193-25-000079", labels: ["Filing"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079", labels: ["Filing"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T09:35:45.804Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0000320193-25-000079", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T09:35:45.826Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0000320193-25-000079", relationshipCount: 5, hasContent: false, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079", relationshipCount: 5, hasContent: false, propertyCount: 10}Object
+[Log] [2025-12-30T09:35:45.827Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0000320193-25-000079", propertyCount: 10, relationshipCount: 5, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079", propertyCount: 10, relationshipCount: 5, hasContent: false}Object
+[Log] [2025-12-30T09:35:45.827Z] [INFO] [App] Node selection completed – {nodeId: "0000320193-25-000079", hasDetails: true, loading: false, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079", hasDetails: true, loading: false, error: null}Object
+[Log] [2025-12-30T09:35:45.982Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0000320193-25-000079", labels: ["Filing"], nodeType: "Filing", …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079", labels: ["Filing"], nodeType: "Filing", hasOnNodeClick: true, nodePosition: {x: -2750, y: 510}}Object
+[Log] [2025-12-30T09:35:45.982Z] [INFO] [App] Node clicked in App – {nodeId: "0000320193-25-000079", labels: ["Filing"]} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:45.983Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0000320193-25-000079", labels: ["Filing"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079", labels: ["Filing"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T09:35:45.983Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0000320193-25-000079", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T09:35:45.989Z] [INFO] [GraphCanvas] Node double-clicked (expand) – {nodeId: "0000320193-25-000079", expandType: "filing"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:45.990Z] [INFO] [App] Node double-clicked (expand via API) – {nodeId: "0000320193-25-000079", nodeType: "filing"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:45.990Z] [INFO] [useGraphData] Expanding node – {nodeId: "0000320193-25-000079", nodeType: "filing", ticker: "AAPL"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:46.012Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0000320193-25-000079", relationshipCount: 5, hasContent: false, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079", relationshipCount: 5, hasContent: false, propertyCount: 10}Object
+[Log] [2025-12-30T09:35:46.012Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0000320193-25-000079", propertyCount: 10, relationshipCount: 5, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079", propertyCount: 10, relationshipCount: 5, hasContent: false}Object
+[Log] [2025-12-30T09:35:46.012Z] [INFO] [App] Node selection completed – {nodeId: "0000320193-25-000079", hasDetails: true, loading: false, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079", hasDetails: true, loading: false, error: null}Object
+[Log] [2025-12-30T09:35:46.012Z] [INFO] [useGraphData] Node expanded – {nodeId: "0000320193-25-000079", newNodeCount: 4, newEdgeCount: 3} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:47.788Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0000320193-25-000079_Item7", labels: ["Section", "PeriodicReportSection"], nodeType: "Section", …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", labels: ["Section", "PeriodicReportSection"], nodeType: "Section", hasOnNodeClick: true, nodePosition: {x: -3600, y: 870}}Object
+[Log] [2025-12-30T09:35:47.789Z] [INFO] [App] Node clicked in App – {nodeId: "0000320193-25-000079_Item7", labels: ["Section", "PeriodicReportSection"]} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:47.789Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0000320193-25-000079_Item7", labels: ["Section", "PeriodicReportSection"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", labels: ["Section", "PeriodicReportSection"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T09:35:47.789Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0000320193-25-000079_Item7", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T09:35:47.822Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0000320193-25-000079_Item7", relationshipCount: 1, hasContent: true, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", relationshipCount: 1, hasContent: true, propertyCount: 10}Object
+[Log] [2025-12-30T09:35:47.822Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0000320193-25-000079_Item7", propertyCount: 10, relationshipCount: 1, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", propertyCount: 10, relationshipCount: 1, hasContent: true}Object
+[Log] [2025-12-30T09:35:47.822Z] [INFO] [App] Node selection completed – {nodeId: "0000320193-25-000079_Item7", hasDetails: true, loading: false, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", hasDetails: true, loading: false, error: null}Object
+[Log] [2025-12-30T09:35:47.962Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0000320193-25-000079_Item7", labels: ["Section", "PeriodicReportSection"], nodeType: "Section", …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", labels: ["Section", "PeriodicReportSection"], nodeType: "Section", hasOnNodeClick: true, nodePosition: {x: -3600, y: 870}}Object
+[Log] [2025-12-30T09:35:47.962Z] [INFO] [App] Node clicked in App – {nodeId: "0000320193-25-000079_Item7", labels: ["Section", "PeriodicReportSection"]} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:47.962Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0000320193-25-000079_Item7", labels: ["Section", "PeriodicReportSection"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", labels: ["Section", "PeriodicReportSection"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T09:35:47.962Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0000320193-25-000079_Item7", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T09:35:47.969Z] [INFO] [GraphCanvas] Node double-clicked (expand) – {nodeId: "0000320193-25-000079_Item7", expandType: "section"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:47.969Z] [INFO] [App] Node double-clicked (expand via API) – {nodeId: "0000320193-25-000079_Item7", nodeType: "section"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:47.969Z] [INFO] [useGraphData] Expanding node – {nodeId: "0000320193-25-000079_Item7", nodeType: "section", ticker: "AAPL"} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:48.000Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0000320193-25-000079_Item7", relationshipCount: 1, hasContent: true, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", relationshipCount: 1, hasContent: true, propertyCount: 10}Object
+[Log] [2025-12-30T09:35:48.000Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0000320193-25-000079_Item7", propertyCount: 10, relationshipCount: 1, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", propertyCount: 10, relationshipCount: 1, hasContent: true}Object
+[Log] [2025-12-30T09:35:48.000Z] [INFO] [App] Node selection completed – {nodeId: "0000320193-25-000079_Item7", hasDetails: true, loading: false, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7", hasDetails: true, loading: false, error: null}Object
+[Log] [2025-12-30T09:35:48.001Z] [INFO] [useGraphData] Node expanded – {nodeId: "0000320193-25-000079_Item7", newNodeCount: 8, newEdgeCount: 7} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:50.233Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0000320193-25-000079_Item7_chunk_0", labels: ["Chunk"], nodeType: "Chunk", …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7_chunk_0", labels: ["Chunk"], nodeType: "Chunk", hasOnNodeClick: true, nodePosition: {x: -3150, y: 1230}}Object
+[Log] [2025-12-30T09:35:50.234Z] [INFO] [App] Node clicked in App – {nodeId: "0000320193-25-000079_Item7_chunk_0", labels: ["Chunk"]} (logger.ts, line 67)
+[Log] [2025-12-30T09:35:50.234Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0000320193-25-000079_Item7_chunk_0", labels: ["Chunk"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7_chunk_0", labels: ["Chunk"], hasGraphNode: true, graphNodeProperties: 20}Object
+[Log] [2025-12-30T09:35:50.234Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0000320193-25-000079_Item7_chunk_0", propertyCount: 20, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7_chunk_0", propertyCount: 20, propertyKeys: Array}Object
+[Log] [2025-12-30T09:35:50.257Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0000320193-25-000079_Item7_chunk_0", relationshipCount: 0, hasContent: true, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7_chunk_0", relationshipCount: 0, hasContent: true, propertyCount: 20}Object
+[Log] [2025-12-30T09:35:50.257Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0000320193-25-000079_Item7_chunk_0", propertyCount: 20, relationshipCount: 0, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7_chunk_0", propertyCount: 20, relationshipCount: 0, hasContent: true}Object
+[Log] [2025-12-30T09:35:50.257Z] [INFO] [App] Node selection completed – {nodeId: "0000320193-25-000079_Item7_chunk_0", hasDetails: true, loading: false, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000079_Item7_chunk_0", hasDetails: true, loading: false, error: null}Object
+[Log] [2025-12-30T09:36:18.165Z] [INFO] [RightPanel] Right panel close clicked – {collapsed: false} (logger.ts, line 67)
+[Log] [2025-12-30T09:36:22.442Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0000320193-25-000066", isExpanded: true} (logger.ts, line 67)
+[Log] [2025-12-30T09:36:22.442Z] [INFO] [useGraphData] Expanding node (UI) – {nodeId: "0000320193-25-000066"} (logger.ts, line 67)
+[Log] [2025-12-30T09:36:23.378Z] [INFO] [App] Node expand/collapse toggled – {nodeId: "0000320193-25-000066", isExpanded: false} (logger.ts, line 67)
+[Log] [2025-12-30T09:36:23.378Z] [INFO] [useGraphData] Collapsing node (UI) – {nodeId: "0000320193-25-000066"} (logger.ts, line 67)
+[Log] [2025-12-30T09:36:24.917Z] [INFO] [GraphCanvas] Node clicked in GraphCanvas – {nodeId: "0000320193-25-000066", labels: ["Filing"], nodeType: "Filing", …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000066", labels: ["Filing"], nodeType: "Filing", hasOnNodeClick: true, nodePosition: {x: -750, y: 510}}Object
+[Log] [2025-12-30T09:36:24.918Z] [INFO] [App] Node clicked in App – {nodeId: "0000320193-25-000066", labels: ["Filing"]} (logger.ts, line 67)
+[Log] [2025-12-30T09:36:24.918Z] [INFO] [usePanelState] Right panel expanded – {previousState: {collapsed: true, visible: true, expandedWidth: 400}, newState: {collapsed: false, visible: true, expandedWidth: 400}} (logger.ts, line 67)
+[Log] [2025-12-30T09:36:24.918Z] [INFO] [useNodeSelection] Selecting node – {nodeId: "0000320193-25-000066", labels: ["Filing"], hasGraphNode: true, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000066", labels: ["Filing"], hasGraphNode: true, graphNodeProperties: 10}Object
+[Log] [2025-12-30T09:36:24.918Z] [INFO] [useNodeSelection] Using graph node properties as initial details – {nodeId: "0000320193-25-000066", propertyCount: 10, propertyKeys: Array} (logger.ts, line 67)
+{nodeId: "0000320193-25-000066", propertyCount: 10, propertyKeys: Array}Object
+[Log] [2025-12-30T09:36:24.940Z] [INFO] [useNodeSelection] Node details received – {nodeId: "0000320193-25-000066", relationshipCount: 2, hasContent: false, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000066", relationshipCount: 2, hasContent: false, propertyCount: 10}Object
+[Log] [2025-12-30T09:36:24.940Z] [INFO] [useNodeSelection] Node details API call successful – {nodeId: "0000320193-25-000066", propertyCount: 10, relationshipCount: 2, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000066", propertyCount: 10, relationshipCount: 2, hasContent: false}Object
+[Log] [2025-12-30T09:36:24.940Z] [INFO] [App] Node selection completed – {nodeId: "0000320193-25-000066", hasDetails: false, loading: false, …} (logger.ts, line 67)
+{nodeId: "0000320193-25-000066", hasDetails: false, loading: false, error: null}Object
+[Log] [2025-12-30T09:36:27.583Z] [INFO] [RightPanel] Right panel close clicked – {collapsed: false} (logger.ts, line 67)
