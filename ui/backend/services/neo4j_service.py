@@ -243,6 +243,110 @@ class Neo4jGraphService:
         
         return {"nodes": nodes, "edges": edges}
     
+    def get_complete_graph(self, ticker: str) -> Dict[str, Any]:
+        """
+        Get complete graph for a ticker with all levels expanded:
+        Company -> Filings -> Sections -> Chunks
+        
+        Returns:
+            Dictionary with nodes and edges
+        """
+        start_time = time.time()
+        logger.debug(f"Executing get_complete_graph query for ticker: {ticker}")
+        
+        query = """
+        MATCH (c:Company {ticker: $ticker})<-[:FILED_BY]-(f:Filing)
+        OPTIONAL MATCH (f)-[:CONTAINS]->(s:Section)
+        OPTIONAL MATCH (s)-[:CONTAINS]->(ch:Chunk)
+        RETURN c, f, s, ch
+        ORDER BY f.fiscal_year DESC, f.fiscal_quarter DESC, s.item_number, ch.chunk_index
+        """
+        
+        logger.debug(f"Query: {query.strip()}")
+        logger.debug(f"Parameters: ticker={ticker.upper()}")
+        
+        results = self.client.execute_query(query, {"ticker": ticker.upper()})
+        
+        elapsed = time.time() - start_time
+        logger.debug(f"Query returned {len(results)} results in {elapsed:.3f}s")
+        
+        nodes = []
+        edges = []
+        company_node = None
+        seen_node_ids = set()
+        seen_edge_keys = set()
+        
+        for record in results:
+            # Process Company node
+            c_node = self._node_to_dict(record, "c")
+            if c_node and not company_node:
+                company_node = c_node
+                if c_node["id"] not in seen_node_ids:
+                    nodes.append(c_node)
+                    seen_node_ids.add(c_node["id"])
+            
+            # Process Filing node
+            f_node = self._node_to_dict(record, "f")
+            if f_node and f_node["id"] not in seen_node_ids:
+                nodes.append(f_node)
+                seen_node_ids.add(f_node["id"])
+                
+                # Add edge from Company to Filing
+                if company_node:
+                    edge_key = f"{company_node['id']}-{f_node['id']}-FILED_BY"
+                    if edge_key not in seen_edge_keys:
+                        edges.append({
+                            "source": company_node["id"],
+                            "target": f_node["id"],
+                            "type": "FILED_BY",
+                            "properties": {}
+                        })
+                        seen_edge_keys.add(edge_key)
+            
+            # Process Section node
+            s_node = self._node_to_dict(record, "s")
+            if s_node and s_node["id"] not in seen_node_ids:
+                nodes.append(s_node)
+                seen_node_ids.add(s_node["id"])
+                
+                # Add edge from Filing to Section
+                if f_node:
+                    edge_key = f"{f_node['id']}-{s_node['id']}-CONTAINS"
+                    if edge_key not in seen_edge_keys:
+                        edges.append({
+                            "source": f_node["id"],
+                            "target": s_node["id"],
+                            "type": "CONTAINS",
+                            "properties": {}
+                        })
+                        seen_edge_keys.add(edge_key)
+            
+            # Process Chunk node
+            ch_node = self._node_to_dict(record, "ch")
+            if ch_node and ch_node["id"] not in seen_node_ids:
+                nodes.append(ch_node)
+                seen_node_ids.add(ch_node["id"])
+                
+                # Add edge from Section to Chunk
+                if s_node:
+                    edge_key = f"{s_node['id']}-{ch_node['id']}-CONTAINS"
+                    if edge_key not in seen_edge_keys:
+                        edges.append({
+                            "source": s_node["id"],
+                            "target": ch_node["id"],
+                            "type": "CONTAINS",
+                            "properties": {}
+                        })
+                        seen_edge_keys.add(edge_key)
+        
+        elapsed_total = time.time() - start_time
+        logger.info(
+            f"get_complete_graph completed for {ticker}: "
+            f"{len(nodes)} nodes, {len(edges)} edges in {elapsed_total:.3f}s"
+        )
+        
+        return {"nodes": nodes, "edges": edges}
+    
     def expand_filing(self, accession_number: str) -> Dict[str, Any]:
         """
         Expand Filing node to include Sections.

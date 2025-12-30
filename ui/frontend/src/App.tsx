@@ -96,9 +96,13 @@ function App() {
   // Handle node click
   const handleNodeClick = useCallback((nodeId: string, labels: string[]) => {
     logger.info('Node clicked', { nodeId, labels }, 'App');
-    nodeSelection.selectNode(nodeId, labels);
+    
+    // Find the graph node to use its properties as fallback
+    const graphNode = graphData.graphData.nodes.find(n => n.id === nodeId);
+    
+    nodeSelection.selectNode(nodeId, labels, graphNode);
     panelState.expandRightPanel();
-  }, [nodeSelection, panelState]);
+  }, [nodeSelection, panelState, graphData]);
 
   // Handle node double-click (expand)
   const handleNodeDoubleClick = useCallback(async (nodeId: string, nodeType: 'filing' | 'section') => {

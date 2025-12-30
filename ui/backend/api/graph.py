@@ -32,7 +32,7 @@ def get_service() -> Neo4jGraphService:
 @router.get("/graph/{ticker}", response_model=GraphData)
 async def get_graph(ticker: str):
     """
-    Get complete graph for a ticker (Company + Filings).
+    Get complete graph for a ticker with all levels expanded (Company + Filings + Sections + Chunks).
     
     Args:
         ticker: Stock ticker symbol (e.g., AAPL)
@@ -42,7 +42,8 @@ async def get_graph(ticker: str):
     """
     try:
         service = get_service()
-        graph_data = service.get_company_graph(ticker)
+        # Use get_complete_graph to load all levels at once
+        graph_data = service.get_complete_graph(ticker)
         
         if not graph_data.get("nodes"):
             raise HTTPException(status_code=404, detail=f"No data found for ticker: {ticker}")
