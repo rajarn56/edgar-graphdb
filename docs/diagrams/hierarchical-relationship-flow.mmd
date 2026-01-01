@@ -1,0 +1,99 @@
+graph TD
+    %% Company and Filing
+    A[Company] -->|FILED_BY| B[Filing]
+    B -->|FOR_PERIOD| P[Period]
+    
+    %% Filing contains sections
+    B -->|CONTAINS order:1| C1[Section: Item 1]
+    B -->|CONTAINS order:7| C2[Section: Item 7<br/>PeriodicReportSection]
+    B -->|CONTAINS order:8| C3[Section: Item 8<br/>Form8KItem]
+    B -->|CONTAINS| D[FinancialStatement]
+    B -->|HAS_RISK| RF[RiskFactor]
+    
+    %% Sections contain chunks (NO PRECEDES relationships)
+    C1 -->|CONTAINS| E1[Chunk 0<br/>chunk_index: 0]
+    C1 -->|CONTAINS| E2[Chunk 1<br/>chunk_index: 1]
+    C1 -->|CONTAINS| E3[Chunk 2<br/>chunk_index: 2]
+    
+    C2 -->|CONTAINS| F1[Chunk 0<br/>chunk_index: 0]
+    C2 -->|CONTAINS| F2[Chunk 1<br/>chunk_index: 1]
+    C2 -->|CONTAINS| F3[Chunk 2<br/>chunk_index: 2]
+    
+    %% Direct Company relationship from Chunk (denormalized)
+    E1 -->|FROM_COMPANY| A
+    E2 -->|FROM_COMPANY| A
+    E3 -->|FROM_COMPANY| A
+    F1 -->|FROM_COMPANY| A
+    F2 -->|FROM_COMPANY| A
+    F3 -->|FROM_COMPANY| A
+    
+    %% Embeddings stored directly on Chunk (NOT separate nodes)
+    E1 -.->|embedding property| E1V[Vector: 1536 dims]
+    E2 -.->|embedding property| E2V[Vector: 1536 dims]
+    F1 -.->|embedding property| F1V[Vector: 1536 dims]
+    
+    %% Financial Statements
+    D -->|HAS_LINE_ITEM| LI[LineItem]
+    LI -->|HAS_VALUE| V[Value]
+    V -->|FOR_PERIOD| P
+    LI -->|CALCULATES| M[Metric]
+    M -->|FOR_PERIOD| P
+    M -->|CALCULATED_FROM| MT[MetricTrend]
+    
+    %% Entity Relationships
+    E1 -->|DISCUSSES| T[Topic]
+    E1 -->|DISCUSSES_METRIC| M
+    E1 -->|MENTIONS| PR[Product]
+    
+    %% Industry & Peer Relationships
+    A -->|OPERATES_IN| I[Industry]
+    I -->|BELONGS_TO| S[Sector]
+    A -->|MEMBER_OF| PG[PeerGroup]
+    A -->|COMPETES_WITH| A2[Company]
+    A -->|HAS_REVENUE_IN| GR[GeographicRegion]
+    A -->|OFFERS| PR
+    
+    %% Governance
+    PER[Person] -->|HOLDS_ROLE| R[Role]
+    R -->|AT_COMPANY| A
+    PER -->|EXECUTED| TR[Transaction]
+    TR -->|RELATES_TO| A
+    TR -->|FILED_IN| B
+    PER -->|OWNS| OP[OwnershipPosition]
+    OP -->|IN_COMPANY| A
+    PER -->|RECEIVED_COMPENSATION| COMP[Compensation]
+    COMP -->|FOR_COMPANY| A
+    
+    %% Board & Committees
+    A -->|HAS_BOARD| BD[Board]
+    BD -->|HAS_COMMITTEE| COM[Committee]
+    PER -->|MEMBER_OF_COMMITTEE| COM
+    
+    %% M&A
+    A -->|ACQUIRING| MA[MandATransaction]
+    A2 -->|BEING_ACQUIRED| MA
+    MA -->|ANNOUNCED_IN| B
+    
+    %% Styling
+    style A fill:#e1f5ff
+    style B fill:#fff4e1
+    style C1 fill:#e8f5e9
+    style C2 fill:#e8f5e9
+    style C3 fill:#e8f5e9
+    style E1 fill:#fce4ec
+    style E2 fill:#fce4ec
+    style E3 fill:#fce4ec
+    style F1 fill:#fce4ec
+    style F2 fill:#fce4ec
+    style F3 fill:#fce4ec
+    style E1V fill:#f3e5f5,stroke-dasharray: 5 5
+    style E2V fill:#f3e5f5,stroke-dasharray: 5 5
+    style F1V fill:#f3e5f5,stroke-dasharray: 5 5
+    style D fill:#fff9c4
+    style LI fill:#fff9c4
+    style V fill:#fff9c4
+    style M fill:#c8e6c9
+    style I fill:#e1bee7
+    style S fill:#e1bee7
+    style PG fill:#e1bee7
+
